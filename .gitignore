@@ -1,0 +1,23 @@
+# Danh sách file, thư mục Git KHÔNG theo dõi
+
+# Hồ sơ nhận về từ chủ đầu tư, đơn vị thiết kế: file lớn, là tài liệu của người khác
+tham-tra/*/dau-vao/
+ban-ve/
+
+# Bản sao lưu thủ công cũ (từ nay Git đã lưu lịch sử thay cho thư mục này)
+_luu-tru/
+
+# File tạm của AutoCAD
+*.bak
+*.dwl
+*.dwl2
+*.sv$
+plot.log
+
+# File tạm của Word, Excel
+~$*
+
+# File tạm của Python
+__pycache__/
+*.pyc
+.venv/
