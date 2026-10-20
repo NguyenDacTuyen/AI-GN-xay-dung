@@ -7,7 +7,7 @@ description: Thẩm tra hồ sơ thiết kế bản vẽ thi công và thẩm tr
 
 Khi soạn **báo cáo kết quả thẩm tra (Word)**: đọc file **`mau-bao-cao.md`** (cùng thư mục với skill này) trước. File đó có định dạng, phần mở đầu, bố cục 8 phần, danh mục căn cứ pháp lý và các lỗi đã biết của file mẫu.
 
-Skill liên quan: `gn-banvecad-isocty` (ghi chú trên file CAD, kiểm tra thể hiện bản vẽ), `boc-khoi-luong-du-toan` (bóc lại khối lượng).
+Skill liên quan: `gn-banvecad-isocty` (ghi chú trên file CAD, kiểm tra thể hiện bản vẽ), `gn-dutoan` (bóc lại khối lượng).
 
 Dự án có **nhiều hạng mục** (mỗi hạng mục có bản vẽ, dự toán riêng): làm theo mục **"Dự án nhiều hạng mục"** ở cuối file này.
 
