@@ -1,11 +1,17 @@
 ---
 name: gn-banvecad-isocty
-description: Thiết kế, thể hiện và kiểm tra bản vẽ thi công trên AutoCAD theo chuẩn công ty Gia Nguyễn (template ISO_CTY.dwt). Dùng khi vẽ hoặc sửa bản vẽ CAD, viết lệnh AutoLISP hoặc Python cho AutoCAD, chọn layer, text style, dim style, tỷ lệ, chèn khung tên, dàn Layout, viewport, in PDF, thống kê cốt thép trên bản vẽ, kiểm tra lỗi bản vẽ, chuẩn hóa bản vẽ của đơn vị khác, PURGE, AUDIT, dọn dẹp file DWG.
+description: Thiết kế, thể hiện và kiểm tra bản vẽ thi công trên AutoCAD theo chuẩn công ty Gia Nguyễn (template ISO_CTY.dwt). Dùng khi vẽ hoặc sửa bản vẽ CAD, viết lệnh AutoLISP hoặc Python cho AutoCAD, chọn layer, text style, dim style, tỷ lệ, chèn khung tên, dàn Layout, viewport, in PDF, thống kê cốt thép trên bản vẽ, kiểm tra lỗi bản vẽ, chuẩn hóa bản vẽ của đơn vị khác, PURGE, AUDIT, dọn dẹp file DWG, vẽ trực tiếp trong AutoCAD qua MCP autocad.
 ---
 
 # Bản vẽ thi công trên CAD
 
 Chi tiết bảng layer, bảng style theo tỷ lệ, khung tên, Layout của template nằm trong file **`template-ISO_CTY.md`** (cùng thư mục với skill này). Đọc file đó trước khi viết code hoặc chọn layer, style.
+
+**Vẽ trực tiếp trong AutoCAD qua MCP** (các công cụ `mcp__autocad__*`): **bắt buộc đọc file `mcp-autocad.md`** (cùng thư mục) trước khi gọi bất kỳ công cụ MCP nào. Tóm tắt các điều cấm:
+- Chỉ vẽ trên **bản sao template**, không vẽ vào bản vẽ gốc.
+- **Không dùng `drawing create`**: lệnh này xóa sạch bản vẽ đang mở.
+- **Không dùng `drawing open`**: không mở được file.
+- Không viết chữ tiếng Việt bằng `create_text`, `create_mtext`.
 
 ## Quy tắc khi viết code AutoCAD
 
