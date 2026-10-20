@@ -4,6 +4,12 @@
 tham-tra/*/dau-vao/
 ban-ve/
 
+# Bản vẽ chạy thử MCP
+ket-qua/_thu-mcp/
+
+# Bộ 8 skill vn-* của repo andyluu98/vn-autocad-skill (bản gốc ở C:\Users\Desktop\mcp\vn-autocad-skill)
+.claude/skills/vn-*/
+
 # Bản sao lưu thủ công cũ (từ nay Git đã lưu lịch sử thay cho thư mục này)
 _luu-tru/
 
