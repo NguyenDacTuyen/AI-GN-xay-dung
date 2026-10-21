@@ -79,3 +79,44 @@ Cách dùng máy chủ MCP `autocad` để vẽ và sửa bản vẽ theo chuẩ
 | Xuất hiện layer lạ màu trắng | Gõ sai tên layer ở tham số `layer` | Xóa đối tượng vẽ sai, purge layer lạ, vẽ lại với tên đúng |
 | Xuất hiện text style `MCP_VN` | Đã dùng `create_text` / `create_mtext` với chữ có dấu | Chuyển các chữ đó sang style đúng của template, rồi purge `MCP_VN` |
 | `status` trả về `ezdxf` | AutoCAD chưa mở, chưa mở bản vẽ, hoặc chưa nạp `mcp_dispatch.lsp` | Nhờ anh mở AutoCAD và mở một bản vẽ, kiểm tra Startup Suite |
+| `drawing` → `plot_pdf` báo thành công nhưng **không có file PDF** | Hạn chế của công cụ MCP | In bằng lệnh `-PLOT` theo cài đặt in sẵn của Layout (xem mục "Bài học khi vẽ bể tự hoại") |
+| Công cụ MCP **treo đến 30 phút** khi in PDF | File PDF cùng tên đã tồn tại hoặc đang mở trong trình xem PDF, AutoCAD dừng chờ hỏi ghi đè | Nhờ anh bấm **Esc** trong AutoCAD. Lần sau: xóa PDF cũ trước khi in; nếu không xóa được (đang mở) thì in ra tên mới |
+
+## Multileader bằng code (đã chạy thử 20/10/2026, trang thử `ket-qua/_mau-iso/thu-mau.dwg`)
+Bản vẽ phải có sẵn kiểu Multileader và block mẫu (xem SKILL.md, quy tắc 7; nếu chưa có thì `(load ".../lisp/gn-mau-iso.lsp") (c:GNMAU)`).
+```lisp
+;; ms = Model space; ax ay = điểm mũi tên; lx ly = điểm gãy
+(setq ml (vlax-invoke ms 'AddMLeader (mapcar 'float (list ax ay 0 lx ly 0)) 0))
+(vla-put-Layer ml "42.Tp_M learder")
+(vla-put-StyleName ml "TP_1-50 GhiChu")
+(vla-put-TextString ml "BT L\U+00D3T B7,5 D\U+00C0Y 100")      ; xuống dòng: \\P
+;; Số hiệu thép: thêm
+(vla-put-ContentType ml 1)
+(vla-put-ContentBlockName ml "GN_SoHieuThep")                ; hoặc GN_SoHieuThep_T (vòng tròn bên trái)
+(vla-SetDoglegDirection ml 0 (vlax-3d-point -1.0 0.0 0.0))   ; chỉ với block; hướng sang trái
+(vla-SetBlockAttributeValue ml <ObjectID của ATTDEF SO_HIEU trong block> "1")
+(vla-SetBlockAttributeValue ml <ObjectID của ATTDEF THEP> "2%%c14")
+;; Cuối cùng: dời cả ghi chú để điểm gãy về đúng (lx ly), rồi đặt lại đường dẫn
+(setq v (vlax-invoke ml 'GetLeaderLineVertices 0))
+(vla-Move ml (vlax-3d-point (nth 3 v) (nth 4 v) 0.0) (vlax-3d-point lx ly 0.0))
+(vlax-invoke ml 'SetLeaderLineVertices 0 (mapcar 'float (list ax ay 0 lx ly 0)))
+```
+Lỗi đã gặp:
+- Tọa độ truyền cho `AddMLeader`, `InsertBlock` phải là **số thực**. Số nguyên (ví dụ `(* 50 -5)`) báo `Exception occurred` hoặc `Invalid input`.
+- `SetDoglegDirection` **báo lỗi với ghi chú chữ**. Ghi chú chữ tự chọn hướng theo vị trí điểm gãy, không cần gọi.
+- Đổi hướng đường ngang làm **cả ghi chú dịch đi** một đoạn. Phải dời lại như 3 dòng cuối ở trên.
+- `entmake` không có mã 410 thì vẽ vào **không gian đang mở** (Layout nếu CTAB là Layout). Đặt `(setvar "CTAB" "Model")` trước khi vẽ vào Model.
+- Kiểu Multileader: kiểu chữ nằm trên đường ngang là `TextLeftAttachmentType` = `TextRightAttachmentType` = **7** (gạch chân dòng cuối). Giá trị 5 và 6 không gạch chân. Không gán được `ArrowSymbol ""` (báo `Key not found`), nhưng kiểu mới tạo mặc định đã là mũi tên đặc.
+- ObjectID của ATTDEF: duyệt block bằng `vlax-for`, lọc `AcDbAttributeDefinition` theo `TagString`, rồi `vla-get-ObjectID`.
+
+## Bài học khi vẽ bể tự hoại GN2026-HT-01 (20/10/2026)
+1. **Bản vẽ nhiều đối tượng thì không gọi MCP từng đối tượng.** Viết chương trình Python chứa toàn bộ thông số, sinh ra file `.lsp` (các hàm `L`, `PL`, `CI`, `TX`, `HT`, `DM`...). Sau đó nạp bằng `execute_lisp` với `(load "D:/.../lisp/<ten>.lsp")` và gọi **từng phần** (mỗi lần gọi phải xong trong khoảng 10 giây). Cùng chương trình Python ghi ra file số liệu khối lượng cho dự toán. Mẫu tham khảo: `python/be_tu_hoai_10m3.py`.
+2. **Chữ tiếng Việt trong file `.lsp`:** đổi ký tự có dấu sang mã `\\U+XXXX` trong chuỗi LISP. Đã chạy đúng.
+3. **Hatch:** đặt `HPNAME`, `HPSCALE`, `HPANG` rồi `(command "_.-HATCH" "_S" <tập đối tượng> "" "")`. Tỷ lệ dùng cho bản vẽ 1/50 đơn vị mm: AR-CONC 0,4–0,6; AR-SAND 0,6; GRAVEL 0,6.
+4. **Model của template có sẵn 6 đối tượng mẫu:** 2 khung tên thu nhỏ và các chữ "A3", "(dùng cho bản vẽ...)". Chúng nằm quanh tọa độ (3700–4550, 6500–7000) và sẽ chồng lên hình vẽ. **Xóa chúng trong bản sao** trước khi vẽ.
+5. **Đặt tỷ lệ viewport:** sửa trực tiếp dữ liệu viewport (`entmod` mã 12, 45) **không có tác dụng**. Cách đúng: mở khóa viewport, `(setvar "CTAB" "<layout>")`, `(command "_.MSPACE")`, `(setvar "CVPORT" <số viewport>)`, `(command "_.ZOOM" "_C" (list x y) "1/50xp")`, `(command "_.PSPACE")`, rồi khóa lại. Vùng Model thấy được ở tỷ lệ 1/50 trong Layout A3: rộng 16.600, cao 14.350 mm.
+6. **In PDF:** `(setvar "FILEDIA" 0) (setvar "BACKGROUNDPLOT" 0) (command "_.-PLOT" "_N" "<layout>" "" "" "<đường dẫn pdf>" "_N" "_Y")`, sau đó trả lại `FILEDIA`. Phải chắc file PDF **chưa tồn tại** trước khi in: kiểm tra bằng `(findfile <đường dẫn>)`, nếu có rồi thì in ra tên mới (`_v2`, `_v3`...). Nếu file đã có, nhất là đang mở trong trình xem PDF, AutoCAD sẽ đứng chờ câu hỏi ghi đè và treo MCP (đã treo 30 phút, anh phải bấm Esc).
+7. **Kiểm tra bằng mắt:** chuyển PDF thành ảnh bằng PyMuPDF (`pymupdf`, đã cài) rồi xem. Cách này nhẹ hơn nhiều so với `get_screenshot`.
+8. **Không đặt tên biến `t` trong `execute_lisp`.** `t` là hằng số đúng (T) của AutoLISP; ghi đè sẽ làm hỏng các đoạn LISP khác.
+   **Tương tự với `pi`:** AutoLISP không phân biệt chữ hoa, chữ thường, nên biến tên `pI`, `PI` chính là `pi`. Đặt biến cục bộ tên `pI` làm `pi` thành nil, gây lỗi `bad argument type numberp: nil` khi vẽ mũi tên. Đặt tên khác (ví dụ `pIn`).
+9. **Tên bản vẽ trong khung tên dân dụng** chỉ chứa được khoảng 30 ký tự (cột rộng khoảng 62 mm). Dài hơn sẽ tràn ra ngoài khổ giấy. Kiểm tra bằng khung bao (`vla-GetBoundingBox`) của Attribute.

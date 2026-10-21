@@ -65,6 +65,43 @@ Chi tiết bảng layer, bảng style theo tỷ lệ, khung tên, Layout của t
 - Đối tượng để màu, nét và độ dày nét là **ByLayer**. Không gán trực tiếp cho từng đối tượng.
 - Template đang ở chế độ in theo màu (PSTYLEMODE = 1, file .ctb). Vì vậy khi in, chọn **`monochrome.ctb`** để in đen và lấy độ dày nét theo layer.
 
+### Ghi chú, đường dẫn, số hiệu thép (quy tắc trình bày của anh, chốt ngày 20/10/2026)
+Kích thước dưới đây tính **trên giấy in**. Trong Model nhân với mẫu số tỷ lệ (ví dụ 1/50 thì × 50).
+1. **Đường dẫn (leader) phải có mũi tên đặc** ở đầu chỉ vào đối tượng. **Mũi tên cao 2 mm = 2 × mẫu số tỷ lệ** (1/50 là 100, 1/100 là 200), áp dụng cho mọi ghi chú.
+2. **Ký hiệu số hiệu thép** (theo hình anh gửi):
+   - Đường dẫn có mũi tên chỉ vào thanh thép, gãy một lần rồi kẻ **đường ngang**.
+   - Chữ thép (ví dụ `2Ø14`, `Ø10a200`) nằm **phía trên** đường ngang.
+   - **Vòng tròn số hiệu Ø5 mm đặt ở cuối đường ngang**. Đường ngang chỉ chạm mép ngoài vòng tròn, không vào trong. Số hiệu nằm giữa vòng tròn.
+   - Đường ngang mặc định dài 15 mm. Chữ thép dài hơn thì kéo dài thêm.
+   - **Chọn phía vòng tròn để đường dẫn không cắt qua chữ:** chỗ chỉ vào nằm bên trái hoặc ngay dưới điểm gãy thì vòng tròn ở bên phải (`GN_SoHieuThep`). Chỗ chỉ vào nằm bên phải thì vòng tròn ở bên trái (`GN_SoHieuThep_T`).
+   - Mặt cắt hẹp không đủ chỗ thì đặt số hiệu **trong lòng cấu kiện** (ví dụ lòng bể). Tránh ký hiệu cắt ngắn của cừ, cọc và tên hình vẽ.
+3. **Mọi ghi chú có đường dẫn** (vật liệu, ống, nắp thăm...): đường dẫn có mũi tên, gãy một lần rồi kẻ đường ngang. **Chữ nằm phía trên đường ngang** (đường ngang là gạch chân dòng chữ cuối).
+4. **Layer:**
+   - Multileader (cả đường dẫn, mũi tên, chữ, vòng tròn số hiệu): `42.Tp_M learder`, màu và nét ByLayer.
+   - Chữ rời không có đường dẫn: `6.TP_Tex tNote`, text style Note theo tỷ lệ (ví dụ `08.TP_1-50 Note`).
+5. **Chữ không được đè** lên chữ khác, đường kích thước hay nét vẽ, và **cách mép khung giấy ít nhất 5 mm**. Kiểm tra bằng cách xuất PDF rồi xem ảnh trước khi giao.
+6. **Ký hiệu cao độ (mẫu công ty, anh gửi ngày 20/10/2026), đã làm thành block `GN_CaoDo`:**
+   - Tam giác ngược rộng 3 mm, cao 1,5 mm, đỉnh nằm đúng điểm cao độ. **Nửa trái tô đặc** (layer `3.TP_Hatch`), nửa phải để trống.
+   - Đường nằm ngang tại cao độ, kéo từ mép trái tam giác sang phải khoảng 2,6 mm. Đường đứng từ đỉnh lên cao 7,5 mm.
+   - Đường ngang đỡ chữ cách đỉnh 3,4 mm, chữ cao độ nằm **phía trên** đường này (ví dụ `±0.000`, `-1.950`, `-0.450 (MN)`).
+   - Các nét ở layer `1.Tp_dim`, chữ ở layer `6.TP_Tex tNote`, style ghi chú theo tỷ lệ.
+   - Trên mặt cắt: các ký hiệu xếp thẳng một cột bên phải hình vẽ, có đường dóng mảnh từ cấu kiện tới. Hai cao độ gần nhau (cách dưới khoảng 8 mm trên giấy) thì đẩy ký hiệu sau **sang trái** một cột, không đẩy sang phải (dễ chạm hình kế bên hoặc mép khung).
+7. **Mẫu có sẵn để dùng (làm ngày 20/10/2026):** lệnh `GNMAU` trong file `lisp/gn-mau-iso.lsp` thêm vào bản vẽ đang mở:
+
+   | Tên | Loại | Ghi chú |
+   |---|---|---|
+   | `GN_SoHieuThep` | Block, vẽ theo kích thước giấy | Vòng tròn bên phải đường ngang. 2 Attribute: `SO_HIEU`, `THEP` |
+   | `GN_SoHieuThep_T` | Block | Bản đối xứng, vòng tròn bên trái. Dùng khi ghi chú nằm bên trái chỗ chỉ vào |
+   | `GN_CaoDo` | Block, vẽ theo kích thước giấy | Attribute `CAO_DO`. Chèn với hệ số = mẫu số tỷ lệ, layer `1.Tp_dim` |
+   | `TP_1-xx GhiChu` | Kiểu Multileader | Chữ nằm trên đường ngang, dùng text style Note của tỷ lệ |
+   | `TP_1-xx SoHieuThep` | Kiểu Multileader | Phần cuối là block `GN_SoHieuThep`, đã phóng theo tỷ lệ |
+
+   - Kiểu Multileader có cho 8 tỷ lệ: 1/10, 1/25, 1/50, 1/100, 1/150, 1/200, 1/250, 1/500. Tỷ lệ khác thì thêm 1 dòng vào danh sách trong `c:GNMAU`.
+   - Bản sao template đã có sẵn các mẫu này: `ket-qua/_mau-iso/ISO_CTY_bo-sung.dwt`, trang thử `ket-qua/_mau-iso/thu-mau.dwg`. **Khi anh chưa chép đè lên `template/ISO_CTY.dwt`**, bản vẽ mới chép từ template cũ phải chạy `GNMAU` trước khi ghi chú.
+   - Multileader phải đặt trên layer `42.Tp_M learder`. Kiểu Multileader không tự chọn layer được.
+   - Cách dùng tay: chọn kiểu Multileader đúng tỷ lệ, gõ `MLEADER`, bấm điểm mũi tên rồi điểm gãy. Số hiệu thép thì nhấp đúp để sửa số và chữ thép. Vòng tròn cần nằm bên trái thì đổi **Source block** trong bảng Properties thành `GN_SoHieuThep_T`.
+   - Khi vẽ bằng code: **dùng Multileader và block này**, không vẽ nét rời. Cách gọi bằng code xem `mcp-autocad.md`, mục "Multileader bằng code".
+
 ### Số hiệu bản vẽ
 - Quy ước: **Mã dự án + Bộ môn + Số thứ tự**, ví dụ `GN2026-KC-01`.
 - Ký hiệu bộ môn: KT (kiến trúc), KC (kết cấu), ĐN (điện nước), HT (hạ tầng), GT (giao thông), BPTC (biện pháp thi công).
