@@ -1,0 +1,223 @@
+{
+ "kich_thuoc_mm": {
+  "L1": 2000,
+  "L2": 1000,
+  "L3": 1000,
+  "B": 1700,
+  "HN": 1500,
+  "HK": 300,
+  "TW": 200,
+  "TV": 150,
+  "TD": 250,
+  "TN": 150,
+  "MO": 200,
+  "LO": 4700,
+  "BO": 2100,
+  "HO": 2200,
+  "LD": 5100,
+  "BD": 2500
+ },
+ "cao_do_m": {
+  "nap": 0.0,
+  "mn": -0.45,
+  "ong_vao": -0.4,
+  "day_long": -1.95,
+  "day_kc": -2.2,
+  "day_lot": -2.3,
+  "day_cat": -2.5
+ },
+ "dung_tich_m3": 10.200000000000001,
+ "thep": [
+  {
+   "cau_kien": "Đáy bể",
+   "so_hieu": 1,
+   "hinh_dang": "Bẻ 2 đầu 150",
+   "d": 12,
+   "l": 5320,
+   "n": 13,
+   "tong_m": 69.16,
+   "kg": 61.45
+  },
+  {
+   "cau_kien": "Đáy bể",
+   "so_hieu": 2,
+   "hinh_dang": "Bẻ 2 đầu 150",
+   "d": 12,
+   "l": 2720,
+   "n": 26,
+   "tong_m": 70.72,
+   "kg": 62.83
+  },
+  {
+   "cau_kien": "Đáy bể",
+   "so_hieu": 3,
+   "hinh_dang": "Bẻ 2 đầu 150",
+   "d": 12,
+   "l": 5320,
+   "n": 13,
+   "tong_m": 69.16,
+   "kg": 61.45
+  },
+  {
+   "cau_kien": "Đáy bể",
+   "so_hieu": 4,
+   "hinh_dang": "Bẻ 2 đầu 150",
+   "d": 12,
+   "l": 2720,
+   "n": 26,
+   "tong_m": 70.72,
+   "kg": 62.83
+  },
+  {
+   "cau_kien": "Thành bể",
+   "so_hieu": 5,
+   "hinh_dang": "Chữ L, chân 200",
+   "d": 10,
+   "l": 2335,
+   "n": 140,
+   "tong_m": 326.9,
+   "kg": 201.7
+  },
+  {
+   "cau_kien": "Thành bể",
+   "so_hieu": 6,
+   "hinh_dang": "Vòng kín, nối 400",
+   "d": 10,
+   "l": 13720,
+   "n": 11,
+   "tong_m": 150.92,
+   "kg": 93.12
+  },
+  {
+   "cau_kien": "Thành bể",
+   "so_hieu": 7,
+   "hinh_dang": "Vòng kín, nối 400",
+   "d": 10,
+   "l": 12680,
+   "n": 10,
+   "tong_m": 126.8,
+   "kg": 78.24
+  },
+  {
+   "cau_kien": "Vách ngăn",
+   "so_hieu": 8,
+   "hinh_dang": "Bẻ 2 đầu 150",
+   "d": 8,
+   "l": 2100,
+   "n": 18,
+   "tong_m": 37.8,
+   "kg": 14.93
+  },
+  {
+   "cau_kien": "Vách ngăn",
+   "so_hieu": 9,
+   "hinh_dang": "Bẻ 2 đầu 150",
+   "d": 8,
+   "l": 2000,
+   "n": 20,
+   "tong_m": 40.0,
+   "kg": 15.8
+  },
+  {
+   "cau_kien": "Nắp bể",
+   "so_hieu": 10,
+   "hinh_dang": "Bẻ 2 đầu 100",
+   "d": 10,
+   "l": 4850,
+   "n": 11,
+   "tong_m": 53.35,
+   "kg": 32.92
+  },
+  {
+   "cau_kien": "Nắp bể",
+   "so_hieu": 11,
+   "hinh_dang": "Bẻ 2 đầu 100",
+   "d": 10,
+   "l": 2250,
+   "n": 24,
+   "tong_m": 54.0,
+   "kg": 33.32
+  },
+  {
+   "cau_kien": "Nắp bể",
+   "so_hieu": 12,
+   "hinh_dang": "Bẻ 2 đầu 100",
+   "d": 8,
+   "l": 4850,
+   "n": 11,
+   "tong_m": 53.35,
+   "kg": 21.07
+  },
+  {
+   "cau_kien": "Nắp bể",
+   "so_hieu": 13,
+   "hinh_dang": "Bẻ 2 đầu 100",
+   "d": 8,
+   "l": 2250,
+   "n": 24,
+   "tong_m": 54.0,
+   "kg": 21.32
+  },
+  {
+   "cau_kien": "Lỗ thăm",
+   "so_hieu": 14,
+   "hinh_dang": "Thẳng",
+   "d": 12,
+   "l": 1400,
+   "n": 24,
+   "tong_m": 33.6,
+   "kg": 29.85
+  },
+  {
+   "cau_kien": "Đan thăm",
+   "so_hieu": 15,
+   "hinh_dang": "Thẳng",
+   "d": 6,
+   "l": 570,
+   "n": 24,
+   "tong_m": 13.68,
+   "kg": 3.04
+  },
+  {
+   "cau_kien": "Đan lọc",
+   "so_hieu": 16,
+   "hinh_dang": "Thẳng",
+   "d": 6,
+   "l": 1670,
+   "n": 7,
+   "tong_m": 11.69,
+   "kg": 2.6
+  },
+  {
+   "cau_kien": "Đan lọc",
+   "so_hieu": 17,
+   "hinh_dang": "Thẳng",
+   "d": 6,
+   "l": 970,
+   "n": 12,
+   "tong_m": 11.64,
+   "kg": 2.59
+  }
+ ],
+ "khoi_luong": {
+  "be_tong_day": 3.188,
+  "be_tong_thanh": 4.608,
+  "be_tong_vach": 0.918,
+  "be_tong_nap": 1.319,
+  "be_tong_dan_tham": 0.086,
+  "be_tong_dan_loc": 0.136,
+  "be_tong_lot": 1.431,
+  "cat_dem": 3.19,
+  "dien_tich_cu": 15.95,
+  "da_loc": 0.51,
+  "trat_trong": 41.15,
+  "bitum_ngoai": 33.2,
+  "thep_kg": {
+   "12": 278.41,
+   "10": 439.3,
+   "8": 73.12,
+   "6": 8.23
+  },
+  "thep_tong_kg": 799.06
+ }
+}
