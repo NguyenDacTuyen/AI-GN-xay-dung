@@ -10,7 +10,12 @@ File mẫu: `template/du-toan/tong-hop/bang-du-toan-tong-hop.xlsx` (đọc ngày
 | `TH TMDT` | **Tổng hợp dự toán xây dựng công trình** (sheet chính) |
 | `Du_phong_truot_gia` | Bảng tính dự phòng phí do trượt giá theo thời gian |
 
-Các tỷ lệ % của chi phí quản lý dự án, tư vấn, chi phí khác được lấy từ **sheet ẩn `TT38`** (bảng định mức chi phí). Claude không đọc sheet này. Khi lập file mới, tra lại tỷ lệ theo văn bản hiện hành, ghi căn cứ vào cột "Căn cứ", và nhắc anh kiểm tra.
+Sheet **`TT38`** (anh để hiện và cập nhật ngày 24/10/2026): bảng định mức chi phí QLDA và tư vấn theo TT 38/2026/TT-BXD, có công thức nội suy theo ô C4 (chi phí xây dựng, tỷ đồng). Mỗi bảng nằm giữa 2 dòng mốc ở cột A (`QLDA79^` ... `QLDA79$`), cột "Giá trị" là tỷ lệ đã nội suy. Anh xác nhận bảng lập BCKTKT (5,8% hạ tầng dưới 1 tỷ) là đúng; 4,37% trên F1 là tỷ lệ cho dự án bảo trì nhóm C, không dùng.
+
+**Lỗi đã biết của sheet TT38 (24/10/2026):**
+- Bảng lập BCKTKT (`LBC79`): dòng dân dụng, công nghiệp, nông nghiệp, hạ tầng so cận với 7 và 15 (mốc thật là 1, 3, 20, 40 tỷ) nên 3 đến 40 tỷ nội suy sai. Chương trình tổng hợp sửa trong file kết quả, mẫu giữ nguyên.
+- Các bảng phí thẩm định dự án, thẩm định TK/dự toán, quyết toán, kiểm toán, PCCC còn theo văn bản cũ (TT 176/2011, 209/2016, 210/2016, 75/2014, 150/2014, NĐ 99/2021): chương trình không dùng.
+- Trong `TH TMDT` của mẫu: D37 (bảo hiểm) trỏ vào bảng phí thẩm định dự án; D38, D39 trỏ dòng giao thông.
 
 ## Định dạng sheet `TH TMDT`
 - Khổ **A4 ngang**, tỷ lệ in 73%, vừa 1 trang theo chiều ngang. Lề trái, phải 0,5 cm, lề trên 1,3 cm, lề dưới 1,7 cm. Chân trang "Trang x/y".
@@ -81,10 +86,10 @@ Các tỷ lệ % của chi phí quản lý dự án, tư vấn, chi phí khác �
 ## Chương trình lập file tổng hợp (anh chốt 23/10/2026, chạy thử với bể tự hoại GN2026-HT-01)
 Trình tự: dự toán hạng mục trên F1 (tới chi phí xây dựng) → **file tổng hợp** → **thuyết minh** lấy số từ file tổng hợp.
 
-1. Trên F1, sheet **TMĐT**: chọn loại công trình, loại thiết kế (số bước), cấp công trình, lưu, rồi **Xuất Excel** ra tên mới. F1 tra tỷ lệ theo TT 38/2026, kèm mức tối thiểu, tối đa trong công thức.
+1. (Không bắt buộc) File F1 xuất ra sau khi chọn loại công trình, số bước, cấp ở sheet **TMĐT**: chỉ dùng để lấy tỷ lệ phí thẩm định dự án, kiểm toán, quyết toán (F1 theo TT 28/2023, NĐ 193/2026). Không khai báo thì 3 khoản này để trống, tô vàng "cần tra cứu".
 2. Chạy `python/tong_hop_du_toan.py <file khai báo>` (xem mục File khai báo dự án trong SKILL.md). Chương trình:
    - Lấy chi phí xây dựng (G, GTGT, LT) từ sheet "Tổng hợp dự toán" của file hạng mục.
-   - Lấy tỷ lệ từ sheet TMĐT của file F1 xuất ra, tìm dòng theo tên khoản.
+   - **Tỷ lệ QLDA, lập BCKTKT, thẩm tra TK, thẩm tra DT, giám sát, lập HSMT** (anh chốt 24/10/2026): công thức trỏ sang sheet `TT38` giữ lại trong file kết quả. Loại công trình theo **hạng mục có chi phí xây dựng trước thuế lớn nhất** (`linh_vuc` của hạng mục đó); tỷ lệ nội suy theo **tổng** chi phí xây dựng trước thuế cả dự án (TT38!C4 = GXD trước thuế). Thẩm định HSMT, KQLCNT 0,1%; nghiệm thu 20% giám sát; dự phòng khối lượng 5%: theo mẫu.
    - Ghi ra `du-toan_tong-hop.xlsx`, mọi số tiền đều là công thức, có một ô thuế suất VAT duy nhất (M4).
 3. Chạy `python/thuyet_minh_du_toan.py <file khai báo>` (mẫu thuyết minh, xem `mau-thuyet-minh.md`).
 

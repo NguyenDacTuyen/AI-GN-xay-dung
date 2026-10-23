@@ -22,7 +22,7 @@ sys.path.insert(0, os.path.join(GOC, "python"))
 import khai_bao
 from khai_bao import CHO_TRONG
 from chuyen_f1_ve_mau import bang_chu             # đọc số thành chữ (dùng chung)
-from tong_hop_du_toan import doc_ty_le, TEN_TH_HM  # loại công trình, cấp, số bước chọn trên F1; tên sheet tổng hợp
+from tong_hop_du_toan import loai_cong_trinh, TEN_TH_HM  # loại công trình tra TT38; tên sheet tổng hợp
 
 VANG = "VANG"   # đánh dấu đoạn chữ cần tô vàng
 CONG_TY = "Công ty cổ phần Tư vấn Đầu tư Xây dựng Gia Nguyễn"
@@ -145,7 +145,7 @@ def main():
         raise SystemExit(f"File đã có, không ghi đè: {KQ}")
     ds_hm = [(h, doc_hang_muc(h.file_du_toan)) for h in kb.hang_muc]
     v = doc_tong_hop(kb.file_tong_hop)
-    loai = doc_ty_le(kb.f1_tmdt)[0]
+    loai = loai_cong_trinh(ds_hm)[0].lower()    # theo hạng mục có chi phí xây dựng trước thuế lớn nhất
     GXD, QLDA, TV, CK, DP, TMDT, LAM = v["GXD"], v["GQLDA"], v["GTV"], v["GK"], v["GDP"], v["TMĐT"], v["LAM"]
     GDD = v.get("GDD", 0)                # chi phí di dời (nếu có khai báo)
     giao_thong = any(h.linh_vuc == "giao-thong" for h in kb.hang_muc)
@@ -229,8 +229,8 @@ def main():
                                "chi phí gián tiếp gồm " + ty_le, 0)])
     them_sau[86] = [dat_chu(P[86], [(
         "Chi phí quản lý dự án, chi phí tư vấn đầu tư xây dựng, chi phí khác tính theo tỷ lệ % trên chi phí xây dựng "
-        f"theo Thông tư 38/2026/TT-BXD ({loai}; tỷ lệ tra trên phần mềm "
-        "Dự toán F1); chi phí thẩm định hồ sơ mời thầu, kết quả lựa chọn nhà thầu theo Nghị định 214/2025/NĐ-CP; phí "
+        f"theo Thông tư 38/2026/TT-BXD ({loai}, loại công trình của hạng mục có chi phí xây dựng lớn nhất; tỷ lệ nội suy "
+        "theo tổng chi phí xây dựng trước thuế của dự án); chi phí thẩm định hồ sơ mời thầu, kết quả lựa chọn nhà thầu theo Nghị định 214/2025/NĐ-CP; phí "
         "thẩm định dự án theo Thông tư 28/2023/TT-BTC; chi phí kiểm toán độc lập, thẩm tra phê duyệt quyết toán theo "
         "Nghị định 193/2026/NĐ-CP; chi phí kiểm tra công tác nghiệm thu theo Thông tư 10/2021/TT-BXD. "
         "Chi tiết xem bảng tổng hợp dự toán đính kèm.", 0)])]
