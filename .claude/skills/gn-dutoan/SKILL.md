@@ -92,6 +92,7 @@ Ba chương trình `python/chuyen_f1_ve_mau.py` (F1 → dự toán hạng mục 
 1. Chép `python/mau-khai-bao-du-an.ini` vào thư mục kết quả của dự án (`ket-qua/<du-an>/khai-bao-du-an.ini`), điền thông tin. Ô chưa có để trống, chương trình ghi "......" và tô vàng. Mẫu đã có giải thích từng dòng.
 2. Mỗi hạng mục ghi `linh_vuc = ha-tang-ky-thuat` hoặc `linh_vuc = giao-thong`. Chương trình chuyển mẫu chọn file mẫu và tên sheet theo dòng này (bảng `MAU_LV` trong chương trình), tự dò các dòng mẫu định dạng.
 3. Chạy lần lượt 3 chương trình, mỗi lệnh kèm đường dẫn file khai báo. Ví dụ đã chạy: `ket-qua/be-tu-hoai-10m3/khai-bao-du-an.ini`.
+   **Cách anh dùng (chốt 24/10/2026):** thư mục dự án đặt ở đâu cũng được (ngoài AI_Cad_K1), chỉ cần chép vào đó: file khai báo `khai-bao-du-an.ini`, file `python/chay-du-toan.bat` và các file F1 xuất ra; **không chép chương trình, không chép mẫu**. Nhấp đúp `chay-du-toan.bat` là chạy đủ 3 bước, dừng và báo rõ khi bước nào lỗi (ví dụ file kết quả đã có). Trong `.bat`, dòng `CT=` trỏ tới `AI_Cad_K1\python`; dời thư mục AI_Cad_K1 hoặc sang máy khác thì sửa dòng này (máy khác phải chép giữ cấu trúc `python\` và `template\du-toan\`). Chữ trong `.bat` viết không dấu, xuống dòng kiểu Windows (CRLF).
 4. Dự án nhiều hạng mục: thêm mục `[hang_muc_2]`, `[hang_muc_3]`... (có thể khác lĩnh vực). File tổng hợp cộng chi phí xây dựng các hạng mục.
 5. Chương trình đọc file khai báo: `python/khai_bao.py`. Thêm thông tin mới thì thêm vào cả file đó và file mẫu `.ini`.
 
