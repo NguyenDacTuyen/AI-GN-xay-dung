@@ -53,6 +53,8 @@ Anh chốt ngày 20/10/2026. Mỗi lĩnh vực có mẫu Excel riêng, file mẫ
 
 **Lập file tổng hợp dự toán chung:** đọc `mau-tong-hop.md`.
 
+**Viết thuyết minh dự toán (Word):** đọc `mau-thuyet-minh.md` (mẫu `template/du-toan/tong-hop/thuyet-minh-du-toan.docx`).
+
 | Lĩnh vực | Ví dụ công trình, hạng mục | File mẫu | File tra cứu |
 |---|---|---|---|
 | Dân dụng, công nghiệp | Nhà xưởng, nhà văn phòng, nhà hội quán, nhà bơm | `template/du-toan/dan-dung-cong-nghiep/du-toan-dd-cn.xlsx` | `mau-dan-dung-cong-nghiep.md` |

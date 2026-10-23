@@ -75,3 +75,19 @@ Các tỷ lệ % của chi phí quản lý dự án, tư vấn, chi phí khác �
 6. Dòng kiểm tra nghiệm thu: chuỗi cách tính thiếu chữ " x " trước 1,08.
 7. Sheet trượt giá: tổng chi phí thực hiện dự án (ô E6) **gõ tay**, không liên kết với tổng GXD + GQLDA + GTV + GK của sheet chính. Chỉ số giá là của TP.HCM, cần đổi theo địa phương và năm.
 8. Phí thẩm định tính × 50% theo chính sách giảm phí có thời hạn (TT 64/2025/TT-BTC). Kiểm tra còn hiệu lực trước khi dùng.
+9. Mẫu lưu `firstSheet=2`, có dòng ẩn (GPMB, khảo sát BCNCKT...) và ô cố định khung hỏng. Khi chép chỉ giữ sheet `TH TMDT`, phải đưa `firstSheet` về 0, bỏ chiều cao, ẩn dòng cũ, bỏ ngắt trang cũ; nếu không, Excel **không mở được file** hoặc mất dòng khi in.
+10. Cột J có sẵn khung viền ở cả vùng dưới bảng. Phần chữ ký phải bỏ viền.
+
+## Chương trình lập file tổng hợp (anh chốt 23/10/2026, chạy thử với bể tự hoại GN2026-HT-01)
+Trình tự: dự toán hạng mục trên F1 (tới chi phí xây dựng) → **file tổng hợp** → **thuyết minh** lấy số từ file tổng hợp.
+
+1. Trên F1, sheet **TMĐT**: chọn loại công trình, loại thiết kế (số bước), cấp công trình, lưu, rồi **Xuất Excel** ra tên mới. F1 tra tỷ lệ theo TT 38/2026, kèm mức tối thiểu, tối đa trong công thức.
+2. Chạy `python/tong_hop_be_tu_hoai.py`. Chương trình:
+   - Lấy chi phí xây dựng (G, GTGT, LT) từ sheet "Tổng hợp dự toán" của file hạng mục.
+   - Lấy tỷ lệ từ sheet TMĐT của file F1 xuất ra, tìm dòng theo tên khoản.
+   - Ghi ra `du-toan_tong-hop.xlsx`, mọi số tiền đều là công thức, có một ô thuế suất VAT duy nhất (M4).
+3. Chạy `python/thuyet_minh_be_tu_hoai.py` (mẫu thuyết minh, xem `mau-thuyet-minh.md`).
+
+Danh mục khoản theo mẫu công ty, chỉ giữ khoản dự án có. **F1 có thêm** một số khoản mẫu công ty không có (thẩm tra, thẩm định BCKTKT, giám sát đánh giá đầu tư, lập kế hoạch tổng thể LCNT, PCCC...): **không tự đưa vào**, báo anh quyết định.
+
+Phí thẩm định dự án, kiểm toán, quyết toán trên F1 tính theo tổng mức đầu tư (F1 tính vòng lặp). File tổng hợp tạm lấy cơ sở **GXD + GQLDA + GTV (sau thuế)** để tránh công thức vòng tròn; báo anh nếu cần đổi.
