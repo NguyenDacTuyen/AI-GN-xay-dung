@@ -1,15 +1,17 @@
 # -*- coding: utf-8 -*-
 """
 Lập BẢNG TỔNG HỢP DỰ TOÁN XÂY DỰNG CÔNG TRÌNH (theo mẫu công ty template/du-toan/tong-hop/bang-du-toan-tong-hop.xlsx)
-cho dự án gồm hạng mục Bể tự hoại 10 m³ (cách A: file hạng mục dừng ở chi phí xây dựng, file này tính các chi phí còn lại).
+cho dự án một hoặc nhiều hạng mục (cách A: file hạng mục dừng ở chi phí xây dựng, file này tính các chi phí còn lại).
 
-Nguồn số liệu:
-  - Chi phí xây dựng: ket-qua/be-tu-hoai-10m3/du-toan_be-tu-hoai-10m3_TT38-HCM.xlsx (sheet "Tổng hợp dự toán").
-  - Tỷ lệ chi phí QLDA, tư vấn, chi phí khác: sheet "TMĐT" của file F1 xuất ra F1-xuat_be-tu-hoai-10m3_TMDT.xlsm
-    (F1 tra bảng TT 38/2026/TT-BXD; anh chốt 23/10/2026: công trình hạ tầng kỹ thuật, cấp IV, thiết kế 1 bước, dự phòng 5%).
-  - Danh mục khoản chi phí: theo mẫu công ty; khoản nào hạng mục không có thì bỏ.
+Nguồn số liệu (khai báo trong FILE KHAI BÁO DỰ ÁN, mẫu: python/mau-khai-bao-du-an.ini):
+  - Chi phí xây dựng: sheet "Tổng hợp dự toán" của file dự toán từng hạng mục (ký hiệu G, GTGT, LT).
+    Trước thuế, thuế: chỉ cộng hạng mục; sau thuế: cộng thêm nhà tạm (đã gồm VAT).
+  - Tỷ lệ chi phí QLDA, tư vấn, chi phí khác, dự phòng: sheet "TMĐT" của file F1 xuất ra
+    (F1 tra bảng TT 38/2026/TT-BXD theo loại công trình, số bước thiết kế, cấp công trình anh chọn trên F1).
+  - Danh mục khoản chi phí: theo mẫu công ty; khoản nào dự án không có thì bỏ.
 
-Chạy:  python python/tong_hop_be_tu_hoai.py
+Chạy:  python python/tong_hop_du_toan.py <file khai báo>
+  ví dụ: python python/tong_hop_du_toan.py ket-qua/be-tu-hoai-10m3/khai-bao-du-an.ini
 """
 import os, sys, tempfile
 from copy import copy
@@ -20,17 +22,11 @@ from openpyxl.styles import Alignment, Border, Font, PatternFill
 from openpyxl.worksheet.pagebreak import RowBreak
 
 GOC = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-THU_MUC = os.path.join(GOC, "ket-qua", "be-tu-hoai-10m3")
 MAU = os.path.join(GOC, "template", "du-toan", "tong-hop", "bang-du-toan-tong-hop.xlsx")
-DT_HM = os.path.join(THU_MUC, "du-toan_be-tu-hoai-10m3_TT38-HCM.xlsx")
-F1_TMDT = os.path.join(THU_MUC, "F1-xuat_be-tu-hoai-10m3_TMDT.xlsm")
-KQ = os.path.join(THU_MUC, "du-toan_tong-hop.xlsx")
 sys.path.insert(0, os.path.join(GOC, "python"))
+import khai_bao
+from khai_bao import CHO_TRONG, chu_hoa, dia_diem_day_du
 from chuyen_f1_ve_mau_ha_tang import bang_chu
-
-DU_AN = "DỰ ÁN: ...................................................... (ANH BỔ SUNG)"
-DIA_DIEM = "ĐỊA ĐIỂM: ......................................, THÀNH PHỐ HỒ CHÍ MINH"
-FILE_HM = os.path.basename(DT_HM)
 
 
 def mo_excel(path):
@@ -53,17 +49,18 @@ def mo_excel(path):
     return openpyxl.load_workbook(tam, data_only=True)
 
 
-def doc_hang_muc():
-    ws = mo_excel(DT_HM)["Tổng hợp dự toán"]
+def doc_hang_muc(path):
+    ws = mo_excel(path)["Tổng hợp dự toán"]
     v = {ws[f"C{r}"].value: ws[f"E{r}"].value for r in range(6, ws.max_row + 1) if ws[f"C{r}"].value}
     return v
 
 
-def doc_ty_le():
-    """Tỷ lệ (cột E) và mức tối thiểu trong công thức F1, tìm dòng theo nội dung."""
-    wsv = mo_excel(F1_TMDT)["TMĐT"]
+def doc_ty_le(path):
+    """Tỷ lệ (cột E) trong sheet TMĐT của F1, tìm dòng theo nội dung.
+    Trả về (loai, t): loai = chữ "công trình hạ tầng kỹ thuật, thiết kế 1 bước, cấp IV" theo lựa chọn trên F1."""
+    wsv = mo_excel(path)["TMĐT"]
     ten = {r: str(wsv[f"B{r}"].value or "") for r in range(10, 80)}
-    loai = f"{wsv['E5'].value} - {wsv['E6'].value} - {wsv['E7'].value}"
+    loai = ", ".join(x[0].lower() + x[1:] for x in (str(wsv[f"E{r}"].value or "") for r in (5, 6, 7)) if x)
 
     def tl(*tu):
         for r, t in ten.items():
@@ -92,12 +89,18 @@ def pct(x):
 
 
 def main():
+    kb = khai_bao.doc()
+    KQ = kb.file_tong_hop
     if os.path.exists(KQ):
         raise SystemExit(f"File đã có, không ghi đè: {KQ}")
-    hm = doc_hang_muc()
-    loai, t = doc_ty_le()
-    VAT = hm["GTGT"] / hm["G"]
-    VAT = round(VAT, 4)
+    if kb.truot_gia != "khong":
+        raise SystemExit("Dự phòng trượt giá: chương trình hiện chỉ hỗ trợ 'khong' (không tính)")
+    for path in [kb.f1_tmdt] + [h.file_du_toan for h in kb.hang_muc]:
+        if not path or not os.path.exists(path):
+            raise SystemExit(f"Chưa có file: {path or 'file F1 TMĐT chưa khai báo'}")
+    ds_hm = [(h, doc_hang_muc(h.file_du_toan)) for h in kb.hang_muc]
+    loai, t = doc_ty_le(kb.f1_tmdt)
+    VAT = kb.vat
 
     import shutil
     shutil.copy(MAU, KQ)
@@ -129,7 +132,8 @@ def main():
         for c in row:
             if not isinstance(c, MergedCell):
                 c.value = None
-    ws["A2"], ws["A3"] = DU_AN, DIA_DIEM
+    ws["A2"] = "DỰ ÁN: " + (chu_hoa(kb.ten_du_an) or CHO_TRONG * 9 + " (ANH BỔ SUNG)")
+    ws["A3"] = "ĐỊA ĐIỂM: " + chu_hoa(dia_diem_day_du(kb))
     ws["L4"], ws["M4"] = "Thuế suất GTGT:", VAT          # ô tham số VAT duy nhất
     ws["M4"].number_format = "0%"
     V = "$M$4"
@@ -141,11 +145,16 @@ def main():
         dong.append(a)
         return r0 + len(dong) - 1
 
-    rI = them("nhom", "I", "Chi phí xây dựng", "GXD", None, '="GXD1 + GXD2 (nhà tạm chỉ cộng sau thuế)"', "SUMG", None, None, None)
-    r_hm = them("muc", None, "- Chi phí xây dựng hạng mục Bể tự hoại BTCT 3 ngăn 10 m³ (hạ tầng kỹ thuật)", "GXD1", None,
-                "Theo bảng tổng hợp dự toán hạng mục (*)", hm["G"], hm["GTGT"], "GH", "Dự toán hạng mục GN2026-HT-01")
-    r_lt = them("muc", None, "- Chi phí nhà tạm để ở và điều hành thi công", "GXD2", None,
-                "Theo bảng tổng hợp dự toán hạng mục, đã gồm VAT (*)", None, None, hm["LT"], "TT 36/2026/TT-BXD")
+    n = len(ds_hm)
+    ky_hieu = " + ".join(f"GXD{i}" for i in range(1, n + 2))
+    rI = them("nhom", "I", "Chi phí xây dựng", "GXD", None, f'="{ky_hieu} (nhà tạm chỉ cộng sau thuế)"', "SUMG", None, None, None)
+    r_hms = [them("muc", None, f"- Chi phí xây dựng hạng mục {h.ten}", f"GXD{i}", None,
+                  "Theo bảng tổng hợp dự toán hạng mục (*)", v["G"], v["GTGT"], "GH",
+                  f"Dự toán hạng mục {h.ky_hieu}".strip())
+             for i, (h, v) in enumerate(ds_hm, start=1)]
+    r_lt = them("muc", None, "- Chi phí nhà tạm để ở và điều hành thi công", f"GXD{n + 1}", None,
+                "Theo bảng tổng hợp dự toán hạng mục, đã gồm VAT (*)", None, None,
+                sum(v["LT"] for _, v in ds_hm), "TT 36/2026/TT-BXD")
     B = f"$G${rI}"           # GXD trước thuế (không gồm nhà tạm) - cơ sở tính các tỷ lệ, giống F1
     rII = them("nhom", "II", "Chi phí quản lý dự án", "GQLDA", t["QLDA"], '="GXD trước thuế x "&D{r}',
                f"=ROUND({B}*D{{r}},0)", f"=ROUND(G{{r}}*{V},0)", "GH", "Bảng 1.1 TT 38/2026/TT-BXD")
@@ -188,7 +197,7 @@ def main():
                 '="(GXD + GQLDA + GTV + GK) x "&D{r}', None, None,
                 f"=ROUND((I{rI}+I{rII}+I{rIII}+I{rIV})*D{{r}},0)", "TT 38/2026/TT-BXD")
     rdp2 = them("dp", "5.2", " - Chi phí dự phòng cho yếu tố trượt giá", "GDP2", None,
-                "Không tính (thời gian thực hiện dưới 1 năm - anh xác nhận)", None, None, 0, None)
+                f"Không tính ({kb.ly_do_truot_gia or 'anh xác nhận lý do'})", None, None, 0, None)
     rT = them("tong", None, "Tổng cộng (I+II+III+IV+V)", "TMĐT", None, '="GXD + GQLDA + GTV + GK + GDP"', None, None,
               f"=I{rI}+I{rII}+I{rIII}+I{rIV}+I{rV}", None)
     rR = them("tron", None, "Tổng cộng (làm tròn)", None, None, None, None, None, f"=ROUND(I{rT},-6)", None)
@@ -207,7 +216,9 @@ def main():
         ws.merge_cells(f"E{r}:F{r}")
         if g == "SUMG":
             # trước thuế và thuế: chỉ hạng mục; sau thuế: cộng thêm nhà tạm (đã gồm VAT), giống THDT hạng mục
-            g, h, iv = f"=G{r_hm}", f"=H{r_hm}", f"=I{r_hm}+I{r_lt}"
+            g = "=" + "+".join(f"G{x}" for x in r_hms)
+            h = "=" + "+".join(f"H{x}" for x in r_hms)
+            iv = "=" + "+".join(f"I{x}" for x in r_hms + [r_lt])
         if g == "SUBG":
             ds = tv if r == rIII else ck
             g = "=" + "+".join(f"G{x}" for x in ds)
@@ -235,8 +246,9 @@ def main():
     ws[f"A{r}"] = "Bằng chữ: (xem dòng dưới, chương trình điền sau khi tính)"
     r_chu = r
     r += 1
-    ws[f"A{r}"] = (f"(*) Chi phí xây dựng lấy từ file {FILE_HM}, sheet \"Tổng hợp dự toán\" (ký hiệu G, GTGT, LT). "
-                   "Tỷ lệ chi phí lấy từ phần mềm Dự toán F1 (TT 38/2026/TT-BXD; công trình hạ tầng kỹ thuật, cấp IV, thiết kế 1 bước).")
+    file_hm = ", ".join(os.path.basename(h.file_du_toan) for h in kb.hang_muc)
+    ws[f"A{r}"] = (f"(*) Chi phí xây dựng lấy từ file {file_hm}, sheet \"Tổng hợp dự toán\" (ký hiệu G, GTGT, LT). "
+                   f"Tỷ lệ chi phí lấy từ phần mềm Dự toán F1 (TT 38/2026/TT-BXD; {loai}).")
     ws[f"A{r}"].font = Font(name="Times New Roman", size=11, italic=True)
     ws[f"A{r}"].alignment = Alignment(vertical="top")
     r += 2

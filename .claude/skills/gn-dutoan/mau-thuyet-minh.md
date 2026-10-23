@@ -19,7 +19,7 @@ File mẫu: `template/du-toan/tong-hop/thuyet-minh-du-toan.docx` (anh chép vào
 - Mục III đổi thành **GIÁ TRỊ DỰ TOÁN HẠNG MỤC**. Bảng kinh phí ghi T, GT, TL, GTGT, LT (không ghi QLDA, tư vấn, chi phí khác, dự phòng; các khoản này thuộc file tổng hợp).
 - Bỏ văn bản không áp dụng (ví dụ văn bản riêng ngành đường bộ, bộ đơn giá cũ khi dùng đơn giá trực tiếp TT38/2026). Báo anh danh sách đã bỏ.
 - Văn bản quy hoạch, chủ trương, hợp đồng, khảo sát là **riêng của từng dự án**: không chép của dự án cũ; để "......" và tô vàng.
-- Số liệu lấy thẳng từ file dự toán (mẫu chương trình: `python/thuyet_minh_be_tu_hoai.py`).
+- Số liệu lấy thẳng từ file dự toán (chương trình: `python/thuyet_minh_du_toan.py <file khai báo>`).
 
 ## Khi lập cho cả dự án (cách A, anh chốt 23/10/2026)
 - Số liệu lấy từ **file tổng hợp** `du-toan_tong-hop.xlsx` (xem `mau-tong-hop.md`), không lấy từ file hạng mục. Chương trình kiểm tra GXD file tổng hợp khớp file hạng mục rồi mới viết.

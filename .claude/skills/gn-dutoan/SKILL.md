@@ -39,7 +39,7 @@ Anh lập dự toán trên **phần mềm F1** (cài ở `C:\Program Files (x86)
    - **Vật tư lấy tại mỏ (đá, cát):** bấm Cước ô tô; nhập cự ly, chọn xe tự đổ 10 tấn, nhập giá ca máy xe (lấy ở sheet Máy thi công); dòng nào chưa có loại hàng thì chọn loại hàng (ví dụ "đá dăm (10m3)") và quy đổi 10. Nhập bằng phím **Tab** (phím Enter làm bảng cuộn, dễ nhập nhầm dòng). Cuối cùng bấm Áp cước ô tô.
 7. **Tính:** sheet Công trình, tích "Tính đơn giá trực tiếp cho VL, NC, Máy", chọn Yes, rồi "Có, thay đổi mẫu" (THDT theo TT 36/2026).
 8. **Giá vật tư ngoài công bố** (ví dụ côn, cút nhựa) do anh nhập; có thể chuột phải chọn "Lưu giá vật liệu vào cơ sở dữ liệu" để lần sau F1 tự lấy.
-9. **Xuất Excel** từ F1 ra tên mới. Màn hình F1 có thể **chưa cập nhật** tổng vật liệu sau khi áp cước; con số đúng là số trong file xuất sau khi Excel tính lại. Sau đó chạy `python/chuyen_f1_ve_mau_ha_tang.py` (sửa đường dẫn file F1 xuất) để ra file theo mẫu công ty.
+9. **Xuất Excel** từ F1 ra tên mới. Màn hình F1 có thể **chưa cập nhật** tổng vật liệu sau khi áp cước; con số đúng là số trong file xuất sau khi Excel tính lại. Sau đó chạy `python/chuyen_f1_ve_mau_ha_tang.py <file khai báo>` để ra file theo mẫu công ty (xem mục File khai báo dự án).
 
 Không ghi trực tiếp vào file `.ctr` của F1 (định dạng riêng). Hộp thoại cập nhật phần mềm F1 do chương trình khác mở, phải nhờ anh bấm.
 
@@ -53,7 +53,16 @@ Anh chốt ngày 20/10/2026. Mỗi lĩnh vực có mẫu Excel riêng, file mẫ
 
 **Lập file tổng hợp dự toán chung:** đọc `mau-tong-hop.md`.
 
-**Viết thuyết minh dự toán (Word):** đọc `mau-thuyet-minh.md` (mẫu `template/du-toan/tong-hop/thuyet-minh-du-toan.docx`).
+**Viết thuyết minh dự toán (Word):** đọc `mau-thuyet-minh.md`
+
+## File khai báo dự án (anh chốt 23/10/2026)
+Ba chương trình `python/chuyen_f1_ve_mau_ha_tang.py` (F1 → mẫu hạng mục), `python/tong_hop_du_toan.py` (tổng hợp), `python/thuyet_minh_du_toan.py` (thuyết minh) **không sửa code cho từng dự án**. Mọi thông tin riêng của dự án (tên dự án, địa điểm, chủ đầu tư, các hạng mục, ký hiệu bản vẽ, tên file, cự ly vận chuyển, số thông báo giá, văn bản riêng, người ký) ghi trong **một file khai báo `.ini`**:
+1. Chép `python/mau-khai-bao-du-an.ini` vào thư mục kết quả của dự án (`ket-qua/<du-an>/khai-bao-du-an.ini`), điền thông tin. Ô chưa có để trống, chương trình ghi "......" và tô vàng. Mẫu đã có giải thích từng dòng.
+2. Chạy lần lượt 3 chương trình, mỗi lệnh kèm đường dẫn file khai báo. Ví dụ đã chạy: `ket-qua/be-tu-hoai-10m3/khai-bao-du-an.ini`.
+3. Dự án nhiều hạng mục: thêm mục `[hang_muc_2]`, `[hang_muc_3]`... File tổng hợp cộng chi phí xây dựng các hạng mục.
+4. Chương trình đọc file khai báo: `python/khai_bao.py`. Thêm thông tin mới thì thêm vào cả file đó và file mẫu `.ini`.
+
+Giới hạn hiện tại: chương trình chuyển mẫu chỉ có mẫu **hạ tầng kỹ thuật** (theo bản mẫu `du-toan-ha-tang.xlsx` anh chốt 23/10/2026, tên sheet không dấu). Anh sửa mẫu lần nữa thì phải sửa chương trình theo; chương trình báo lỗi rõ khi không thấy sheet. Dự phòng trượt giá chỉ hỗ trợ "không tính". Chi phí bồi thường chưa hỗ trợ. (mẫu `template/du-toan/tong-hop/thuyet-minh-du-toan.docx`).
 
 | Lĩnh vực | Ví dụ công trình, hạng mục | File mẫu | File tra cứu |
 |---|---|---|---|

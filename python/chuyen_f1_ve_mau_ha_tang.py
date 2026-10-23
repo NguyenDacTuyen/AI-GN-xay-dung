@@ -6,12 +6,17 @@ Việc chương trình làm:
   1. Mở file F1 xuất ra (.xlsm) bằng Excel ở chế độ CHỈ ĐỌC, tắt macro, lưu một bản .xlsx tạm để đọc.
   2. Chép file mẫu template/du-toan/ha-tang-ky-thuat/du-toan-ha-tang.xlsx sang thư mục kết quả (không sửa file mẫu).
   3. Đổ số liệu F1 vào các sheet theo đúng bố cục mẫu:
-       Công trình (chi tiết khối lượng, có dòng diễn giải) - Hao phí vật tư - Vật liệu - Nhân công - Máy thi công
+       cong trinh (chi tiết khối lượng, có dòng diễn giải) - Phan tich vat tu - vat tu - nhan cong - May Thi cong
        - Tổng hợp dự toán - Bìa dự toán.
-     Giữ chuỗi công thức: Công trình -> Hao phí vật tư -> Vật liệu / Nhân công / Máy thi công -> Tổng hợp dự toán.
+     Giữ chuỗi công thức: cong trinh -> Phan tich vat tu -> vat tu / nhan cong / May Thi cong -> Tổng hợp dự toán.
+     Tên sheet theo mẫu anh chốt 23/10/2026 (không dấu).
   4. Không ghi đè file kết quả đã có.
 
-Chạy:  python python/chuyen_f1_ve_mau_ha_tang.py
+Tên dự án, tên hạng mục, đường dẫn file... lấy từ FILE KHAI BÁO DỰ ÁN (mẫu: python/mau-khai-bao-du-an.ini).
+
+Chạy:  python python/chuyen_f1_ve_mau_ha_tang.py <file khai báo> [số thứ tự hạng mục]
+  - Không ghi số hạng mục: lập cho mọi hạng mục có file F1 xuất và chưa có file dự toán.
+  - Ví dụ: python python/chuyen_f1_ve_mau_ha_tang.py ket-qua/be-tu-hoai-10m3/khai-bao-du-an.ini 1
 """
 import math, os, re, shutil, sys, tempfile
 from copy import copy
@@ -21,19 +26,19 @@ from openpyxl.cell.cell import MergedCell
 from openpyxl.styles import Alignment, Font
 
 GOC = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-THU_MUC = os.path.join(GOC, "ket-qua", "be-tu-hoai-10m3")
-F1_XUAT = os.path.join(THU_MUC, "F1-xuat_be-tu-hoai-10m3.xlsm")
 MAU = os.path.join(GOC, "template", "du-toan", "ha-tang-ky-thuat", "du-toan-ha-tang.xlsx")
-KQ = os.path.join(THU_MUC, "du-toan_be-tu-hoai-10m3_TT38-HCM.xlsx")
+sys.path.insert(0, os.path.join(GOC, "python"))
+import khai_bao
+from khai_bao import CHO_TRONG, chu_hoa, dia_diem_day_du
 
-CONG_TRINH = "CÔNG TRÌNH: ................................................ (ANH BỔ SUNG TÊN CÔNG TRÌNH)"
-HANG_MUC = "HẠNG MỤC: BỂ TỰ HOẠI BTCT 3 NGĂN, DUNG TÍCH HỮU ÍCH 10 m³ (BẢN VẼ GN2026-HT-01)"
-DIA_DIEM = "ĐỊA ĐIỂM: ................................................, THÀNH PHỐ HỒ CHÍ MINH"
 TNR = "Times New Roman"
+# Tên sheet trong file kết quả, theo mẫu du-toan-ha-tang.xlsx (bản anh sửa, chốt 23/10/2026)
+CT, HP, VL, NC, MAY = "cong trinh", "Phan tich vat tu", "vat tu", "nhan cong", "May Thi cong"
+TEN_MAU = {"Vật liệu": VL, "Nhân công": NC, "Máy thi công": MAY}     # tên sheet F1 -> tên sheet mẫu
 
 
 # ------------------------------------------------------------------ đọc file F1
-def doc_f1():
+def doc_f1(f1_xuat):
     """Mở file F1 bằng Excel (chỉ đọc, tắt macro), tính lại, lưu bản .xlsx tạm. Trả về (wb công thức, wb giá trị)."""
     import win32com.client
     tam = os.path.join(tempfile.gettempdir(), "f1_xuat_tam.xlsx")
@@ -44,7 +49,7 @@ def doc_f1():
     xl.DisplayAlerts = False
     xl.AutomationSecurity = 3          # tắt macro
     try:
-        wb = xl.Workbooks.Open(F1_XUAT, 0, True)
+        wb = xl.Workbooks.Open(f1_xuat, 0, True)
         xl.CalculateFull()
         wb.SaveAs(tam, 51)
         wb.Close(False)
@@ -60,17 +65,17 @@ HP_COT = {"K": "I", "L": "I", "M": "I", "G": "G", "H": "G", "I": "G"}   # cột 
 
 def doi_ref(f):
     """Đổi tham chiếu sang sheet của mẫu: Công trình lùi 1 dòng (mẫu có thêm dòng địa điểm),
-    'Hao phí VT' -> 'Hao phí vật tư' (gộp 3 cột VL/NC/M thành 1 cột)."""
+    'Hao phí VT' -> 'Phan tich vat tu' (gộp 3 cột VL/NC/M thành 1 cột), các sheet khác đổi tên theo mẫu."""
     if not isinstance(f, str) or not f.startswith("="):
         return f
 
     def thay(m):
         sh, col, row = m.group(1), m.group(2), int(m.group(3))
         if sh == "Công trình":
-            return f"'Công trình'!{col}{row + 1}"
+            return f"'{CT}'!{col}{row + 1}"
         if sh == "Hao phí VT":
-            return f"'Hao phí vật tư'!{HP_COT.get(col, col)}{row}"
-        return f"'{sh}'!{col}{row}"
+            return f"'{HP}'!{HP_COT.get(col, col)}{row}"
+        return f"'{TEN_MAU[sh]}'!{col}{row}"
     return REF.sub(thay, f)
 
 
@@ -142,13 +147,19 @@ def bang_chu(so):
 
 
 # ------------------------------------------------------------------ chương trình chính
-def main():
-    if os.path.exists(KQ):
-        raise SystemExit(f"File đã có, không ghi đè: {KQ}")
-    f1, f1v = doc_f1()
+def lap(kb, hm):
+    """Lập file dự toán theo mẫu công ty cho 1 hạng mục (hm) của dự án (kb)."""
+    KQ = hm.file_du_toan
+    CONG_TRINH = "CÔNG TRÌNH: " + (chu_hoa(kb.ten_du_an) or CHO_TRONG * 8 + " (ANH BỔ SUNG TÊN CÔNG TRÌNH)")
+    HANG_MUC = "HẠNG MỤC: " + chu_hoa(hm.ten) + (f" (BẢN VẼ {hm.ky_hieu})" if hm.ky_hieu else "")
+    DIA_DIEM = "ĐỊA ĐIỂM: " + chu_hoa(dia_diem_day_du(kb))
+    f1, f1v = doc_f1(hm.file_f1_xuat)
     shutil.copy(MAU, KQ)
     wb = openpyxl.load_workbook(KQ)
-    giu = ("Công trình", "Hao phí vật tư", "Vật liệu", "Tổng hợp du toan (2)", "Bìa du toan (2)")
+    giu = (CT, HP, VL, "Tổng hợp du toan (2)", "Bìa du toan (2)")
+    for t in giu:
+        if t not in wb.sheetnames:
+            raise SystemExit(f"Mẫu {MAU} không có sheet '{t}' (mẫu đã đổi?), cần sửa chương trình")
     for ws in list(wb.worksheets):
         if ws.title not in giu:
             wb.remove(ws)
@@ -158,7 +169,7 @@ def main():
         ws.defined_names.clear()
 
     # ============================== 1. CÔNG TRÌNH (chi tiết khối lượng)
-    ws, src, srv = wb["Công trình"], f1["Công trình"], f1v["Công trình"]
+    ws, src, srv = wb[CT], f1["Công trình"], f1v["Công trình"]
     cols = [openpyxl.utils.get_column_letter(i) for i in range(1, 26)]
     st = {k: {c: copy(ws[f"{c}{r}"]._style) for c in cols} for k, r in (("cv", 11), ("dg", 12), ("tong", 248))}
     st_hdr4 = {c: copy(ws[f"{c}4"]._style) for c in cols}
@@ -182,7 +193,7 @@ def main():
                 ws[f"{c}{n}"] = src[f"{c}{r}"].value
             for a, b in (("Q", "M"), ("R", "N"), ("S", "O"), ("T", "P")):
                 ws[f"{a}{n}"] = f"=ROUND(L{n}*{b}{n},0)"
-            ws[f"B{n}"] = "GN2026-HT-01"
+            ws[f"B{n}"] = hm.ky_hieu
             dong_cv.append(n)
         elif src[f"D{r}"].value is not None:                     # dòng diễn giải
             for c in cols:
@@ -220,15 +231,14 @@ def main():
         ws[o] = "(Họ tên, chứng chỉ hành nghề định giá XD - anh bổ sung)"
         ws[o].font = Font(name=TNR, size=11, italic=True)
         ws[o].alignment = Alignment(horizontal="center")
-    ws.print_area = f"A1:W{k + 4}"
-    for n in dong_cv:                                    # khối lượng hiện đủ 4 số lẻ như F1
-        ws[f"L{n}"].number_format = "#,##0.0000"
+    ws.print_area = f"A1:T{k + 4}"                      # mẫu in tới cột T
+    ws.row_dimensions[6].height = 32                     # tiêu đề "Mã hiệu công tác", "Khối lượng" không bị cắt
     ws.row_dimensions[7].height = 32                     # tiêu đề "Nhân công" không bị cắt
     ws.sheet_properties.pageSetUpPr.fitToPage = True
     ws.page_setup.fitToWidth, ws.page_setup.fitToHeight = 1, 0
 
     # ============================== 2. HAO PHÍ VẬT TƯ (gộp VL/NC/M thành 1 cột "Vật tư")
-    ws, src = wb["Hao phí vật tư"], f1["Hao phí VT"]
+    ws, src = wb[HP], f1["Hao phí VT"]
     hcols = list("ABCDEFGHI")
     sth = {k: {c: copy(ws[f"{c}{r}"]._style) for c in hcols} for k, r in (("cv", 10), ("nhom", 11), ("ct", 12))}
     xoa_tu(ws, 7)
@@ -256,11 +266,11 @@ def main():
         for c in hcols:
             ws[f"{c}{r}"]._style = copy(sth[kieu][c])
     ws["A1"] = "BẢNG PHÂN TÍCH VẬT TƯ"
-    ws["A2"], ws["A3"] = "='Công trình'!A3", "='Công trình'!A4"
+    ws["A2"], ws["A3"] = f"='{CT}'!A3", f"='{CT}'!A4"
     ws.print_area = f"A1:I{src.max_row}"
 
     # ============================== 3. VẬT LIỆU (cùng bố cục cột với F1)
-    ws, src, srv = wb["Vật liệu"], f1["Vật liệu"], f1v["Vật liệu"]
+    ws, src, srv = wb[VL], f1["Vật liệu"], f1v["Vật liệu"]
     vcols = [openpyxl.utils.get_column_letter(i) for i in range(1, 31)]
     stv = {k: {c: copy(ws[f"{c}{r}"]._style) for c in vcols}
            for k, r in (("chinh", 8), ("con", 9), ("t1", 210), ("t2", 211), ("t3", 212))}
@@ -283,11 +293,13 @@ def main():
         # ghi rõ cước vận chuyển vào cột nguồn mua
         cuoc = srv[f"P{r}"].value
         if kieu == "chinh" and cuoc:
+            cl = f", cự ly {kb.cu_ly_km} km" if kb.cu_ly_km else ""
             ws[f"H{r}"] = ((src[f"H{r}"].value or "Giá tại nguồn") +
-                           f"; cộng cước ô tô tự đổ 10T, cự ly 30 km: {cuoc:,.0f} đ/{src[f'F{r}'].value}"
+                           f"; cộng cước ô tô tự đổ 10T{cl}: {cuoc:,.0f} đ/{src[f'F{r}'].value}"
                            .replace(",", "."))
         ws.row_dimensions[r].height = max(src.row_dimensions[r].height or 15, 15)
-    ws["A2"] = "(Theo thông báo giá vật liệu xây dựng tháng 8 năm 2026 của Sở Xây dựng TP. Hồ Chí Minh; giá cao nhất trong thông báo)"
+    ws["A2"] = (f"(Theo thông báo giá vật liệu xây dựng {kb.thoi_diem_gia_vl or CHO_TRONG} của Sở Xây dựng "
+                f"{kb.tinh_thanh}; giá cao nhất trong thông báo)")
     ws.print_area = f"A1:AD{r_tong}"
     ws.sheet_properties.pageSetUpPr.fitToPage = True
     ws.page_setup.fitToWidth, ws.page_setup.fitToHeight = 1, 0
@@ -295,8 +307,8 @@ def main():
     # ============================== 4. NHÂN CÔNG, MÁY THI CÔNG (chép từ F1, giữ định dạng F1)
     for ten in ("Nhân công", "Máy thi công"):
         s = f1[ten]
-        ws = wb.create_sheet(ten, index=wb.sheetnames.index("Vật liệu") + 1 if ten == "Nhân công"
-                             else wb.sheetnames.index("Nhân công") + 1)
+        ws = wb.create_sheet(TEN_MAU[ten], index=wb.sheetnames.index(VL) + 1 if ten == "Nhân công"
+                             else wb.sheetnames.index(NC) + 1)
         for row in s.iter_rows():
             for c in row:
                 d = ws.cell(row=c.row, column=c.column, value=doi_ref(c.value))
@@ -334,16 +346,16 @@ def main():
     for c in t5:
         ws[f"{c}4"]._style = copy(ws[f"{c}3"]._style)
     ws.merge_cells("A4:E4")
-    ws["A2"], ws["A3"], ws["A4"] = "='Công trình'!A3", "='Công trình'!A4", "='Công trình'!A5"
+    ws["A2"], ws["A3"], ws["A4"] = f"='{CT}'!A3", f"='{CT}'!A4", f"='{CT}'!A5"
 
     def pct(x):
         return f"{x * 100:g}".replace(".", ",") + "%"
 
     dong = [  # (stt, nội dung, ký hiệu, cách tính (công thức chữ), thành tiền, kiểu)
         ("I", "CHI PHÍ TRỰC TIẾP", None, None, None, "nhom"),
-        (1, "Chi phí vật liệu", "VL", '"Theo bảng tổng hợp vật liệu"', "=ROUND('Vật liệu'!AD{v},0)".format(v=r_tong), "muc"),
-        (2, "Chi phí nhân công", "NC", '"Theo bảng tổng hợp nhân công"', f"=ROUND('Nhân công'!Q{q_nc},0)", "muc"),
-        (3, "Chi phí máy thi công", "M", '"Theo bảng tổng hợp máy thi công"', f"=ROUND('Máy thi công'!Q{q_m},0)", "muc"),
+        (1, "Chi phí vật liệu", "VL", '"Theo bảng tổng hợp vật liệu"', f"=ROUND('{VL}'!AD{r_tong},0)", "muc"),
+        (2, "Chi phí nhân công", "NC", '"Theo bảng tổng hợp nhân công"', f"=ROUND('{NC}'!Q{q_nc},0)", "muc"),
+        (3, "Chi phí máy thi công", "M", '"Theo bảng tổng hợp máy thi công"', f"=ROUND('{MAY}'!Q{q_m},0)", "muc"),
         ("", "Chi phí trực tiếp", "T", '=C{a}&" + "&C{b}&" + "&C{c}', "=E{a}+E{b}+E{c}", "cong"),
         ("II", "CHI PHÍ GIÁN TIẾP", None, None, None, "nhom"),
         (1, "Chi phí chung", "C", f'=C{{t}}&" x {pct(C)}"', f"=ROUND(E{{t}}*{C},0)", "muc2"),
@@ -399,7 +411,7 @@ def main():
     ws[f"A{r}"] = "Bằng chữ: " + bang_chu(lam)
     r += 2
     ws.merge_cells(f"C{r}:E{r}")
-    ws[f"C{r}"] = "TP. Hồ Chí Minh, ngày ...... tháng ...... năm 2026"
+    ws[f"C{r}"] = f"TP. Hồ Chí Minh, ngày ...... tháng ...... năm {kb.nam}"
     ws[f"C{r}"]._style = copy(stt_["ngay"]["C"])
     noi = {27: "ĐƠN VỊ LẬP", 28: "CÔNG TY CỔ PHẦN TƯ VẤN ĐẦU TƯ XÂY DỰNG", 29: "GIA NGUYỄN", 30: "GIÁM ĐỐC",
            34: "(Họ tên Giám đốc - anh bổ sung)", 35: "NGƯỜI LẬP",
@@ -417,7 +429,7 @@ def main():
     # ============================== 6. BÌA
     bia = wb["Bìa du toan (2)"]
     bia.title = "Bìa dự toán"
-    bia["A3"] = "(CHỦ ĐẦU TƯ / CƠ QUAN CHỦ QUẢN - anh bổ sung)"
+    bia["A3"] = chu_hoa(kb.chu_dau_tu) or "(CHỦ ĐẦU TƯ / CƠ QUAN CHỦ QUẢN - anh bổ sung)"
     bia["D15"] = CONG_TRINH.split(": ", 1)[1]
     bia["D16"] = DIA_DIEM.split(": ", 1)[1]
     for m in list(bia.merged_cells.ranges):
@@ -428,22 +440,40 @@ def main():
     bia.merge_cells("D17:O17")
     bia["D17"] = HANG_MUC.split(": ", 1)[1]
     bia["D17"]._style = copy(bia["D16"]._style)
-    bia["A29"] = "TP. Hồ Chí Minh, năm 2026"
+    bia["A29"] = f"TP. Hồ Chí Minh, năm {kb.nam}"
     for c in ("R1", "R2"):
         bia[c] = None
     # mẫu gốc không đặt vùng in nên bìa tràn 3 trang: in vừa 1 trang A4 ngang
     bia.print_area = "A1:O31"
+    bia.row_dimensions[11].height = 70      # tiêu đề cỡ 26 xuống 2 dòng, mẫu để 36,75 nên bị cắt chữ
     bia.sheet_properties.pageSetUpPr.fitToPage = True
     bia.page_setup.fitToWidth, bia.page_setup.fitToHeight = 1, 1
 
-    # Thứ tự sheet: Bìa, Tổng hợp, Công trình, Hao phí, Vật liệu, Nhân công, Máy
-    thu_tu = ["Bìa dự toán", "Tổng hợp dự toán", "Công trình", "Hao phí vật tư", "Vật liệu", "Nhân công", "Máy thi công"]
+    # Thứ tự sheet: Bìa, Tổng hợp, chi tiết khối lượng, phân tích vật tư, vật tư, nhân công, máy
+    thu_tu = ["Bìa dự toán", "Tổng hợp dự toán", CT, HP, VL, NC, MAY]
     wb._sheets = [wb[t] for t in thu_tu]
     wb.active = 1
     wb.save(KQ)
     print("Đã lập:", KQ)
     print(f"VL={VLv:,} NC={NCv:,} M={Mv:,} T={T:,} Gxd={Gxd:,} LT={LTv:,} Làm tròn={lam:,}")
     print(bang_chu(lam))
+
+
+def main():
+    kb = khai_bao.doc()
+    chon = int(sys.argv[2]) if len(sys.argv) > 2 else None
+    for i, hm in enumerate(kb.hang_muc, start=1):
+        if chon and i != chon:
+            continue
+        ten = f"[{hm.muc}] {hm.ten}"
+        if hm.linh_vuc != "ha-tang-ky-thuat":
+            print(f"{ten}: chương trình chưa có mẫu lĩnh vực '{hm.linh_vuc}', bỏ qua")
+        elif not hm.file_f1_xuat or not os.path.exists(hm.file_f1_xuat):
+            print(f"{ten}: chưa có file F1 xuất ({hm.file_f1_xuat or 'chưa khai báo'}), bỏ qua")
+        elif os.path.exists(hm.file_du_toan):
+            print(f"{ten}: file dự toán đã có, không ghi đè ({hm.file_du_toan})")
+        else:
+            lap(kb, hm)
 
 
 if __name__ == "__main__":

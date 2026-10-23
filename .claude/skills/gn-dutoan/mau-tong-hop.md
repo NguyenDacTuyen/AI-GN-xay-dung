@@ -82,11 +82,11 @@ Các tỷ lệ % của chi phí quản lý dự án, tư vấn, chi phí khác �
 Trình tự: dự toán hạng mục trên F1 (tới chi phí xây dựng) → **file tổng hợp** → **thuyết minh** lấy số từ file tổng hợp.
 
 1. Trên F1, sheet **TMĐT**: chọn loại công trình, loại thiết kế (số bước), cấp công trình, lưu, rồi **Xuất Excel** ra tên mới. F1 tra tỷ lệ theo TT 38/2026, kèm mức tối thiểu, tối đa trong công thức.
-2. Chạy `python/tong_hop_be_tu_hoai.py`. Chương trình:
+2. Chạy `python/tong_hop_du_toan.py <file khai báo>` (xem mục File khai báo dự án trong SKILL.md). Chương trình:
    - Lấy chi phí xây dựng (G, GTGT, LT) từ sheet "Tổng hợp dự toán" của file hạng mục.
    - Lấy tỷ lệ từ sheet TMĐT của file F1 xuất ra, tìm dòng theo tên khoản.
    - Ghi ra `du-toan_tong-hop.xlsx`, mọi số tiền đều là công thức, có một ô thuế suất VAT duy nhất (M4).
-3. Chạy `python/thuyet_minh_be_tu_hoai.py` (mẫu thuyết minh, xem `mau-thuyet-minh.md`).
+3. Chạy `python/thuyet_minh_du_toan.py <file khai báo>` (mẫu thuyết minh, xem `mau-thuyet-minh.md`).
 
 Danh mục khoản theo mẫu công ty, chỉ giữ khoản dự án có. **F1 có thêm** một số khoản mẫu công ty không có (thẩm tra, thẩm định BCKTKT, giám sát đánh giá đầu tư, lập kế hoạch tổng thể LCNT, PCCC...): **không tự đưa vào**, báo anh quyết định.
 

@@ -1,19 +1,22 @@
 # Mẫu dự toán hạ tầng kỹ thuật (tài liệu tra cứu của skill gn-dutoan)
 
-File mẫu: `template/du-toan/ha-tang-ky-thuat/du-toan-ha-tang.xlsx` (đọc ngày 20/10/2026). Mẫu lấy từ dự toán cải tạo, nâng cấp hệ thống thoát nước kho nguyên liệu (mương BTCT, cống D400, hố ga).
+File mẫu: `template/du-toan/ha-tang-ky-thuat/du-toan-ha-tang.xlsx` (đọc ngày 20/10/2026; anh sửa, chốt bản chính thức ngày 23/10/2026, đọc lại cùng ngày). Mẫu lấy từ dự toán cải tạo, nâng cấp hệ thống thoát nước kho nguyên liệu (mương BTCT, cống D400, hố ga).
 
 **Đọc `mau-hang-muc-chung.md` trước.** File này chỉ ghi phần riêng.
 
-## Các sheet đang hiện (theo thứ tự)
+## Các sheet đang hiện (theo thứ tự, bản 23/10/2026)
 | Sheet | Nội dung |
 |---|---|
-| `Công trình` | Bảng chi tiết khối lượng công tác xây dựng (tiêu đề cột ở dòng 6–7, dữ liệu từ dòng 8) |
-| `Hao phí vật tư` | Bảng phân tích vật tư |
-| `Vật liệu` | Bảng tổng hợp vật liệu, dòng 2 ghi "(Theo thông báo giá vật liệu xây dựng tháng ... năm ... của Sở Xây dựng ...)" |
-| `HO GA CONG D400 _OK` | **Bảng tính khối lượng đào đất, đổ bê tông hố ga** theo cao độ |
+| `cong trinh` | Bảng chi tiết khối lượng công tác xây dựng (tiêu đề cột ở dòng 6–7, dữ liệu từ dòng 8). Vùng in A–T |
+| `Phan tich vat tu` | Bảng phân tích vật tư |
+| `vat tu` | Bảng tổng hợp vật liệu, dòng 2 ghi "(Theo thông báo giá vật liệu xây dựng tháng ... năm ... của Sở Xây dựng ...)" |
+| `He so Thiet ke` | Thực chất là **bảng tính khối lượng đào đất, đổ bê tông hố ga** theo cao độ của dự án cũ (trước tên `HO GA CONG D400 _OK`), có liên kết file ngoài `[154]`. Không chép sang file dự toán mới |
 | `CONG D400_ok` | **Bảng tính khối lượng đào, lấp đất phui cống** theo cao độ |
 | `Tổng hợp du toan (2)` | Bảng tổng hợp kinh phí hạng mục |
 | `Bìa du toan (2)` | Trang bìa dự toán |
+
+Thay đổi so với bản 20/10/2026 (anh sửa): tên sheet không dấu (`Công trình` → `cong trinh`, `Hao phí vật tư` → `Phan tich vat tu`, `Vật liệu` → `vat tu`; sheet ẩn đơn giá nhân công, máy đổi tên `nhan cong`, `May Thi cong`), độ rộng một số cột, canh giữa theo chiều đứng, khối lượng định dạng `0.000` canh giữa. Bố cục dòng, cột, cột ẩn, thiết lập in **không đổi**.
+Chương trình `python/chuyen_f1_ve_mau_ha_tang.py` đã sửa theo bản này: file kết quả có các sheet `Bìa dự toán`, `Tổng hợp dự toán`, `cong trinh`, `Phan tich vat tu`, `vat tu`, `nhan cong`, `May Thi cong`.
 
 ## Riêng của mẫu này
 - Sheet chi tiết khối lượng chỉ có 2 dòng đầu: CÔNG TRÌNH, ĐỊA ĐIỂM (không có dòng HẠNG MỤC).
@@ -44,3 +47,5 @@ File mẫu: `template/du-toan/ha-tang-ky-thuat/du-toan-ha-tang.xlsx` (đọc ng�
 3. Trang bìa ghi cơ quan chủ quản là "SỞ KẾ HOẠCH VÀ ĐẦU TƯ THÀNH PHỐ HỒ CHÍ MINH" và năm cũ. Đổi theo chủ đầu tư, cơ quan quản lý của dự án mới (từ năm 2025 các sở đã sắp xếp lại, cần kiểm tra tên cơ quan).
 4. Tên sheet tổng hợp và bìa có đuôi "(2)" (bản sao của sheet khác). File mới nên đặt tên gọn: `Tổng hợp dự toán`, `Bìa dự toán`.
 5. Thông báo giá vật liệu trong mẫu là của tháng 04/2023. Cập nhật theo thời điểm lập.
+6. Sheet `cong trinh`: tiêu đề "Mã hiệu công tác", "Khối lượng" ở dòng 6 cao 21,95 nên bị cắt chữ khi in. File mới cho dòng 6 và 7 cao 32.
+7. Bìa: tiêu đề cỡ 26 xuống 2 dòng nhưng dòng 11 chỉ cao 36,75, chữ bị cắt. File mới cho dòng 11 cao 70.
