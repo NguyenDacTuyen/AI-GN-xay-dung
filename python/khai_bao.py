@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Đọc FILE KHAI BÁO DỰ ÁN (.ini) dùng chung cho 3 chương trình:
-  - python/chuyen_f1_ve_mau_ha_tang.py  (file F1 xuất ra -> dự toán hạng mục theo mẫu công ty)
+  - python/chuyen_f1_ve_mau.py  (file F1 xuất ra -> dự toán hạng mục theo mẫu công ty)
   - python/tong_hop_du_toan.py          (các hạng mục -> bảng tổng hợp dự toán)
   - python/thuyet_minh_du_toan.py       (bảng tổng hợp -> thuyết minh dự toán Word)
 
@@ -67,6 +67,15 @@ def doc(path=None):
     except ValueError:
         raise SystemExit("File khai báo: thuế suất GTGT phải là số, ví dụ: thue_gtgt = 8")
 
+    def tien(muc, ten):
+        """Số tiền (đồng), cho phép ghi 50.000.000 hoặc 50000000; để trống = 0 (không tính)."""
+        x = g(muc, ten).replace(".", "").replace(",", "").replace(" ", "")
+        if not x:
+            return 0
+        if not x.isdigit():
+            raise SystemExit(f"File khai báo, mục [{muc}], dòng '{ten}': phải là số tiền, ví dụ 50.000.000")
+        return int(x)
+
     return SimpleNamespace(
         file=path,
         thu_muc=thu_muc,
@@ -88,6 +97,9 @@ def doc(path=None):
         vat=vat,
         truot_gia=g("tong_hop", "du_phong_truot_gia", "khong").lower(),
         ly_do_truot_gia=g("tong_hop", "ly_do_khong_tinh_truot_gia"),
+        dam_bao_giao_thong=tien("tong_hop", "dam_bao_giao_thong"),
+        di_doi=tien("tong_hop", "di_doi_ha_tang"),
+        ten_di_doi=g("tong_hop", "ten_di_doi", "Chi phí di dời hạ tầng kỹ thuật"),
         file_thuyet_minh=f(g("thuyet_minh", "file_ket_qua", "thuyet-minh-du-toan_tong-hop.docx")),
         so_van_ban=g("thuyet_minh", "so_van_ban"),
         van_ban_quy_hoach=g("thuyet_minh", "van_ban_quy_hoach"),

@@ -14,6 +14,11 @@ File mẫu: `template/du-toan/giao-thong/du-toan-giao-thong.xlsx` (đọc ngày 
 | `Tong hop du toan` | Bảng tổng hợp kinh phí hạng mục |
 | `Dự thầu` | **Bảng giá dự thầu** |
 
+## Bản anh sửa, chốt 23/10/2026
+- Chỉ còn hiện 4 sheet: `Công trình`, `Hao phí vật tư`, `Vật liệu`, `Tong hop du toan`. Các sheet `Bìa du toan`, `Dự thầu` đã **ẩn** (không đọc).
+- Sheet `Tong hop du toan` cùng bố cục với mẫu hạ tầng (dòng 5–36). Dòng tổng hạng mục "THM" ở dòng 163 sheet `Công trình`; dòng công tác đầu tiên ở dòng 10, diễn giải dòng 11 (mẫu hạ tầng lệch 1 dòng); tổng vật liệu ở dòng 134. Vùng in `Công trình` tới cột W.
+- Chương trình `python/chuyen_f1_ve_mau.py` dùng mẫu này khi hạng mục khai báo `linh_vuc = giao-thong`. File kết quả có các sheet `Tong hop du toan`, `Công trình`, `Hao phí vật tư`, `Vật liệu`, `Nhân công`, `Máy thi công`.
+
 ## Riêng của mẫu này
 - Sheet chi tiết khối lượng có 2 dòng đầu: CÔNG TRÌNH, ĐỊA ĐIỂM.
 - **Trang bìa:** "BÁO CÁO KINH TẾ KỸ THUẬT XÂY DỰNG CÔNG TRÌNH" / "(PHẦN DỰ TOÁN)", CÔNG TRÌNH, ĐỊA ĐIỂM XD, ĐƠN VỊ LẬP: CÔNG TY CỔ PHẦN TƯ VẤN ĐẦU TƯ XÂY DỰNG GIA NGUYỄN, "TP. Hồ Chí Minh, năm ...".

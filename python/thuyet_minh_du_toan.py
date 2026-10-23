@@ -21,8 +21,8 @@ MAU = os.path.join(GOC, "template", "du-toan", "tong-hop", "thuyet-minh-du-toan.
 sys.path.insert(0, os.path.join(GOC, "python"))
 import khai_bao
 from khai_bao import CHO_TRONG
-from chuyen_f1_ve_mau_ha_tang import bang_chu      # đọc số thành chữ (dùng chung)
-from tong_hop_du_toan import doc_ty_le             # loại công trình, cấp, số bước chọn trên F1
+from chuyen_f1_ve_mau import bang_chu             # đọc số thành chữ (dùng chung)
+from tong_hop_du_toan import doc_ty_le, TEN_TH_HM  # loại công trình, cấp, số bước chọn trên F1; tên sheet tổng hợp
 
 VANG = "VANG"   # đánh dấu đoạn chữ cần tô vàng
 CONG_TY = "Công ty cổ phần Tư vấn Đầu tư Xây dựng Gia Nguyễn"
@@ -30,7 +30,7 @@ CONG_TY = "Công ty cổ phần Tư vấn Đầu tư Xây dựng Gia Nguyễn"
 
 # ------------------------------------------------------------------ số liệu từ file dự toán
 def mo_excel(path, sheet):
-    """Mở bằng Excel (chỉ đọc), tính lại, trả về sheet giá trị."""
+    """Mở bằng Excel (chỉ đọc), tính lại, trả về sheet giá trị (sheet: tên, hoặc danh sách tên để chọn tên có trong file)."""
     import win32com.client
     import openpyxl
     tam = os.path.join(tempfile.gettempdir(), "tm_" + os.path.basename(path))
@@ -46,11 +46,12 @@ def mo_excel(path, sheet):
         wb.Close(False)
     finally:
         xl.Quit()
-    return openpyxl.load_workbook(tam, data_only=True)[sheet]
+    wb = openpyxl.load_workbook(tam, data_only=True)
+    return wb[sheet if isinstance(sheet, str) else next(t for t in sheet if t in wb.sheetnames)]
 
 
 def doc_hang_muc(path):
-    ws = mo_excel(path, "Tổng hợp dự toán")
+    ws = mo_excel(path, TEN_TH_HM)
     return {ws[f"C{r}"].value: ws[f"E{r}"].value for r in range(6, ws.max_row + 1) if ws[f"C{r}"].value}
 
 
@@ -144,11 +145,13 @@ def main():
         raise SystemExit(f"File đã có, không ghi đè: {KQ}")
     ds_hm = [(h, doc_hang_muc(h.file_du_toan)) for h in kb.hang_muc]
     v = doc_tong_hop(kb.file_tong_hop)
-    loai, _ = doc_ty_le(kb.f1_tmdt)
+    loai = doc_ty_le(kb.f1_tmdt)[0]
     GXD, QLDA, TV, CK, DP, TMDT, LAM = v["GXD"], v["GQLDA"], v["GTV"], v["GK"], v["GDP"], v["TMĐT"], v["LAM"]
+    GDD = v.get("GDD", 0)                # chi phí di dời (nếu có khai báo)
+    giao_thong = any(h.linh_vuc == "giao-thong" for h in kb.hang_muc)
     tong_hm = sum(x["Tdt"] for _, x in ds_hm)
     assert abs(GXD - tong_hm) < 1, f"Chi phí xây dựng file tổng hợp ({GXD}) khác tổng các file hạng mục ({tong_hm})"
-    assert abs(GXD + QLDA + TV + CK + DP - TMDT) < 2, "số liệu tổng hợp không cộng khớp"
+    assert abs(GXD + QLDA + TV + CK + DP + GDD - TMDT) < 2, "số liệu tổng hợp không cộng khớp"
     tl_dp = pct(v["TL_DP"])
     ten_hm = "; ".join(h.ten for h, _ in ds_hm)
     hm_ban_ve = "; ".join(f"{h.ten}" + (f" (bản vẽ {h.ky_hieu})" if h.ky_hieu else "") for h, _ in ds_hm)
@@ -177,8 +180,10 @@ def main():
     moi[9] = dat_chu(P[9], [("Khối lượng: ", 0), (
         f"Theo bảng chi tiết khối lượng lập từ hồ sơ thiết kế bản vẽ thi công hạng mục {hm_ban_ve} "
         f"do {CONG_TY} lập.", 1)])
-    # Văn bản riêng của đường giao thông và bộ đơn giá cũ: không áp dụng (dự toán lập đơn giá trực tiếp trên F1)
-    for i in (32, 51, 53, 54, 57, 58, 59):
+    # Bộ đơn giá cũ (QĐ 2966/2023, 1491/2024, 959/2025): luôn bỏ, vì đơn giá lập trực tiếp trên F1.
+    # Văn bản riêng ngành đường bộ (NĐ 165/2024, QĐ 38/QĐ-GT, CV 2424/SGTVT, QĐ 1762/QĐ-SGTVT):
+    # giữ khi dự án có hạng mục giao thông, bỏ khi chỉ có hạ tầng kỹ thuật.
+    for i in (57, 58, 59) + (() if giao_thong else (32, 51, 53, 54)):
         moi[i] = None
     # Quy hoạch, chủ trương, hợp đồng: riêng của từng dự án (mẫu là của dự án KP8-15)
     moi[62] = dat_chu(P[62], [(f"Căn cứ {can_cu(kb.van_ban_quy_hoach)};", 0)] if kb.van_ban_quy_hoach else
@@ -229,6 +234,12 @@ def main():
         "thẩm định dự án theo Thông tư 28/2023/TT-BTC; chi phí kiểm toán độc lập, thẩm tra phê duyệt quyết toán theo "
         "Nghị định 193/2026/NĐ-CP; chi phí kiểm tra công tác nghiệm thu theo Thông tư 10/2021/TT-BXD. "
         "Chi tiết xem bảng tổng hợp dự toán đính kèm.", 0)])]
+    # Khoản tạm tính anh khai báo (đảm bảo giao thông, di dời): ghi rõ là tạm tính, tô vàng phần căn cứ chờ bổ sung
+    tam_tinh = ([f"chi phí đảm bảo an toàn giao thông phục vụ thi công {so(kb.dam_bao_giao_thong)} đồng (trước thuế)"]
+                if kb.dam_bao_giao_thong else []) + ([f"{kb.ten_di_doi.lower()} {so(GDD)} đồng"] if GDD else [])
+    if tam_tinh:
+        them_sau[86].append(dat_chu(P[86], [("Các khoản tạm tính: " + "; ".join(tam_tinh) + " ", 0),
+                                            ("(anh bổ sung căn cứ)", 0, VANG), (".", 0)]))
     moi[88] = dat_chu(P[88], [(
         f"Dự phòng cho yếu tố phát sinh khối lượng công việc được tính bằng {tl_dp} tổng chi phí xây dựng, chi phí "
         "quản lý dự án, chi phí tư vấn đầu tư xây dựng và chi phí khác.", 0)])
@@ -240,14 +251,18 @@ def main():
                               (" (đã làm tròn; xem bảng tổng hợp dự toán đính kèm)", 0)])
     moi[95] = dat_chu(P[95], [(f"(Bằng chữ: {bang_chu(LAM).replace('./.', '')}).", 0)])
     # Bảng chi tiết mẫu: 6 dòng x (tên, ":", số tiền, "đồng") ở các đoạn 97..120.
-    # Chưa hỗ trợ chi phí bồi thường, hỗ trợ và tái định cư: bỏ dòng thứ nhất.
-    for i in range(97, 101):
-        moi[i] = "XOA_DONG_BANG"
+    # Điền lần lượt các khoản dự án có; dòng thừa xóa (chưa hỗ trợ chi phí bồi thường, hỗ trợ và tái định cư).
     dong = [("Chi phí xây dựng", GXD), ("Chi phí quản lý dự án", QLDA), ("Chi phí tư vấn đầu tư xây dựng", TV),
             ("Chi phí khác", CK), ("Chi phí dự phòng", DP)]
-    for k, (ten, tien) in enumerate(dong, start=1):
-        moi[97 + 4 * k] = dat_chu(P[97 + 4 * k], [(ten, 0)])
-        moi[99 + 4 * k] = dat_chu(P[99 + 4 * k], [(f" {so(tien)} ", 0)])
+    if GDD:
+        dong.append((f"{kb.ten_di_doi} (tạm tính)", GDD))
+    for k in range(6):
+        if k < len(dong):
+            moi[97 + 4 * k] = dat_chu(P[97 + 4 * k], [(dong[k][0], 0)])
+            moi[99 + 4 * k] = dat_chu(P[99 + 4 * k], [(f" {so(dong[k][1])} ", 0)])
+        else:
+            for i in range(97 + 4 * k, 101 + 4 * k):
+                moi[i] = "XOA_DONG_BANG"
     moi[130] = dat_chu(P[130], [("                              ", 0), hoac(kb.nguoi_lap, "(Họ tên người lập)"),
                                 ("                                                                                     ", 0),
                                 hoac(kb.giam_doc, "(Họ tên Giám đốc)")])

@@ -16,7 +16,8 @@ File mẫu: `template/du-toan/ha-tang-ky-thuat/du-toan-ha-tang.xlsx` (đọc ng�
 | `Bìa du toan (2)` | Trang bìa dự toán |
 
 Thay đổi so với bản 20/10/2026 (anh sửa): tên sheet không dấu (`Công trình` → `cong trinh`, `Hao phí vật tư` → `Phan tich vat tu`, `Vật liệu` → `vat tu`; sheet ẩn đơn giá nhân công, máy đổi tên `nhan cong`, `May Thi cong`), độ rộng một số cột, canh giữa theo chiều đứng, khối lượng định dạng `0.000` canh giữa. Bố cục dòng, cột, cột ẩn, thiết lập in **không đổi**.
-Chương trình `python/chuyen_f1_ve_mau_ha_tang.py` đã sửa theo bản này: file kết quả có các sheet `Bìa dự toán`, `Tổng hợp dự toán`, `cong trinh`, `Phan tich vat tu`, `vat tu`, `nhan cong`, `May Thi cong`.
+Anh sửa tiếp (bản 23/10/2026 tối): sheet tổng hợp đổi tên `Tong hop du toan` (bố cục không đổi); **ẩn** các sheet `He so Thiet ke`, `CONG D400_ok`, `Bìa du toan (2)`. Mẫu chỉ còn hiện 4 sheet: `cong trinh`, `Phan tich vat tu`, `vat tu`, `Tong hop du toan`.
+Chương trình `python/chuyen_f1_ve_mau.py` theo bản này: file kết quả có các sheet `Tong hop du toan`, `cong trinh`, `Phan tich vat tu`, `vat tu`, `nhan cong`, `May Thi cong` (không còn sheet bìa).
 
 ## Riêng của mẫu này
 - Sheet chi tiết khối lượng chỉ có 2 dòng đầu: CÔNG TRÌNH, ĐỊA ĐIỂM (không có dòng HẠNG MỤC).

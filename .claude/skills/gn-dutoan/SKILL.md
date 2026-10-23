@@ -39,7 +39,7 @@ Anh lập dự toán trên **phần mềm F1** (cài ở `C:\Program Files (x86)
    - **Vật tư lấy tại mỏ (đá, cát):** bấm Cước ô tô; nhập cự ly, chọn xe tự đổ 10 tấn, nhập giá ca máy xe (lấy ở sheet Máy thi công); dòng nào chưa có loại hàng thì chọn loại hàng (ví dụ "đá dăm (10m3)") và quy đổi 10. Nhập bằng phím **Tab** (phím Enter làm bảng cuộn, dễ nhập nhầm dòng). Cuối cùng bấm Áp cước ô tô.
 7. **Tính:** sheet Công trình, tích "Tính đơn giá trực tiếp cho VL, NC, Máy", chọn Yes, rồi "Có, thay đổi mẫu" (THDT theo TT 36/2026).
 8. **Giá vật tư ngoài công bố** (ví dụ côn, cút nhựa) do anh nhập; có thể chuột phải chọn "Lưu giá vật liệu vào cơ sở dữ liệu" để lần sau F1 tự lấy.
-9. **Xuất Excel** từ F1 ra tên mới. Màn hình F1 có thể **chưa cập nhật** tổng vật liệu sau khi áp cước; con số đúng là số trong file xuất sau khi Excel tính lại. Sau đó chạy `python/chuyen_f1_ve_mau_ha_tang.py <file khai báo>` để ra file theo mẫu công ty (xem mục File khai báo dự án).
+9. **Xuất Excel** từ F1 ra tên mới. Màn hình F1 có thể **chưa cập nhật** tổng vật liệu sau khi áp cước; con số đúng là số trong file xuất sau khi Excel tính lại. Sau đó chạy `python/chuyen_f1_ve_mau.py <file khai báo>` để ra file theo mẫu công ty của đúng lĩnh vực (xem mục File khai báo dự án).
 
 Không ghi trực tiếp vào file `.ctr` của F1 (định dạng riêng). Hộp thoại cập nhật phần mềm F1 do chương trình khác mở, phải nhờ anh bấm.
 
@@ -53,16 +53,7 @@ Anh chốt ngày 20/10/2026. Mỗi lĩnh vực có mẫu Excel riêng, file mẫ
 
 **Lập file tổng hợp dự toán chung:** đọc `mau-tong-hop.md`.
 
-**Viết thuyết minh dự toán (Word):** đọc `mau-thuyet-minh.md`
-
-## File khai báo dự án (anh chốt 23/10/2026)
-Ba chương trình `python/chuyen_f1_ve_mau_ha_tang.py` (F1 → mẫu hạng mục), `python/tong_hop_du_toan.py` (tổng hợp), `python/thuyet_minh_du_toan.py` (thuyết minh) **không sửa code cho từng dự án**. Mọi thông tin riêng của dự án (tên dự án, địa điểm, chủ đầu tư, các hạng mục, ký hiệu bản vẽ, tên file, cự ly vận chuyển, số thông báo giá, văn bản riêng, người ký) ghi trong **một file khai báo `.ini`**:
-1. Chép `python/mau-khai-bao-du-an.ini` vào thư mục kết quả của dự án (`ket-qua/<du-an>/khai-bao-du-an.ini`), điền thông tin. Ô chưa có để trống, chương trình ghi "......" và tô vàng. Mẫu đã có giải thích từng dòng.
-2. Chạy lần lượt 3 chương trình, mỗi lệnh kèm đường dẫn file khai báo. Ví dụ đã chạy: `ket-qua/be-tu-hoai-10m3/khai-bao-du-an.ini`.
-3. Dự án nhiều hạng mục: thêm mục `[hang_muc_2]`, `[hang_muc_3]`... File tổng hợp cộng chi phí xây dựng các hạng mục.
-4. Chương trình đọc file khai báo: `python/khai_bao.py`. Thêm thông tin mới thì thêm vào cả file đó và file mẫu `.ini`.
-
-Giới hạn hiện tại: chương trình chuyển mẫu chỉ có mẫu **hạ tầng kỹ thuật** (theo bản mẫu `du-toan-ha-tang.xlsx` anh chốt 23/10/2026, tên sheet không dấu). Anh sửa mẫu lần nữa thì phải sửa chương trình theo; chương trình báo lỗi rõ khi không thấy sheet. Dự phòng trượt giá chỉ hỗ trợ "không tính". Chi phí bồi thường chưa hỗ trợ. (mẫu `template/du-toan/tong-hop/thuyet-minh-du-toan.docx`).
+**Viết thuyết minh dự toán (Word):** đọc `mau-thuyet-minh.md` (mẫu `template/du-toan/tong-hop/thuyet-minh-du-toan.docx`).
 
 | Lĩnh vực | Ví dụ công trình, hạng mục | File mẫu | File tra cứu |
 |---|---|---|---|
@@ -95,3 +86,18 @@ Ví dụ Công viên I.22: nhà hội quán là dân dụng, san nền giao thô
    - `du-toan_01-nha-hoi-quan.xlsx`, `du-toan_03-san-nen-giao-thong.xlsx`...
    - `du-toan_tong-hop.xlsx`
    - Đánh số theo danh mục hạng mục của dự án.
+
+## File khai báo dự án (anh chốt 23/10/2026, dùng chung cho hạ tầng kỹ thuật và giao thông)
+Ba chương trình `python/chuyen_f1_ve_mau.py` (F1 → dự toán hạng mục theo mẫu), `python/tong_hop_du_toan.py` (tổng hợp), `python/thuyet_minh_du_toan.py` (thuyết minh) **không sửa code cho từng dự án**. Mọi thông tin riêng của dự án (tên dự án, địa điểm, chủ đầu tư, các hạng mục và lĩnh vực, ký hiệu bản vẽ, tên file, cự ly vận chuyển, số thông báo giá, khoản tạm tính, văn bản riêng, người ký) ghi trong **một file khai báo `.ini`**:
+1. Chép `python/mau-khai-bao-du-an.ini` vào thư mục kết quả của dự án (`ket-qua/<du-an>/khai-bao-du-an.ini`), điền thông tin. Ô chưa có để trống, chương trình ghi "......" và tô vàng. Mẫu đã có giải thích từng dòng.
+2. Mỗi hạng mục ghi `linh_vuc = ha-tang-ky-thuat` hoặc `linh_vuc = giao-thong`. Chương trình chuyển mẫu chọn file mẫu và tên sheet theo dòng này (bảng `MAU_LV` trong chương trình), tự dò các dòng mẫu định dạng.
+3. Chạy lần lượt 3 chương trình, mỗi lệnh kèm đường dẫn file khai báo. Ví dụ đã chạy: `ket-qua/be-tu-hoai-10m3/khai-bao-du-an.ini`.
+4. Dự án nhiều hạng mục: thêm mục `[hang_muc_2]`, `[hang_muc_3]`... (có thể khác lĩnh vực). File tổng hợp cộng chi phí xây dựng các hạng mục.
+5. Chương trình đọc file khai báo: `python/khai_bao.py`. Thêm thông tin mới thì thêm vào cả file đó và file mẫu `.ini`.
+
+Theo lĩnh vực:
+- **File dự toán hạng mục:** 6 sheet theo mẫu (tổng hợp, chi tiết khối lượng, phân tích vật tư, vật liệu, nhân công, máy). Mẫu chỉ hiện 4 sheet; sheet ẩn (bìa, dự thầu, đơn giá chi tiết...) **không đọc, không chép**. Bìa dùng file Word `template/du-toan/tong-hop/bia-du-toan.docx`.
+- **Tổng hợp:** tỷ lệ lấy đúng dòng F1 đang tính (ví dụ lập BCKTKT có Bảng 2.4, 2.5, 2.6, F1 chỉ tính 1 bảng theo loại công trình), số bảng căn cứ đọc từ tên dòng F1. Khoản tạm tính khai báo: `dam_bao_giao_thong` (trước thuế, cộng vào chi phí khác), `di_doi_ha_tang` (đã gồm thuế, mục VI riêng, không tính dự phòng).
+- **Thuyết minh:** bộ đơn giá cũ (QĐ 2966/2023, 1491/2024, 959/2025) luôn bỏ. Văn bản ngành đường bộ (NĐ 165/2024, QĐ 38/QĐ-GT, CV 2424/SGTVT, QĐ 1762/QĐ-SGTVT) giữ khi dự án có hạng mục giao thông, bỏ khi chỉ có hạ tầng. Văn bản của Sở Giao thông vận tải cũ: nhắc anh kiểm tra hiệu lực (các sở đã sắp xếp lại từ 2025).
+
+Giới hạn hiện tại: chỉ có mẫu **hạ tầng kỹ thuật** và **giao thông** (chưa có dân dụng, công nghiệp). Anh sửa mẫu lần nữa thì kiểm tra lại chương trình; chương trình báo lỗi rõ khi không thấy sheet hoặc dòng mốc. Dự phòng trượt giá chỉ hỗ trợ "không tính". Chi phí bồi thường chưa hỗ trợ. Giao thông mới chạy thử bằng số liệu F1 của bể tự hoại; dự án giao thông thật đầu tiên cần đối chiếu kỹ.

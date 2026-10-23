@@ -13,7 +13,7 @@ Nguồn số liệu (khai báo trong FILE KHAI BÁO DỰ ÁN, mẫu: python/mau-
 Chạy:  python python/tong_hop_du_toan.py <file khai báo>
   ví dụ: python python/tong_hop_du_toan.py ket-qua/be-tu-hoai-10m3/khai-bao-du-an.ini
 """
-import os, sys, tempfile
+import os, re, sys, tempfile
 from copy import copy
 
 import openpyxl
@@ -26,7 +26,9 @@ MAU = os.path.join(GOC, "template", "du-toan", "tong-hop", "bang-du-toan-tong-ho
 sys.path.insert(0, os.path.join(GOC, "python"))
 import khai_bao
 from khai_bao import CHO_TRONG, chu_hoa, dia_diem_day_du
-from chuyen_f1_ve_mau_ha_tang import bang_chu
+from chuyen_f1_ve_mau import bang_chu
+
+TEN_TH_HM = ("Tong hop du toan", "Tổng hợp dự toán")   # tên sheet tổng hợp của file hạng mục (mẫu mới, bản cũ)
 
 
 def mo_excel(path):
@@ -50,38 +52,47 @@ def mo_excel(path):
 
 
 def doc_hang_muc(path):
-    ws = mo_excel(path)["Tổng hợp dự toán"]
+    wb = mo_excel(path)
+    ws = wb[next(t for t in TEN_TH_HM if t in wb.sheetnames)]
     v = {ws[f"C{r}"].value: ws[f"E{r}"].value for r in range(6, ws.max_row + 1) if ws[f"C{r}"].value}
     return v
 
 
 def doc_ty_le(path):
     """Tỷ lệ (cột E) trong sheet TMĐT của F1, tìm dòng theo nội dung.
-    Trả về (loai, t): loai = chữ "công trình hạ tầng kỹ thuật, thiết kế 1 bước, cấp IV" theo lựa chọn trên F1."""
+    Một khoản có thể có nhiều dòng (ví dụ lập BCKTKT có Bảng 2.4, 2.5, 2.6 theo loại công trình): lấy dòng F1
+    đang tính (cột H có tiền); các dòng còn lại F1 nhân 0.
+    Trả về (loai, t, bang): loai = chữ "công trình hạ tầng kỹ thuật, thiết kế 1 bước, cấp IV" theo lựa chọn trên F1,
+    t = tỷ lệ từng khoản, bang = số bảng tra ghi trong tên dòng F1 (ví dụ "Bảng 2.5"), không có thì để trống."""
     wsv = mo_excel(path)["TMĐT"]
     ten = {r: str(wsv[f"B{r}"].value or "") for r in range(10, 80)}
     loai = ", ".join(x[0].lower() + x[1:] for x in (str(wsv[f"E{r}"].value or "") for r in (5, 6, 7)) if x)
 
-    def tl(*tu):
-        for r, t in ten.items():
-            if all(x in t for x in tu):
-                return wsv[f"E{r}"].value
-        raise KeyError(tu)
-    return loai, {
-        "QLDA": tl("Chi phí quản lý dự án"),
-        "BCKTKT": tl("lập báo cáo kinh tế - kỹ thuật", "Bảng 2.5"),
-        "TT_TK": tl("thẩm tra thiết kế xây dựng"),
-        "TT_DT": tl("thẩm tra dự toán công trình"),
-        "GS": tl("giám sát thi công xây dựng"),
-        "HSMT": tl("lập hồ sơ mời thầu, đánh giá hồ sơ dự thầu thi công xây dựng"),
-        "TD_HSMT": tl("thẩm định hồ sơ mời thầu, hồ sơ yêu cầu"),
-        "TD_KQ": tl("thẩm định kết quả lựa chọn nhà thầu"),
-        "TD_DA": tl("Phí thẩm định dự án đầu tư"),
-        "KTOAN": tl("kiểm toán độc lập"),
-        "QTOAN": tl("thẩm tra, phê duyệt quyết toán"),
-        "NTHU": tl("kiểm tra công tác nghiệm thu"),
-        "DP": tl("Dự phòng cho yếu tố khối lượng"),
+    tim = {
+        "QLDA": ("Chi phí quản lý dự án",),
+        "BCKTKT": ("lập báo cáo kinh tế - kỹ thuật",),
+        "TT_TK": ("thẩm tra thiết kế xây dựng",),
+        "TT_DT": ("thẩm tra dự toán công trình",),
+        "GS": ("giám sát thi công xây dựng",),
+        "HSMT": ("lập hồ sơ mời thầu, đánh giá hồ sơ dự thầu thi công xây dựng",),
+        "TD_HSMT": ("thẩm định hồ sơ mời thầu, hồ sơ yêu cầu",),
+        "TD_KQ": ("thẩm định kết quả lựa chọn nhà thầu",),
+        "TD_DA": ("Phí thẩm định dự án đầu tư",),
+        "KTOAN": ("kiểm toán độc lập",),
+        "QTOAN": ("thẩm tra, phê duyệt quyết toán",),
+        "NTHU": ("kiểm tra công tác nghiệm thu",),
+        "DP": ("Dự phòng cho yếu tố khối lượng",),
     }
+    t, bang = {}, {}
+    for k, tu in tim.items():
+        ds = [r for r, x in ten.items() if all(y in x for y in tu)]
+        if not ds:
+            raise SystemExit(f"Sheet TMĐT của F1 không có dòng '{tu[0]}'")
+        r = next((r for r in ds if (wsv[f"H{r}"].value or 0) > 0), ds[0])
+        t[k] = wsv[f"E{r}"].value
+        m = re.search(r"Bảng \d+\.\d+", ten[r])
+        bang[k] = m.group(0) if m else ""
+    return loai, t, bang
 
 
 def pct(x):
@@ -99,7 +110,12 @@ def main():
         if not path or not os.path.exists(path):
             raise SystemExit(f"Chưa có file: {path or 'file F1 TMĐT chưa khai báo'}")
     ds_hm = [(h, doc_hang_muc(h.file_du_toan)) for h in kb.hang_muc]
-    loai, t = doc_ty_le(kb.f1_tmdt)
+    loai, t, bang = doc_ty_le(kb.f1_tmdt)
+
+    def cc(k):
+        """Căn cứ: số bảng F1 đang tra + TT 38/2026. F1 không ghi số bảng thì lấy theo mẫu tổng hợp công ty."""
+        mac_dinh = {"QLDA": "Bảng 1.1"}          # mẫu bang-du-toan-tong-hop.xlsx ghi "(Bảng 1.1- TT 38/2026/TT-BXD)"
+        return f"{bang[k] or mac_dinh.get(k, '')} TT 38/2026/TT-BXD".strip()
     VAT = kb.vat
 
     import shutil
@@ -157,19 +173,19 @@ def main():
                 sum(v["LT"] for _, v in ds_hm), "TT 36/2026/TT-BXD")
     B = f"$G${rI}"           # GXD trước thuế (không gồm nhà tạm) - cơ sở tính các tỷ lệ, giống F1
     rII = them("nhom", "II", "Chi phí quản lý dự án", "GQLDA", t["QLDA"], '="GXD trước thuế x "&D{r}',
-               f"=ROUND({B}*D{{r}},0)", f"=ROUND(G{{r}}*{V},0)", "GH", "Bảng 1.1 TT 38/2026/TT-BXD")
+               f"=ROUND({B}*D{{r}},0)", f"=ROUND(G{{r}}*{V},0)", "GH", cc("QLDA"))
     rIII = them("nhom2", "III", "Chi phí tư vấn đầu tư xây dựng", "GTV", None, None, "SUBG", "SUBH", "SUBI", None)
     tv = [
         them("muc", 1, "- Chi phí lập Báo cáo kinh tế - kỹ thuật", "GTV1", t["BCKTKT"], '="GXD trước thuế x "&D{r}&" (tối thiểu 5 triệu)"',
-             f"=ROUND(MAX({B}*D{{r}},5000000),0)", f"=ROUND(G{{r}}*{V},0)", "GH", "Bảng 2.5 TT 38/2026/TT-BXD"),
+             f"=ROUND(MAX({B}*D{{r}},5000000),0)", f"=ROUND(G{{r}}*{V},0)", "GH", cc("BCKTKT")),
         them("muc", 2, "- Chi phí thẩm tra thiết kế bản vẽ thi công", "GTV2", t["TT_TK"], '="GXD trước thuế x "&D{r}&" (tối thiểu 2 triệu)"',
-             f"=ROUND(MAX({B}*D{{r}},2000000),0)", f"=ROUND(G{{r}}*{V},0)", "GH", "Bảng 2.19 TT 38/2026/TT-BXD"),
+             f"=ROUND(MAX({B}*D{{r}},2000000),0)", f"=ROUND(G{{r}}*{V},0)", "GH", cc("TT_TK")),
         them("muc", 3, "- Chi phí thẩm tra dự toán xây dựng", "GTV3", t["TT_DT"], '="GXD trước thuế x "&D{r}&" (tối thiểu 2 triệu)"',
-             f"=ROUND(MAX({B}*D{{r}},2000000),0)", f"=ROUND(G{{r}}*{V},0)", "GH", "Bảng 2.20 TT 38/2026/TT-BXD"),
+             f"=ROUND(MAX({B}*D{{r}},2000000),0)", f"=ROUND(G{{r}}*{V},0)", "GH", cc("TT_DT")),
         them("muc", 4, "- Chi phí giám sát thi công xây dựng", "GTV4", t["GS"], '="GXD trước thuế x "&D{r}',
-             f"=ROUND({B}*D{{r}},0)", f"=ROUND(G{{r}}*{V},0)", "GH", "Bảng 2.24 TT 38/2026/TT-BXD"),
+             f"=ROUND({B}*D{{r}},0)", f"=ROUND(G{{r}}*{V},0)", "GH", cc("GS")),
         them("muc", 5, "- Chi phí lập HSMT và đánh giá HSDT thi công xây dựng", "GTV5", t["HSMT"], '="GXD trước thuế x "&D{r}',
-             f"=ROUND({B}*D{{r}},0)", f"=ROUND(G{{r}}*{V},0)", "GH", "Bảng 2.22 TT 38/2026/TT-BXD"),
+             f"=ROUND({B}*D{{r}},0)", f"=ROUND(G{{r}}*{V},0)", "GH", cc("HSMT")),
         them("muc", 6, "- Chi phí thẩm định hồ sơ mời thầu gói thầu thi công xây dựng", "GTV6", t["TD_HSMT"],
              '="GXD sau thuế x "&D{r}&" (tối thiểu 2 triệu, tối đa 60 triệu)"',
              f"=ROUND(MIN(MAX($I${rI}*D{{r}},2000000),60000000),0)", 0, "GH", "NĐ 214/2025/NĐ-CP"),
@@ -192,14 +208,24 @@ def main():
         them("muc", 4, "- Chi phí kiểm tra công tác nghiệm thu công trình", "K4", t["NTHU"],
              '="GTV4 trước thuế x "&D{r}', f"=ROUND($G${tv[3]}*D{{r}},0)", f"=ROUND(G{{r}}*{V},0)", "GH", "TT 10/2021/TT-BXD"),
     ]
+    if kb.dam_bao_giao_thong:            # khoản riêng của giao thông, anh khai báo (tạm tính, trước thuế)
+        ck.append(them("muc", len(ck) + 1, "- Chi phí đảm bảo an toàn giao thông phục vụ thi công", f"K{len(ck) + 1}",
+                       None, "Tạm tính (theo khai báo)", kb.dam_bao_giao_thong, f"=ROUND(G{{r}}*{V},0)", "GH",
+                       "Tạm tính - anh bổ sung căn cứ"))
     rV = them("nhom2", "V", "Chi phí dự phòng", "GDP", None, '="GDP1 + GDP2"', None, None, "DP", None)
     rdp1 = them("dp", "5.1", " - Chi phí dự phòng cho yếu tố khối lượng", "GDP1", t["DP"],
                 '="(GXD + GQLDA + GTV + GK) x "&D{r}', None, None,
                 f"=ROUND((I{rI}+I{rII}+I{rIII}+I{rIV})*D{{r}},0)", "TT 38/2026/TT-BXD")
     rdp2 = them("dp", "5.2", " - Chi phí dự phòng cho yếu tố trượt giá", "GDP2", None,
                 f"Không tính ({kb.ly_do_truot_gia or 'anh xác nhận lý do'})", None, None, 0, None)
-    rT = them("tong", None, "Tổng cộng (I+II+III+IV+V)", "TMĐT", None, '="GXD + GQLDA + GTV + GK + GDP"', None, None,
-              f"=I{rI}+I{rII}+I{rIII}+I{rIV}+I{rV}", None)
+    if kb.di_doi:                        # chi phí di dời hạ tầng kỹ thuật, anh khai báo (tạm tính, đã gồm thuế)
+        rVI = them("nhom2", "VI", f"{kb.ten_di_doi} (tạm tính)", "GDD", None, "Tạm tính (theo khai báo), đã gồm thuế",
+                   None, None, kb.di_doi, "Tạm tính - anh bổ sung căn cứ")
+        rT = them("tong", None, "Tổng cộng (I+II+III+IV+V+VI)", "TMĐT", None, '="GXD + GQLDA + GTV + GK + GDP + GDD"',
+                  None, None, f"=I{rI}+I{rII}+I{rIII}+I{rIV}+I{rV}+I{rVI}", None)
+    else:
+        rT = them("tong", None, "Tổng cộng (I+II+III+IV+V)", "TMĐT", None, '="GXD + GQLDA + GTV + GK + GDP"', None, None,
+                  f"=I{rI}+I{rII}+I{rIII}+I{rIV}+I{rV}", None)
     rR = them("tron", None, "Tổng cộng (làm tròn)", None, None, None, None, None, f"=ROUND(I{rT},-6)", None)
 
     for i, d in enumerate(dong):
