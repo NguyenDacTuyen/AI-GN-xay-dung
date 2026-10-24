@@ -9,15 +9,15 @@ Nguồn số liệu (khai báo trong FILE KHAI BÁO DỰ ÁN, mẫu: python/mau-
   - Tỷ lệ chi phí QLDA, lập BCKTKT, thẩm tra, giám sát, lập HSMT: sheet "TT38" của mẫu tổng hợp (anh đã nhập bảng
     TT 38/2026/TT-BXD). Loại công trình lấy theo hạng mục có chi phí xây dựng trước thuế lớn nhất; tỷ lệ nội suy theo
     TỔNG chi phí xây dựng trước thuế của dự án (ô C4 sheet TT38). Sheet TT38 giữ lại trong file kết quả để kiểm tra.
-  - Phí thẩm định dự án, kiểm toán, quyết toán: sheet TT38 còn bảng văn bản cũ, nên lấy từ sheet "TMĐT" của file F1
-    xuất ra nếu có khai báo file_f1_tmdt; không có thì để trống, tô vàng "cần tra cứu".
+  - Phí thẩm định dự án (TT 28/2023/TT-BTC), kiểm toán, quyết toán (NĐ 193/2026/NĐ-CP): sheet TT38, nội suy theo
+    GXD + GQLDA + GTV sau thuế (ô C9, tạm thay tổng mức đầu tư để tránh công thức vòng). Không cần file F1.
   - Thẩm định HSMT, kết quả LCNT (0,1%), kiểm tra nghiệm thu (20% giám sát), dự phòng khối lượng (5%): theo mẫu.
   - Danh mục khoản chi phí: theo mẫu công ty; khoản nào dự án không có thì bỏ.
 
 Chạy:  python python/tong_hop_du_toan.py <file khai báo>
   ví dụ: python python/tong_hop_du_toan.py ket-qua/be-tu-hoai-10m3/khai-bao-du-an.ini
 """
-import os, re, sys, tempfile
+import os, sys, tempfile
 from copy import copy
 
 import openpyxl
@@ -62,43 +62,6 @@ def doc_hang_muc(path):
     return v
 
 
-def doc_ty_le(path):
-    """Tỷ lệ (cột E) trong sheet TMĐT của F1, tìm dòng theo nội dung.
-    Một khoản có thể có nhiều dòng (ví dụ lập BCKTKT có Bảng 2.4, 2.5, 2.6 theo loại công trình): lấy dòng F1
-    đang tính (cột H có tiền); các dòng còn lại F1 nhân 0.
-    Trả về (loai, t, bang): loai = chữ "công trình hạ tầng kỹ thuật, thiết kế 1 bước, cấp IV" theo lựa chọn trên F1,
-    t = tỷ lệ từng khoản, bang = số bảng tra ghi trong tên dòng F1 (ví dụ "Bảng 2.5"), không có thì để trống."""
-    wsv = mo_excel(path)["TMĐT"]
-    ten = {r: str(wsv[f"B{r}"].value or "") for r in range(10, 80)}
-    loai = ", ".join(x[0].lower() + x[1:] for x in (str(wsv[f"E{r}"].value or "") for r in (5, 6, 7)) if x)
-
-    tim = {
-        "QLDA": ("Chi phí quản lý dự án",),
-        "BCKTKT": ("lập báo cáo kinh tế - kỹ thuật",),
-        "TT_TK": ("thẩm tra thiết kế xây dựng",),
-        "TT_DT": ("thẩm tra dự toán công trình",),
-        "GS": ("giám sát thi công xây dựng",),
-        "HSMT": ("lập hồ sơ mời thầu, đánh giá hồ sơ dự thầu thi công xây dựng",),
-        "TD_HSMT": ("thẩm định hồ sơ mời thầu, hồ sơ yêu cầu",),
-        "TD_KQ": ("thẩm định kết quả lựa chọn nhà thầu",),
-        "TD_DA": ("Phí thẩm định dự án đầu tư",),
-        "KTOAN": ("kiểm toán độc lập",),
-        "QTOAN": ("thẩm tra, phê duyệt quyết toán",),
-        "NTHU": ("kiểm tra công tác nghiệm thu",),
-        "DP": ("Dự phòng cho yếu tố khối lượng",),
-    }
-    t, bang = {}, {}
-    for k, tu in tim.items():
-        ds = [r for r, x in ten.items() if all(y in x for y in tu)]
-        if not ds:
-            raise SystemExit(f"Sheet TMĐT của F1 không có dòng '{tu[0]}'")
-        r = next((r for r in ds if (wsv[f"H{r}"].value or 0) > 0), ds[0])
-        t[k] = wsv[f"E{r}"].value
-        m = re.search(r"Bảng \d+\.\d+", ten[r])
-        bang[k] = m.group(0) if m else ""
-    return loai, t, bang
-
-
 LOAI_CT = {"dan-dung": "Công trình dân dụng", "cong-nghiep": "Công trình công nghiệp",
            "giao-thong": "Công trình giao thông", "ha-tang-ky-thuat": "Công trình hạ tầng kỹ thuật"}
 
@@ -113,8 +76,8 @@ def loai_cong_trinh(ds_hm):
 
 
 def o_tt38(ws, ma, loai):
-    """Địa chỉ ô "Giá trị" (tỷ lệ %, Excel đã nội suy) của dòng loại công trình trong bảng có mã `ma`
-    của sheet TT38 (bảng nằm giữa 2 dòng mốc ở cột A: ma^ ... ma$)."""
+    """Địa chỉ ô "Giá trị" (tỷ lệ %, Excel đã nội suy) của dòng `loai` (chữ đầu cột B: tên loại công trình,
+    hoặc "Tỷ lệ"... với bảng chỉ có 1 dòng) trong bảng có mã `ma` của sheet TT38 (giữa 2 dòng mốc cột A: ma^ ... ma$)."""
     dau = cuoi = None
     for r in range(1, ws.max_row + 1):
         a = ws[f"A{r}"].value
@@ -127,7 +90,7 @@ def o_tt38(ws, ma, loai):
         raise SystemExit(f"Sheet TT38 không có bảng {ma} (dòng mốc {ma}^ ... {ma}$)")
     cot = next((c.column_letter for hang in ws.iter_rows(min_row=dau, max_row=cuoi) for c in hang
                 if c.value == "Giá trị"), None)
-    dong = next((r for r in range(dau, cuoi) if str(ws[f"B{r}"].value or "").strip() == loai), None)
+    dong = next((r for r in range(dau, cuoi) if str(ws[f"B{r}"].value or "").strip().startswith(loai)), None)
     if not cot or not dong:
         raise SystemExit(f"Sheet TT38, bảng {ma}: không thấy cột 'Giá trị' hoặc dòng '{loai}'")
     return f"TT38!{cot}{dong}"
@@ -162,12 +125,11 @@ def main():
         raise SystemExit(f"File đã có, không ghi đè: {KQ}")
     if kb.truot_gia != "khong":
         raise SystemExit("Dự phòng trượt giá: chương trình hiện chỉ hỗ trợ 'khong' (không tính)")
-    for path in [h.file_du_toan for h in kb.hang_muc] + ([kb.f1_tmdt] if kb.f1_tmdt else []):
+    for path in [h.file_du_toan for h in kb.hang_muc]:
         if not os.path.exists(path):
             raise SystemExit(f"Chưa có file: {path}")
     ds_hm = [(h, doc_hang_muc(h.file_du_toan)) for h in kb.hang_muc]
     loai, h_lon = loai_cong_trinh(ds_hm)
-    t = doc_ty_le(kb.f1_tmdt)[1] if kb.f1_tmdt else {}   # chỉ dùng cho phí thẩm định dự án, kiểm toán, quyết toán
 
     def cc(k):
         """Căn cứ: số bảng TT 38/2026 theo mẫu tổng hợp công ty."""
@@ -190,6 +152,12 @@ def main():
     tl = {k: f"={o_tt38(wt, ma, loai)}/100" for k, ma in
           (("QLDA", "QLDA79"), ("BCKTKT", "LBC79"), ("TT_TK", "TTTKXD79"), ("TT_DT", "TTDT79"),
            ("GS", "GSTC79"), ("HSMT", "LXL79"))}
+    tl.update({k: f"={o_tt38(wt, ma, dong)}/100" for k, ma, dong in
+               (("TD_DA", "TDDA", "Tỷ lệ"), ("KTOAN", "CPKT", "Kiểm toán"), ("QTOAN", "TTQT", "Thẩm tra, phê duyệt"))})
+    # Bảng phí thẩm định dự án: ô giá trị tra (ngay trên dòng tỷ lệ) mẫu trỏ vào ô nhập tay -> trỏ về C9
+    o = o_tt38(wt, "TDDA", "Tỷ lệ").replace("TT38!", "")
+    cot, dong = o.rstrip("0123456789"), int(o.lstrip("ABCDEFGHIJKLMNOPQRSTUVWXYZ"))
+    wt[f"{cot}{dong - 1}"] = "=$C$9"
     wb._external_links = []
     wb.defined_names.clear()
     wb.active = 0
@@ -261,16 +229,10 @@ def main():
     ]
     rIV = them("nhom2", "IV", "Chi phí khác", "GK", None, None, "SUBG", "SUBH", "SUBI", None)
     base_tm = f"($I${rI}+$I${rII}+$I${rIII})"     # tổng mức tạm tính để tính phí thẩm định, kiểm toán, quyết toán
-    can_tra = []      # dòng chưa có tỷ lệ (không khai báo file F1): tô vàng, anh tra cứu
 
     def phi(stt, ten, ky, k, cach, g, h, can_cu):
-        """Khoản phí tính trên tổng mức: tỷ lệ lấy từ F1 nếu có; không có thì để trống, công thức ra 0."""
-        if k in t:
-            return them("muc", stt, ten, ky, t[k], cach, g, h, "GH", can_cu)
-        r = them("muc", stt, ten, ky, None, "Cần tra cứu tỷ lệ (sheet TT38 còn bảng văn bản cũ)",
-                 g.replace("=", '=IF(D{r}="",0,', 1) + ")", h, "GH", can_cu + " - cần tra cứu")
-        can_tra.append(r)
-        return r
+        """Khoản phí tính trên tổng mức tạm (GXD + GQLDA + GTV sau thuế), tỷ lệ tra sheet TT38."""
+        return them("muc", stt, ten, ky, tl[k], cach, g, h, "GH", can_cu)
     ck = [
         phi(1, "- Phí thẩm định dự án đầu tư xây dựng", "K1", "TD_DA",
             '="(GXD + GQLDA + GTV) x "&D{r}&" (tối thiểu 500.000, tối đa 150 triệu)"',
@@ -340,13 +302,11 @@ def main():
         if kieu == "tong":
             ws[f"I{r}"].fill = PatternFill(fill_type=None)       # bỏ tô vàng của mẫu cũ
         ws.row_dimensions[r].height = 36 if len(str(b)) > 48 or len(str(e or "")) > 40 or len(str(j or "")) > 22 else 26
-        if r in can_tra:
-            for col in "DEJ":
-                ws[f"{col}{r}"].fill = PatternFill("solid", fgColor="FFFF00")
     # Sheet TT38 nội suy theo tổng chi phí xây dựng trước thuế của dự án (tỷ đồng), không có thiết bị, GPMB, khảo sát
     wt["C4"] = f"='TH TMDT'!G{rI}/10^9"
     wt["C6"], wt["C11"] = 0, 0
-    wt["C9"] = f"='TH TMDT'!I{rT}/10^9"
+    wt["C9"] = f"=('TH TMDT'!I{rI}+'TH TMDT'!I{rII}+'TH TMDT'!I{rIII})/10^9"
+    wt["F9"] = "Tạm lấy GXD + GQLDA + GTV sau thuế (tránh công thức vòng khi tra phí thẩm định, kiểm toán, quyết toán)"
     # Bằng chữ: tính lại đúng như công thức để viết chữ
     r = rR + 1
     for col in cols:
@@ -359,8 +319,7 @@ def main():
     ws[f"A{r}"] = (f"(*) Chi phí xây dựng lấy từ file {file_hm}, sheet \"Tổng hợp dự toán\" (ký hiệu G, GTGT, LT). "
                    f"Tỷ lệ QLDA, tư vấn: sheet TT38 (TT 38/2026/TT-BXD), {loai.lower()} theo hạng mục {h_lon.ten} "
                    f"(chi phí xây dựng trước thuế lớn nhất), nội suy theo tổng chi phí xây dựng trước thuế của dự án."
-                   + (" Phí thẩm định dự án, kiểm toán, quyết toán: tỷ lệ theo phần mềm Dự toán F1." if t else
-                      " Ô tô vàng: chưa có tỷ lệ, anh tra cứu theo văn bản hiện hành."))
+                   " Phí thẩm định dự án, kiểm toán, quyết toán: sheet TT38, nội suy theo GXD + GQLDA + GTV sau thuế.")
     ws[f"A{r}"].font = Font(name="Times New Roman", size=11, italic=True)
     ws[f"A{r}"].alignment = Alignment(vertical="top")
     r += 2
@@ -389,8 +348,6 @@ def main():
     if loi_bcktkt:
         print("Đã sửa lỗi công thức bảng lập BCKTKT trong sheet TT38 của file kết quả (mẫu giữ nguyên):",
               ", ".join(loi_bcktkt))
-    if can_tra:
-        print("Chưa có file F1 TMĐT: phí thẩm định dự án, kiểm toán, quyết toán để trống, tô vàng - anh tra cứu.")
     for k_, rr in (("GXD", rI), ("GQLDA", rII), ("GTV", rIII), ("GK", rIV), ("GDP", rV), ("TMĐT", rT), ("Làm tròn", rR)):
         print(f"{k_:9} {wv[f'G{rr}'].value or 0:>14,.0f} {wv[f'H{rr}'].value or 0:>12,.0f} {wv[f'I{rr}'].value or 0:>14,.0f}")
     print(bang_chu(tong))
