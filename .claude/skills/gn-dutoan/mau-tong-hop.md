@@ -14,12 +14,12 @@ Sheet **`TT38`** (anh để hiện và cập nhật ngày 24/10/2026): bảng đ
 
 Anh cập nhật lần 2 (trưa 24/10/2026): bảng `TDDA` theo TT 28/2023/TT-BTC, bảng `TTQT` và `CPKT` theo NĐ 193/2026/NĐ-CP (khớp F1: 0,019%, 0,57%, 0,96% dưới 5 tỷ); TH TMDT D37 bảo hiểm cố định 0,25% (NĐ 67/2023, NĐ 220/2026); D38, D39 trỏ đúng cột "Giá trị". Chương trình dùng `TDDA`, `TTQT`, `CPKT` (không dùng bản cũ `TTQT09`, `CPKT09`, `TDDA209`).
 
-**Lỗi còn lại của mẫu (24/10/2026):**
-- Bảng lập BCKTKT (`LBC79`): dòng dân dụng, công nghiệp, nông nghiệp, hạ tầng so cận với 7 và 15 (mốc thật là 1, 3, 20, 40 tỷ) nên 3 đến 40 tỷ nội suy sai. Chương trình tổng hợp sửa trong file kết quả, mẫu giữ nguyên.
-- Bảng phí thẩm định TK (`TTTK210`, dòng 367–384) và dự toán (`TTDT210`, 388–403), tiêu đề đã ghi TT 27/2023: công thức nội suy còn trỏ sang bảng TT 75/2014 (hàng 281 và 306), nên "Giá trị" ra số bảng cũ, không phải số anh nhập ở cột C–K.
-- Bảng mới NĐ 67/2023 (dòng 406–415): công thức trỏ hàng 306 (bảng khác), chưa có dòng mốc `^`/`$` ở cột A.
-- TH TMDT của mẫu: D41 (kiểm toán), D43 (quyết toán) còn trỏ bảng cũ NĐ 99/2021 (J350, J343); G43 nhân 50% quyết toán (chương trình chưa nhân, chờ anh xác nhận). Bảng `TDDA` lấy giá trị tra từ ô M359 (= ô nhập tay N51); chương trình trỏ về C9.
-- Chương trình chưa có các khoản bảo hiểm công trình, phí thẩm định TK, phí thẩm định dự toán (mẫu có): chờ anh quyết định.
+Anh sửa lần 3 (tối 24/10/2026): bảng lập BCKTKT (`LBC79`) đủ 6 mốc 1, 3, 7, 15, 20, 40 tỷ cho cả 5 loại công trình, cột "Giá trị" chuyển sang **cột I** (trên 40 tỷ ra 0: không lập BCKTKT); TH TMDT D18 trỏ I59, D41 trỏ `CPKT` (J270), D43 trỏ `TTQT` (J263). Ô C4, C9 của mẫu là số nhập tay để thử; chương trình ghi lại công thức trong file kết quả.
+
+**Còn lưu ý (26/10/2026):**
+- Bảng phí thẩm định TK (`TTTK210`) và dự toán (`TTDT210`), bảng NĐ 67/2023 (dòng 406–415): công thức nội suy vẫn đọc số ở bảng TT 75/2014 (hàng 281, 306). Số hai bên hiện giống nhau (chỉ khác ô 8.000 tỷ của thẩm định dự toán: 0,015 và 0,014), nên kết quả chưa sai; sửa số ở bảng mới sẽ không có tác dụng cho tới khi sửa công thức.
+- Bảng lập BCKTKT: J56, K56 dùng `>=40` nên chi phí xây dựng đúng 40 tỷ ra 0% (không phải 2,2%).
+- Anh chốt 26/10/2026: quyết toán **không nhân 50%** (mẫu G43 đã bỏ); đưa **bảo hiểm công trình** (0,25% GXD trước thuế, có thuế GTGT) và **phí thẩm định dự toán** (bảng `TTDT210` Phụ lục số 1, GXD trước thuế, không thuế, không nhân 50%) vào bảng tổng hợp. **Phí thẩm định thiết kế chưa đưa vào.**
 
 ## Định dạng sheet `TH TMDT`
 - Khổ **A4 ngang**, tỷ lệ in 73%, vừa 1 trang theo chiều ngang. Lề trái, phải 0,5 cm, lề trên 1,3 cm, lề dưới 1,7 cm. Chân trang "Trang x/y".
@@ -93,7 +93,7 @@ Trình tự: dự toán hạng mục trên F1 (tới chi phí xây dựng) → *
 1. **Không cần file F1 TMĐT** (từ 24/10/2026). Mọi tỷ lệ tra sheet `TT38`.
 2. Chạy `python/tong_hop_du_toan.py <file khai báo>` (xem mục File khai báo dự án trong SKILL.md). Chương trình:
    - Lấy chi phí xây dựng (G, GTGT, LT) từ sheet "Tổng hợp dự toán" của file hạng mục.
-   - **Tỷ lệ QLDA, lập BCKTKT, thẩm tra TK, thẩm tra DT, giám sát, lập HSMT** (anh chốt 24/10/2026): công thức trỏ sang sheet `TT38` giữ lại trong file kết quả. Loại công trình theo **hạng mục có chi phí xây dựng trước thuế lớn nhất** (`linh_vuc` của hạng mục đó); tỷ lệ nội suy theo **tổng** chi phí xây dựng trước thuế cả dự án (TT38!C4 = GXD trước thuế). Phí thẩm định dự án, kiểm toán, quyết toán tra bảng `TDDA`, `CPKT`, `TTQT` theo ô C9 = GXD + GQLDA + GTV sau thuế (tạm thay tổng mức đầu tư, tránh công thức vòng). Thẩm định HSMT, KQLCNT 0,1%; nghiệm thu 20% giám sát; dự phòng khối lượng 5%: theo mẫu.
+   - **Tỷ lệ QLDA, lập BCKTKT, thẩm tra TK, thẩm tra DT, giám sát, lập HSMT** (anh chốt 24/10/2026): công thức trỏ sang sheet `TT38` giữ lại trong file kết quả. Loại công trình theo **hạng mục có chi phí xây dựng trước thuế lớn nhất** (`linh_vuc` của hạng mục đó); tỷ lệ nội suy theo **tổng** chi phí xây dựng trước thuế cả dự án (TT38!C4 = GXD trước thuế). Chi phí khác theo thứ tự mẫu: K1 phí thẩm định dự án, K2 bảo hiểm, K3 phí thẩm định dự toán, K4 kiểm toán, K5 quyết toán, K6 nghiệm thu, K7 đảm bảo giao thông (nếu khai báo). Phí thẩm định dự án, kiểm toán, quyết toán tra bảng `TDDA`, `CPKT`, `TTQT` theo ô C9 = GXD + GQLDA + GTV sau thuế (tạm thay tổng mức đầu tư, tránh công thức vòng). Thẩm định HSMT, KQLCNT 0,1%; nghiệm thu 20% giám sát; dự phòng khối lượng 5%: theo mẫu.
    - Ghi ra `du-toan_tong-hop.xlsx`, mọi số tiền đều là công thức, có một ô thuế suất VAT duy nhất (M4).
 3. Chạy `python/thuyet_minh_du_toan.py <file khai báo>` (mẫu thuyết minh, xem `mau-thuyet-minh.md`).
 

@@ -9,6 +9,8 @@ Nguồn số liệu (khai báo trong FILE KHAI BÁO DỰ ÁN, mẫu: python/mau-
   - Tỷ lệ chi phí QLDA, lập BCKTKT, thẩm tra, giám sát, lập HSMT: sheet "TT38" của mẫu tổng hợp (anh đã nhập bảng
     TT 38/2026/TT-BXD). Loại công trình lấy theo hạng mục có chi phí xây dựng trước thuế lớn nhất; tỷ lệ nội suy theo
     TỔNG chi phí xây dựng trước thuế của dự án (ô C4 sheet TT38). Sheet TT38 giữ lại trong file kết quả để kiểm tra.
+  - Phí thẩm định dự toán (TT 27/2023/TT-BTC): sheet TT38 theo loại công trình, tính trên GXD trước thuế, không thuế.
+  - Bảo hiểm công trình 0,25% GXD trước thuế, có thuế GTGT (theo mẫu, NĐ 67/2023, NĐ 220/2026).
   - Phí thẩm định dự án (TT 28/2023/TT-BTC), kiểm toán, quyết toán (NĐ 193/2026/NĐ-CP): sheet TT38, nội suy theo
     GXD + GQLDA + GTV sau thuế (ô C9, tạm thay tổng mức đầu tư để tránh công thức vòng). Không cần file F1.
   - Thẩm định HSMT, kết quả LCNT (0,1%), kiểm tra nghiệm thu (20% giám sát), dự phòng khối lượng (5%): theo mẫu.
@@ -96,24 +98,6 @@ def o_tt38(ws, ma, loai):
     return f"TT38!{cot}{dong}"
 
 
-def sua_loi_bang_bcktkt(ws):
-    """Bảng lập BCKTKT (mã LBC79) của mẫu: các dòng dân dụng, công nghiệp, nông nghiệp, hạ tầng so cận với 7 và 15,
-    trong khi hàng mốc là 1, 3, 20, 40 tỷ (dòng giao thông đúng) -> chi phí 3 đến 40 tỷ nội suy ra sai.
-    Chỉ sửa trong FILE KẾT QUẢ, không sửa mẫu. Trả về danh sách ô đã sửa."""
-    da_sua = []
-    for r in range(1, ws.max_row + 1):
-        if ws[f"A{r}"].value != "LBC79^":
-            continue
-        moc = next(rr for rr in range(r, r + 5) if ws[f"G{rr}"].value == "Giá trị") + 1
-        for rr in range(moc + 1, moc + 6):
-            for c in "HI":
-                f = ws[f"{c}{rr}"].value
-                if isinstance(f, str) and f"${moc}=7," in f:
-                    ws[f"{c}{rr}"] = f.replace(f"${moc}=7,", f"${moc}=20,").replace(f"${moc}=15,", f"${moc}=40,")
-                    da_sua.append(f"{c}{rr}")
-    return da_sua
-
-
 def pct(x):
     return f"{x * 100:.3f}".rstrip("0").rstrip(".").replace(".", ",") + "%"
 
@@ -147,13 +131,13 @@ def main():
     wt = wb["TT38"]
     wt.defined_names.clear()
     wt.sheet_view.tabSelected = False          # tránh Excel mở ra 2 sheet bị chọn chung (nhóm sheet)
-    loi_bcktkt = sua_loi_bang_bcktkt(wt)
     # Tỷ lệ (%) Excel nội suy trong sheet TT38, theo loại công trình của hạng mục lớn nhất
     tl = {k: f"={o_tt38(wt, ma, loai)}/100" for k, ma in
           (("QLDA", "QLDA79"), ("BCKTKT", "LBC79"), ("TT_TK", "TTTKXD79"), ("TT_DT", "TTDT79"),
            ("GS", "GSTC79"), ("HSMT", "LXL79"))}
     tl.update({k: f"={o_tt38(wt, ma, dong)}/100" for k, ma, dong in
                (("TD_DA", "TDDA", "Tỷ lệ"), ("KTOAN", "CPKT", "Kiểm toán"), ("QTOAN", "TTQT", "Thẩm tra, phê duyệt"))})
+    tl["TD_DT"] = f"={o_tt38(wt, 'TTDT210', loai)}/100"   # phí thẩm định dự toán TT 27/2023 (dòng đầu: Phụ lục số 1)
     # Bảng phí thẩm định dự án: ô giá trị tra (ngay trên dòng tỷ lệ) mẫu trỏ vào ô nhập tay -> trỏ về C9
     o = o_tt38(wt, "TDDA", "Tỷ lệ").replace("TT38!", "")
     cot, dong = o.rstrip("0123456789"), int(o.lstrip("ABCDEFGHIJKLMNOPQRSTUVWXYZ"))
@@ -233,17 +217,22 @@ def main():
     def phi(stt, ten, ky, k, cach, g, h, can_cu):
         """Khoản phí tính trên tổng mức tạm (GXD + GQLDA + GTV sau thuế), tỷ lệ tra sheet TT38."""
         return them("muc", stt, ten, ky, tl[k], cach, g, h, "GH", can_cu)
-    ck = [
+    ck = [   # thứ tự theo mẫu: thẩm định dự án, bảo hiểm, thẩm định dự toán, kiểm toán, quyết toán, nghiệm thu
         phi(1, "- Phí thẩm định dự án đầu tư xây dựng", "K1", "TD_DA",
             '="(GXD + GQLDA + GTV) x "&D{r}&" (tối thiểu 500.000, tối đa 150 triệu)"',
             f"=ROUND(MIN(MAX({base_tm}*D{{r}},500000),150000000),0)", 0, "TT 28/2023/TT-BTC"),
-        phi(2, "- Chi phí kiểm toán độc lập", "K2", "KTOAN",
+        them("muc", 2, "- Chi phí bảo hiểm công trình xây dựng", "K2", 0.0025,   # 0,25% theo mẫu (D37)
+             '="GXD trước thuế x "&D{r}', f"=ROUND({B}*D{{r}},0)", f"=ROUND(G{{r}}*{V},0)", "GH",
+             "NĐ 67/2023/NĐ-CP, NĐ 220/2026/NĐ-CP"),
+        them("muc", 3, "- Phí thẩm định dự toán xây dựng", "K3", tl["TD_DT"],   # phí, không chịu thuế GTGT
+             '="GXD trước thuế x "&D{r}', f"=ROUND({B}*D{{r}},0)", 0, "GH", "TT 27/2023/TT-BTC, TT 64/2025/TT-BTC"),
+        phi(4, "- Chi phí kiểm toán độc lập", "K4", "KTOAN",
             '="(GXD + GQLDA + GTV) x "&D{r}&" (tối thiểu 1 triệu)"',
             f"=ROUND(MAX({base_tm}*D{{r}},1000000),0)", f"=ROUND(G{{r}}*{V},0)", "NĐ 193/2026/NĐ-CP"),
-        phi(3, "- Chi phí thẩm tra, phê duyệt quyết toán", "K3", "QTOAN",
+        phi(5, "- Chi phí thẩm tra, phê duyệt quyết toán", "K5", "QTOAN",
             '="(GXD + GQLDA + GTV) x "&D{r}&" (tối thiểu 500.000)"',
             f"=ROUND(MAX({base_tm}*D{{r}},500000),0)", 0, "NĐ 193/2026/NĐ-CP"),
-        them("muc", 4, "- Chi phí kiểm tra công tác nghiệm thu công trình", "K4", 0.2,   # 20% giám sát, theo mẫu
+        them("muc", 6, "- Chi phí kiểm tra công tác nghiệm thu công trình", "K6", 0.2,   # 20% giám sát, theo mẫu
              '="GTV4 trước thuế x "&D{r}', f"=ROUND($G${tv[3]}*D{{r}},0)", f"=ROUND(G{{r}}*{V},0)", "GH", "TT 10/2021/TT-BXD"),
     ]
     if kb.dam_bao_giao_thong:            # khoản riêng của giao thông, anh khai báo (tạm tính, trước thuế)
@@ -345,9 +334,6 @@ def main():
     wb.save(KQ)
     print("Đã lập:", KQ)
     print(f"Loại công trình tra sheet TT38: {loai} (theo hạng mục {h_lon.ten})")
-    if loi_bcktkt:
-        print("Đã sửa lỗi công thức bảng lập BCKTKT trong sheet TT38 của file kết quả (mẫu giữ nguyên):",
-              ", ".join(loi_bcktkt))
     for k_, rr in (("GXD", rI), ("GQLDA", rII), ("GTV", rIII), ("GK", rIV), ("GDP", rV), ("TMĐT", rT), ("Làm tròn", rR)):
         print(f"{k_:9} {wv[f'G{rr}'].value or 0:>14,.0f} {wv[f'H{rr}'].value or 0:>12,.0f} {wv[f'I{rr}'].value or 0:>14,.0f}")
     print(bang_chu(tong))

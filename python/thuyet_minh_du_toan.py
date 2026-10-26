@@ -231,7 +231,9 @@ def main():
         "Chi phí quản lý dự án, chi phí tư vấn đầu tư xây dựng, chi phí khác tính theo tỷ lệ % trên chi phí xây dựng "
         f"theo Thông tư 38/2026/TT-BXD ({loai}, loại công trình của hạng mục có chi phí xây dựng lớn nhất; tỷ lệ nội suy "
         "theo tổng chi phí xây dựng trước thuế của dự án); chi phí thẩm định hồ sơ mời thầu, kết quả lựa chọn nhà thầu theo Nghị định 214/2025/NĐ-CP; phí "
-        "thẩm định dự án theo Thông tư 28/2023/TT-BTC; chi phí kiểm toán độc lập, thẩm tra phê duyệt quyết toán theo "
+        "thẩm định dự án theo Thông tư 28/2023/TT-BTC; chi phí bảo hiểm công trình theo Nghị định 67/2023/NĐ-CP, Nghị "
+        "định 220/2026/NĐ-CP; phí thẩm định dự toán xây dựng theo Thông tư 27/2023/TT-BTC, Thông tư 64/2025/TT-BTC; "
+        "chi phí kiểm toán độc lập, thẩm tra phê duyệt quyết toán theo "
         "Nghị định 193/2026/NĐ-CP; chi phí kiểm tra công tác nghiệm thu theo Thông tư 10/2021/TT-BXD. "
         "Chi tiết xem bảng tổng hợp dự toán đính kèm.", 0)])]
     # Khoản tạm tính anh khai báo (đảm bảo giao thông, di dời): ghi rõ là tạm tính, tô vàng phần căn cứ chờ bổ sung
