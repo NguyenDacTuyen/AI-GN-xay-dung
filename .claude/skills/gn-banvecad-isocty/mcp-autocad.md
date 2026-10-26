@@ -15,7 +15,7 @@ Cách dùng máy chủ MCP `autocad` để vẽ và sửa bản vẽ theo chuẩ
 | Đọc thông tin bản vẽ: layer, đối tượng, khung tên | Khi AutoCAD không bật MCP, hoặc anh làm ở máy khác |
 
 ## Quy tắc bắt buộc
-1. **Luôn làm trên bản sao template, không vẽ vào bản vẽ gốc.** Bản vẽ mới thì chép `template/ISO_CTY.dwt` thành file `.dwg` mới. Sửa bản vẽ có sẵn thì chép ra bản sao trước. Bản sao để trong `ket-qua/<tên dự án>/`.
+1. **Luôn làm trên bản sao template, không vẽ vào bản vẽ gốc.** Bản vẽ mới thì chép `template/ban-ve/ISO_CTY.dwt` thành file `.dwg` mới. Sửa bản vẽ có sẵn thì chép ra bản sao trước. Bản sao để trong `ket-qua/<tên dự án>/`.
 2. **Đường dẫn và tên file không dấu tiếng Việt.** Công cụ đọc sai đường dẫn có dấu (ví dụ `Tài liệu`).
 3. **Không đụng vào bản vẽ anh đang mở** khi anh chưa đồng ý. Trước khi làm, kiểm tra `DWGNAME` để chắc đang ở đúng bản sao.
 4. **Cấm dùng `drawing` → `create`.** Lệnh này **xóa sạch toàn bộ đối tượng** của bản vẽ đang mở rồi purge, không phải tạo bản vẽ mới.
@@ -30,7 +30,7 @@ Cách dùng máy chủ MCP `autocad` để vẽ và sửa bản vẽ theo chuẩ
 **Bước 1: Kiểm tra kết nối.** Gọi `system` → `status`. Kết quả phải là `backend: file_ipc`. Nếu là `ezdxf` thì AutoCAD chưa mở hoặc chưa nạp `mcp_dispatch.lsp`, báo anh.
 
 **Bước 2: Chép template rồi mở bản sao.**
-- Chép file bằng lệnh shell, ví dụ `Copy-Item "template\ISO_CTY.dwt" "ket-qua\<du-an>\<ten-ban-ve>.dwg"`.
+- Chép file bằng lệnh shell, ví dụ `Copy-Item "templatean-ve\ISO_CTY.dwt" "ket-qua\<du-an>\<ten-ban-ve>.dwg"`.
 - Mở bằng `system` → `execute_lisp` (đường dẫn dùng dấu `/`):
   ```lisp
   (vl-load-com)

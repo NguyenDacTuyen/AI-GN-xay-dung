@@ -33,8 +33,10 @@ AI_Cad_K1/
 │   ├── gn-banvecad-isocty/      SKILL.md + template-ISO_CTY.md (bảng layer, style, khung tên, Layout) + mcp-autocad.md (vẽ qua MCP)
 │   ├── gn-dutoan/               SKILL.md + mau-hang-muc-chung.md + 3 file mẫu theo lĩnh vực + mau-tong-hop.md
 │   └── tham-tra/                SKILL.md + mau-bao-cao.md (bố cục mẫu báo cáo, căn cứ pháp lý)
-├── template/          ← mẫu công ty, chỉ đọc, không sửa: ISO_CTY.dwt, 1.2 Bao cao tham tra (sua).docx
-│   └── du-toan/       ← mẫu dự toán Excel: dan-dung-cong-nghiep/, ha-tang-ky-thuat/, giao-thong/, tong-hop/
+├── template/          ← mẫu công ty, chỉ đọc, không sửa
+│   ├── ban-ve/        ← ISO_CTY.dwt (template bản vẽ)
+│   ├── du-toan/       ← mẫu dự toán Excel: dan-dung-cong-nghiep/, ha-tang-ky-thuat/, giao-thong/, tong-hop/
+│   └── tham-tra/      ← 1.2 Bao cao tham tra (sua).docx (mẫu báo cáo thẩm tra)
 ├── lisp/              ← các file AutoLISP (.lsp)
 ├── python/            ← các file Python (.py)
 ├── ban-ve/            ← bản vẽ đầu vào (DWG/DXF), chỉ đọc, không sửa

@@ -28,7 +28,7 @@ Chi tiết bảng layer, bảng style theo tỷ lệ, khung tên, Layout của t
 
 ### Template công ty là chuẩn cao nhất
 - Khung tên, layer, cỡ chữ, text style và dim style đều **theo template của Công ty Gia Nguyễn**.
-- File template: **`template/ISO_CTY.dwt`**. Chi tiết layer, text style, dim style xem file **`template-ISO_CTY.md`** trong thư mục skill này.
+- File template: **`template/ban-ve/ISO_CTY.dwt`**. Chi tiết layer, text style, dim style xem file **`template-ISO_CTY.md`** trong thư mục skill này.
 - Code LISP/Python chỉ **dùng layer, text style, dim style đã có trong template**, và phải gõ **đúng tên** (kể cả dấu cách, chữ hoa, chữ thường). Không tự tạo style mới. Nếu thiếu thì báo lại.
 
 ### Khung tên và khổ giấy
@@ -97,7 +97,7 @@ Kích thước dưới đây tính **trên giấy in**. Trong Model nhân với 
    | `TP_1-xx SoHieuThep` | Kiểu Multileader | Phần cuối là block `GN_SoHieuThep`, đã phóng theo tỷ lệ |
 
    - Kiểu Multileader có cho 8 tỷ lệ: 1/10, 1/25, 1/50, 1/100, 1/150, 1/200, 1/250, 1/500. Tỷ lệ khác thì thêm 1 dòng vào danh sách trong `c:GNMAU`.
-   - Bản sao template đã có sẵn các mẫu này: `ket-qua/_mau-iso/ISO_CTY_bo-sung.dwt`, trang thử `ket-qua/_mau-iso/thu-mau.dwg`. **Khi anh chưa chép đè lên `template/ISO_CTY.dwt`**, bản vẽ mới chép từ template cũ phải chạy `GNMAU` trước khi ghi chú.
+   - Bản sao template đã có sẵn các mẫu này: `ket-qua/_mau-iso/ISO_CTY_bo-sung.dwt`, trang thử `ket-qua/_mau-iso/thu-mau.dwg`. **Khi anh chưa chép đè lên `template/ban-ve/ISO_CTY.dwt`**, bản vẽ mới chép từ template cũ phải chạy `GNMAU` trước khi ghi chú.
    - Multileader phải đặt trên layer `42.Tp_M learder`. Kiểu Multileader không tự chọn layer được.
    - Cách dùng tay: chọn kiểu Multileader đúng tỷ lệ, gõ `MLEADER`, bấm điểm mũi tên rồi điểm gãy. Số hiệu thép thì nhấp đúp để sửa số và chữ thép. Vòng tròn cần nằm bên trái thì đổi **Source block** trong bảng Properties thành `GN_SoHieuThep_T`.
    - Khi vẽ bằng code: **dùng Multileader và block này**, không vẽ nét rời. Cách gọi bằng code xem `mcp-autocad.md`, mục "Multileader bằng code".

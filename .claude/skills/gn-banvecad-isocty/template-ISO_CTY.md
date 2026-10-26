@@ -1,6 +1,6 @@
 # Chi tiết template ISO_CTY.dwt (tài liệu tra cứu của skill gn-banvecad-isocty)
 
-Đọc từ `template/ISO_CTY.dwt`, cập nhật lần cuối ngày 16/10/2026 sau khi anh sửa template. Cài đặt chung: đơn vị **mm** (INSUNITS = 4), hệ mét, LTSCALE = 1, in theo màu (.ctb). Loại nét có sẵn: Continuous, CENTER, HIDDEN.
+Đọc từ `template/ban-ve/ISO_CTY.dwt` (trước 26/10/2026 nằm ở `template/ISO_CTY.dwt`), cập nhật lần cuối ngày 16/10/2026 sau khi anh sửa template. Cài đặt chung: đơn vị **mm** (INSUNITS = 4), hệ mét, LTSCALE = 1, in theo màu (.ctb). Loại nét có sẵn: Continuous, CENTER, HIDDEN.
 
 ### Cách chọn style theo tỷ lệ (quan trọng nhất)
 Template **không dùng Annotative**. Mỗi tỷ lệ có một bộ style riêng, chữ đã được phóng to sẵn để in ra đúng cỡ. Vì vậy:

@@ -1,6 +1,6 @@
 # Mẫu báo cáo kết quả thẩm tra (tài liệu tra cứu của skill tham-tra)
 
-File mẫu: **`template/1.2 Bao cao tham tra (sua).docx`** (đọc ngày 17/10/2026). Đây là báo cáo thật của dự án đường giao thông "Nâng cấp, mở rộng đường KP8-15", dài khoảng 23 trang.
+File mẫu: **`template/tham-tra/1.2 Bao cao tham tra (sua).docx`** (đọc ngày 17/10/2026). Đây là báo cáo thật của dự án đường giao thông "Nâng cấp, mở rộng đường KP8-15", dài khoảng 23 trang.
 - Khi soạn báo cáo mới: **copy file mẫu** sang thư mục của dự án rồi thay nội dung, **giữ nguyên định dạng**. Không sửa file mẫu.
 
 **Định dạng**
