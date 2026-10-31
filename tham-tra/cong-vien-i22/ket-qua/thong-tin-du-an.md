@@ -7,18 +7,19 @@ Các mục ghi "(chưa có)" sẽ được điền sau khi đọc hồ sơ trong
 
 | Mục | Nội dung |
 |---|---|
-| Tên dự án | Công viên I.22 |
-| Loại việc | (chưa có: thẩm tra độc lập hay kiểm tra nội bộ) |
-| Chủ đầu tư | (chưa có) |
-| Nguồn vốn | (chưa có) |
-| Loại, cấp công trình | (chưa có) |
-| Địa điểm | (chưa có) |
-| Bước thiết kế được thẩm tra | (chưa có) |
-| Bước thiết kế trước đã duyệt | (chưa có: số quyết định, ngày) |
-| Đơn vị thiết kế | (chưa có) |
-| Công bố giá vật liệu áp dụng | (chưa có) |
-| Đơn giá nhân công áp dụng | (chưa có) |
-| Số báo cáo thẩm tra | (chưa có) |
+| Tên dự án | Xây dựng Công viên I.22 – xã Tân Xuân |
+| Loại việc | Thẩm tra độc lập (anh xác nhận 27/10/2026) – thẩm tra thiết kế BVTC và dự toán |
+| Chủ đầu tư | Ban Quản lý dự án đầu tư xây dựng xã Hóc Môn (theo thuyết minh TK) |
+| Nguồn vốn | Vốn đầu tư công (anh xác nhận 27/10/2026); thuyết minh ghi vốn ngân sách TP bổ sung có mục tiêu cho ngân sách cấp xã (NQ 158/NQ-HĐND ngày 17/12/2025 của HĐND xã Hóc Môn) |
+| Loại, cấp công trình | Cấp III, gồm 2 phần: **dân dụng** (nhà hội quán, nhà bơm, bể…) và **hạ tầng kỹ thuật** (san nền, giao thông nội bộ, cây xanh, điện, cấp thoát nước) – anh xác nhận 27/10/2026. Dự án nhóm C, thời hạn sử dụng ≥ 50 năm |
+| Địa điểm | Xã Tân Xuân cũ, nay thuộc xã Hóc Môn, TP. Hồ Chí Minh (thuyết minh kiến trúc ghi "xã Hóc Môn", thuyết minh kết cấu ghi "xã Tân Xuân") |
+| Bước thiết kế được thẩm tra | Thiết kế bản vẽ thi công (thiết kế 2 bước) |
+| Bước thiết kế trước đã duyệt | Đối chiếu theo **khái toán TKCS** `260630 KHÁI TOÁN TKCS-CÔNG VIÊN I.22 XÃ TÂN XUÂN` (.pdf và .xlsx), TMĐT 63.947.000.000 đ (anh chép bổ sung 27/10/2026). ⚠️ Chưa có số, ngày QĐ phê duyệt dự án; file `Quyết định 3641-QĐ-UBND.pdf` là QĐ bồi thường dự án rạch Bà Triệu, không liên quan. Hồ sơ nêu QĐ 252/QĐ-UBND-KT ngày 23/01/2026 (chủ trương) và QĐ 1328/QĐ-UBND-KT ngày 15/4/2026 (điều chỉnh chủ trương) |
+| Đơn vị thiết kế | Công ty TNHH Thiết kế Xây dựng Điểm Kiến Trúc (GĐ Phan Thanh Tùng; chủ trì dự toán Huỳnh Minh Hoàng Nhiệm, CC BXD-00139016) |
+| Công bố giá vật liệu áp dụng | Hồ sơ dự toán: TB 32431/TB-SXD-KTVLXD ngày 09/9/2026, giá VL TP.HCM tháng 8/2026 (khái toán TKCS dùng giá tháng 5/2026) |
+| Đơn giá nhân công áp dụng | QĐ 4570/QĐ-UBND ngày 24/7/2026 của UBND TP.HCM; định mức TT 38/2026/TT-BXD |
+| Số báo cáo thẩm tra | 2611/BCTTr/2026_GN |
+| Chủ trì thẩm tra | Phần dân dụng: ông **Đặng Xuân Bách**; phần hạ tầng kỹ thuật: ông **Lê Văn Hoàng** (số chứng chỉ: cần anh cung cấp khi soạn báo cáo) |
 
 ## Danh mục hạng mục và mã hạng mục
 
@@ -26,18 +27,57 @@ Các mục ghi "(chưa có)" sẽ được điền sau khi đọc hồ sơ trong
 
 | STT | Hạng mục | Mã | Thư mục | Ví dụ số ý kiến | Trạng thái |
 |---|---|---|---|---|---|
-| 1 | Nhà hội quán | `HQ` | `01-nha-hoi-quan` | TK-HQ-01, DT-HQ-01 | Chưa thẩm tra |
-| 2 | Nhà bơm, XLNT | `NB` | `02-nha-bom-xlnt` | TK-NB-01, DT-NB-01 | Chưa thẩm tra |
-| 3 | San nền giao thông | `SN` | `03-san-nen-giao-thong` | TK-SN-01, DT-SN-01 | Chưa thẩm tra |
-| 4 | Bể tự hoại, bể nước ngầm | `BT` | `04-be-tu-hoai-be-nuoc-ngam` | TK-BT-01, DT-BT-01 | Chưa thẩm tra |
-| 5 | Cảnh quan cây xanh | `CX` | `05-canh-quan-cay-xanh` | TK-CX-01, DT-CX-01 | Chưa thẩm tra |
-| 6 | Hệ thống điện | `HTD` | `06-he-thong-dien` | TK-HTD-01, DT-HTD-01 | Chưa thẩm tra |
-| 7 | Hệ thống cấp thoát nước | `CTN` | `07-cap-thoat-nuoc` | TK-CTN-01, DT-CTN-01 | Chưa thẩm tra |
-| | Phần chung, tổng hợp | `TH` | `00-chung`, `tong-hop` | TK-TH-01, DT-TH-01 | Chưa thẩm tra |
+| 1 | Nhà hội quán | `HQ` | `01-nha-hoi-quan` | TK-HQ-01, DT-HQ-01 | Đã thẩm tra dự thảo 27/10/2026, chờ anh duyệt: TK 2A/2B/4C, DT 2A/7B/6C; Gxd 6.669.098.150 → 6.152.727.676 đ tạm tính (−516.370.482 đ, −7,74%), còn tạm giữ giá VL chưa có báo giá (DT-HQ-02, ≈ 55% chi phí trực tiếp); kết cấu chờ phụ lục tính toán (TK-HQ-07, TK-HQ-08) |
+| 2 | Nhà bơm, XLNT | `NB` | `02-nha-bom-xlnt` | TK-NB-01, DT-NB-01 | Đã thẩm tra dự thảo 27/10/2026, chờ anh duyệt: TK 2A/2B/9C, DT 2A/9B/6C; Gxd 471.699.684 → 439.768.372 đ tạm tính (−31.931.316 đ, −6,77%), còn tạm giữ giá lam nhôm, cửa nhôm kính (DT-NB-09) và định mức thành bể (DT-NB-11) |
+| 3 | San nền giao thông | `SN` | `03-san-nen-giao-thong` | TK-SN-01, DT-SN-01 | Đã thẩm tra dự thảo 27/10/2026, chờ anh duyệt: TK 0A/4B/8C, DT 2A/5B/4C; Gxd 6.362.773.637 → 6.333.986.601 đ tạm tính (−28.787.036 đ), còn tạm giữ giá VL "tham khảo thị trường" và cự ly đổ thải |
+| 4 | Bể tự hoại, bể nước ngầm | `BT` | `04-be-tu-hoai-be-nuoc-ngam` | TK-BT-01, DT-BT-01 | Đã thẩm tra dự thảo 28/10/2026, chờ anh duyệt: TK 1A/2B/5C, DT 2A/6B/5C; Gxd 260.693.628 → 246.331.209 đ tạm tính (−14.362.419 đ, −5,51%); hai bể chưa đạt chống đẩy nổi khi rỗng nếu nước ngầm sát mặt đất (TK-BT-01, mức A); bể nước ngầm chỉ ≈ 25,1 m³ < 28 m³ (TK-BT-02); còn tạm giữ giá water stop, nắp thăm, gạch ốp lát chưa có báo giá (DT-BT-08) và chờ áp lại mã định mức (DT-BT-07) |
+| 5 | Cảnh quan cây xanh | `CX` | `05-canh-quan-cay-xanh` | TK-CX-01, DT-CX-01 | Đã thẩm tra dự thảo 28/10/2026, chờ anh duyệt: TK 0A/2B/6C, DT 3A/6B/3C; Gxd 2.553.359.790 → 2.546.943.876 đ tạm tính (−6.415.914 đ, −0,25%); còn tạm giữ giá VL "tham khảo thị trường" ≈ 76% chi phí trực tiếp (DT-CX-01), giá bị sửa tay so với dữ liệu gốc của file (DT-CX-02, kịch bản −405,6 triệu đ chi phí trực tiếp) và bồn cây di chuyển nghi tính trùng (DT-CX-03, kịch bản −281,3 triệu đ); bảng tên dự toán không khớp bản vẽ LS-401 (DT-CX-04) |
+| 6 | Hệ thống điện | `HTD` | `06-he-thong-dien` | TK-HTD-01, DT-HTD-01 | Đã thẩm tra dự thảo 28/10/2026, chờ anh duyệt: TK 0A/5B/7C, DT 3A/5B/6C; Gxd 2.669.119.064 → 2.285.637.209 đ tạm tính (−383.481.859 đ, −14,37%), trong đó chuyển thiết bị điện nhẹ 215.566.800 đ (chưa VAT) sang Gtb (DT-HTD-02; nếu không chuyển thì chỉ giảm ≈ 116,5 triệu đ); còn tạm giữ giá VL, thiết bị "tham khảo thị trường" ≈ 1.371,7 triệu đ (DT-HTD-01) |
+| 7 | Hệ thống cấp thoát nước | `CTN` | `07-cap-thoat-nuoc` | TK-CTN-01, DT-CTN-01 | Đã thẩm tra dự thảo 28/10/2026, chờ anh duyệt: TK 1A/3B/5C, DT 2A/6B/2C; Gxd 1.709.494.513 → 1.645.931.466 đ tạm tính (−63.563.052 đ, −3,72%), trong đó VAT 10 % → 8 % ≈ −30,5 triệu đ (DT-CTN-01); thủy lực thoát nước mưa chưa có bảng tính, kiểm tra sơ bộ đoạn M6–M8 (Ø300), M8–DN (Ø400) quá tải (TK-CTN-06, mức A); còn tạm giữ giá VL, thiết bị chưa có báo giá (DT-CTN-02), 35 m uPVC Ø220 chưa có giá (DT-CTN-06), xử lý đất đào trùng HM 03 (DT-CTN-07) |
+| | Phần chung, tổng hợp | `TH` | `00-chung`, `tong-hop` | TK-TH-01, DT-TH-01 | Dự thảo báo cáo Word chung 29/10/2026 (`tong-hop/`), chờ anh duyệt: TK-TH 1A/1B/3C, DT-TH 0A/3B/2C; dự toán tổng 65.202.615.243 → 64.235.638.371 đ tạm tính (−966.976.872 đ); chi phí QLDA, tư vấn, khác tính lại giữ tỷ lệ hồ sơ |
 
 Mã `TH` dùng cho ý kiến về thuyết minh chung, dự toán tổng hợp, chi phí cấp dự án (QLDA, tư vấn, khác, dự phòng) và ý kiến liên hạng mục.
 
 ## Điểm cần kiểm tra chéo khi tổng hợp
 Mỗi lượt thẩm tra hạng mục, nếu thấy chỗ có liên quan tới hạng mục khác thì ghi thêm vào đây, để kiểm tra ở bước tổng hợp.
 
-- (chưa có)
+- Hạng mục 2 (nhà bơm, XLNT) và 4 (bể tự hoại, bể nước ngầm) dùng **chung một file bản vẽ** `2. CongVien TanXuan _ KetCau_Nhabom+BeNuoc.dwg`: kiểm tra khối lượng không bị tính trùng giữa 2 dự toán.
+- Chưa có hồ sơ khảo sát địa chất, địa hình trong `dau-vao/` (TMĐT có HĐ khảo sát 06/2026/HĐ-BQLDA): cần để kiểm tra móng, san nền.
+- Dự toán tổng hợp `0.TMĐT.xlsx`: Gxd sau thuế 20.696.238.466 đ, tổng 65.203.000.000 đ, lớn hơn khái toán TKCS 63.947.000.000 đ; sheet `TMĐT-so sánh` bị lỗi #REF!.
+- (HM 03 ↔ HM 07) Cao độ hoàn thiện sân đường +7,20 ÷ +7,60, miệng thu, hố ga nước mưa ghi +6,95 trên tờ GT-02 (dốc ngang 1 ÷ 1,5 %, nhiều đoạn dốc dọc 0,3 %): đối chiếu cao độ miệng hố ga, đáy cống Ø300 của HM 07 (TK-SN-09).
+- (HM 03 ↔ HM 05) Khối lượng san nền đã trừ 693,01 m³ "đất cây xanh chiếm chỗ" (2.310,03 m² x 0,3 m): kiểm tra HM 05 có tính đắp đất trồng khối lượng này. HM 03 còn tính đất hữu cơ trồng cỏ trong gạch 222,9 m³, lát gạch trồng cỏ 743,01 m², gạch tự chèn 830,45 m²: kiểm tra không trùng với đất trồng, lát gạch của HM 05. Thiết bị sân chơi thiếu nhi (HM 05) cần cho chiều cao rơi để chọn chiều dày EPDM (TK-SN-12).
+- (HM 03 ↔ HM 06) Mương cáp, ống luồn cáp băng qua sân đường: kiểm tra hoàn trả kết cấu sân đường không tính trùng giữa HM 06 và HM 03.
+- (HM 03 ↔ HM 01, 02) Nền nhà hội quán, nhà rác + XLNT nằm trong lưới san nền 6.054,44 m² (cát đắp tới cao độ hoàn thiện sân 7,25–7,60): kiểm tra cát đắp nền nhà của HM 01, 02 không tính trùng. Xe thu gom rác, xe hút bùn vào nhà rác, bể tự hoại cần tuyến đường đủ tải trọng (TK-SN-03).
+- (TH, chi phí) Tỷ lệ nhà tạm Bảng 3.7 Phụ lục III TT 36/2026 tính theo Gxd trước thuế trong TMĐT dự án (≈ 19,2 tỷ > 15 tỷ: nằm giữa 1,1 % và 1,0 %); các HM đang lấy 1,1 %. VAT 8 % theo NQ 204/2025/QH15 chỉ đến 31/12/2026.
+- (TH, thuyết minh) Thuyết minh kiến trúc mục D và thuyết minh SD-CTN mục I ghi số liệu san nền, sân đường khác nhau và khác bản vẽ HM 03 (san nền 2.465,31 / 1.598,99 / 1.856,13 m³) – xem TK-SN-07.
+- (HM 02 ↔ HM 04) Đã kiểm tra: dự toán HM 04 không có công tác của bể XLNT, chưa thấy tính trùng. Nhưng bảng thép S-02-12 của bể tự hoại, bể nước ngầm có cùng lỗi thanh Ø8 số 1 = 507 thanh/vách (527,28 m; 208,28 kg mỗi bể) như bể XLNT (TK-NB-12) – HM 04 cần kiểm tra.
+- (HM 02 ↔ HM 03) Dự toán HM 02 tính đào, đắp, vận chuyển đất từ cao độ ±0,00 coi như mặt đất tự nhiên, và đắp cát nâng nền nhà bơm 5,52 m³; trong khi HM 03 san nền tới +7,25 ÷ +7,60: cần thống nhất cao độ ±0,00 nhà bơm với cao độ san nền, tránh tính trùng cát đắp nền và đất đào (DT-NB-02, DT-NB-15).
+- (HM 02 ↔ HM 04, 07) Bơm tăng áp biến tần, tủ điều khiển bơm nằm trong dự toán HM 07, đặt trong nhà bơm, hút từ bể nước ngầm (HM 04): kiểm tra vị trí, đấu nối. Cao độ ống vào, ra bể XLNT chưa có (TK-NB-01) – đối chiếu với mạng thoát nước thải HM 07.
+- (HM 02 ↔ chi phí thiết bị TH) Thiết bị XLNT 7 m³/ngđ (478.311.480 đ) gồm bể điều hòa, Anoxic, hiếu khí, lắng, nhà chứa thiết bị, nhưng kết cấu bể XLNT HM 02 chỉ có 1 ngăn (TK-NB-01, mức A). TKCS xếp bể XLNT 25 m³ (236.053.636 đ) vào nhóm bể nước phần hạ tầng; BVTC gộp vào HM 02 dân dụng, dung tích hình học còn khoảng 19 m³ (TK-NB-03).
+- (HM 02 ↔ HM 06) Cấp điện cho bơm và hệ XLNT (máy thổi khí, tủ điện) – kiểm tra có trong HM 06.
+- (HM 01 ↔ HM 03) Dự toán HQ đắp cát nâng nền 0,6 m (159,996 m³, 97.288.677 đ chi phí trực tiếp) không có trong chi tiết "Cấu tạo nền" S-01-07 (nền đặt trên đất tự nhiên đầm K0,90); HM 03 đã đắp cát nền nhà tới cao độ sân. Thẩm tra HQ tạm loại (DT-HQ-04); thống nhất cao độ ±0,00 nhà hội quán với san nền.
+- (HM 01 ↔ HM 05) TKCS có lan can kính 89,98 m², chống thấm, lát nền 160 m², lam gỗ nhựa 160 m² ("khu không gian ngoài trời" của khối nhà); BVTC HQ không còn các công tác này – kiểm tra có chuyển sang HM 05 không (TK-HQ-01). Cây trồng bồn hoa trên nhà (cúc tần, thiên điểu, trầu bà, đất trồng 8,065 m³) trong dự toán HQ không được trùng HM 05 (DT-HQ-15).
+- (HM 01 ↔ HM 02) Dự toán HQ có láng nền "phòng bơm" 4,56 m² – kiểm tra không trùng nhà bơm HM 02.
+- (HM 01 ↔ HM 06, 07) Chưa có bản vẽ điện, nước, PCCC trong nhà hội quán (TK-HQ-02); kiểm tra HM 06, HM 07 đã gồm phần trong nhà hay chưa.
+- (TH, mức độ) Thống nhất mức độ giữa các hạng mục: bê tông thương phẩm + máy trộn (DT-HQ-06 xếp B vì giá trị 0,55 triệu, DT-SN-02 xếp A); thiếu ghi chú chung kết cấu trên bản vẽ (TK-HQ-03 xếp B, TK-NB-05 xếp C).
+- (HM 01 ↔ HM 06) Đã kiểm tra: HM 06 gồm điện chiếu sáng, ổ cắm, quạt, wifi, camera trong nhà hội quán (Đ-04, Đ-06; dự toán mục "khối nhà hội quán + phụ trợ") – trả lời phần điện của TK-HQ-02. Còn thiếu chiếu sáng sự cố, exit, PCCC và chống sét đánh thẳng nhà hội quán (TK-HTD-10, 11): xác định thuộc HM 01 hay HM 06. Dự toán HM 06 có 8 trụ trang trí ghi thuộc "khối nhà hội quán" không có trên bản vẽ (DT-HTD-03).
+- (HM 02 ↔ HM 06) Đã kiểm tra: HM 06 cấp nguồn tủ DB.XLNT (4,5 kW, MCB 2P-32A, CXV 3Cx6) và tủ DB.BSH bơm sinh hoạt (1,5 kW, 2P-16A, CXV 3Cx4), chiếu sáng nhà rác-XLNT có trong Đ-04. Tổng công suất thiết bị XLNT trong TMĐT (sheet HTXLNT) chỉ ≈ 1,43 kW; tủ điều khiển XLNT 72 triệu đ thuộc chi phí thiết bị. Mạch bơm, XLNT không có chống dòng rò (TK-HTD-05, 06).
+- (HM 03 ↔ HM 06) Đã kiểm tra: dự toán HM 06 chỉ có đào, đắp cát, gạch thẻ, đắp đất mương cáp (662 m), không có hoàn trả kết cấu sân đường → không trùng HM 03. Nhưng thiếu ống bảo vệ băng đường (thuyết minh yêu cầu ống thép) và chưa quy định làm mương cáp, ống chờ trước kết cấu sân đường (TK-HTD-12, DT-HTD-14).
+- (HM 05 ↔ HM 06) 10 đèn LED cắm cỏ "1 đèn/cây bóng mát" (HM 06) – đối chiếu số cây bóng mát của HM 05.
+- (HM 07 ↔ HM 06) HM 06 dành 1,5 kW cho bơm sinh hoạt – đối chiếu công suất bơm tăng áp biến tần HM 07; tuyến mương cáp giao cắt cống thoát nước HM 07.
+- (TH, chi phí) Thiết bị điện nhẹ (camera, đầu ghi, switch, router, wifi, màn hình, UPS) 215,6 triệu đ nằm trong Gxd HM 06 (DT-HTD-02); TKCS có "thiết bị xây lắp" 247,6 triệu đ không còn trong TMĐT. Phần điện trong nhà hội quán tính theo tỷ lệ chi phí HTKT 5,5 % / 2 % thay vì dân dụng 7,3 % / 2,5 % (DT-HTD-13).
+- (HM 04 ↔ HM 02) Đã kiểm tra bảng thép S-02-12: lỗi thanh Ø8 số 1 = 507 thanh/vách xác nhận ở cả bể tự hoại, bể nước ngầm (TK-BT-05, DT-BT-03: thép D ≤ 10 giảm 1,120 → 0,751 tấn). Các thanh khác của bảng khớp hình vẽ. Bể nước ngầm "đặt tiếp giáp khu nhà bơm" (thuyết minh) nhưng chưa có mặt bằng định vị, ống hút bơm, hố thu, lỗ xuyên thành (TK-BT-04).
+- (HM 04 ↔ HM 07) Ống cấp vào, ống tràn, xả cặn bể nước ngầm; ống vào, ra bể tự hoại (D114), ống thông hơi, lỗ thông qua vách ngăn chưa có trên bản vẽ HM 04 (TK-BT-04): đối chiếu bản vẽ, cao độ và dự toán HM 07 (ống, phụ kiện, mặt bích chống thấm xuyên thành). Nước sau bể tự hoại dẫn sang trạm XLNT (HM 02) rồi ra hố ga – kiểm tra cao độ nối tiếp. Thuyết minh SD-CTN chọn bể nước ngầm 28 m³ (nhu cầu 18,12 m³/ngđ × 1,5), bản vẽ chỉ ≈ 25,1 m³ (TK-BT-02).
+- (HM 04 ↔ HM 03) Hai bể tính đào đất từ ±0,00 coi như mặt đất tự nhiên (đáy lót −2,75 và −3,05, mặt nắp −0,45), chưa gắn cao độ với san nền +7,25 ÷ +7,60: tránh trùng, thiếu đất đào, đắp (DT-BT-11). Xe hút bùn cần tiếp cận bể tự hoại.
+- (TH, mức độ) DT-BT-01 (bê tông thương phẩm + máy trộn 250 l, 975.892 đ) tạm xếp A theo quy tắc vốn đầu tư công – thống nhất với DT-HQ-06 (B), DT-SN-02 (A). Dự toán HM 04 dùng tỷ lệ chi phí gián tiếp HTKT (5,5 % / 2 % / 5,5 %), phù hợp nhóm hạ tầng của TMĐT (DT-BT-13). Định mức TT 38/2026: phụ lục được thay bằng Công văn 9947/BXD-VPB ngày 29/6/2026 – kiểm tra bản định mức các HM đang áp.
+- (HM 05 ↔ HM 03) Đã kiểm tra: đất trồng HM 05 = 693,01 m³ = 2.310,03 m² x 0,3 m, khớp đúng phần "đất cây xanh chiếm chỗ" HM 03 đã trừ → không trùng. Nhưng diện tích trồng đo trên LS-106 là 2.482,45 m² (thảm cỏ 2.136,99 + cây bụi 345,46), giá đất HM 05 700.000 đ/m³ (dữ liệu gốc file 340.000) khác đất hữu cơ HM 03 900.000 đ/m³ (DT-CX-02, DT-CX-10). Cỏ lá gừng HM 05 gồm 730,97 m² trong khu gạch trồng cỏ HM 03 (HM 03 không có công tác trồng cỏ nên không trùng, nhưng phải tính theo diện tích lỗ gạch). Không có gạch tự chèn trong HM 05.
+- (HM 05 ↔ HM 03, thiết bị) Thiết bị sân chơi chưa có số lượng, chiều cao rơi; ghi chú cao su "EPDM 20 mm", "EPDM 30 mm", "EPM" không thống nhất với lót cao su 3 cm HM 03 (TK-CX-06, TK-SN-12). Móng lắp đặt thiết bị (F.LS11) chưa có trong HM 03, HM 05 hay gói thiết bị (DT-CX-11). Trụ bóng rổ di động có trên bản vẽ, chưa có trong danh mục thiết bị TMĐT.
+- (HM 05 ↔ HM 01) Đã kiểm tra: BVTC cảnh quan không có lan can kính, lát nền, chống thấm, lam gỗ nhựa của "khu không gian ngoài trời" (TK-HQ-01) → các công tác này không chuyển sang HM 05. Dự toán HM 05 không có cúc tần, thiên điểu, trầu bà, đất bồn trên nhà → không trùng DT-HQ-15. Nhưng LS-402 (bồn cây trong nhà) và F.LS2 trên LS-101 (bồn cây trên tầng: vỉ nhựa 30 mm, vải địa, chống thấm, vữa tạo dốc) nằm trong bộ HM 05: kiểm tra dự toán HM 01 đã có các lớp này (TK-CX-08).
+- (HM 05 ↔ HM 06) Số cây bóng mát HM 05 theo đếm trên LS-105 khoảng 71 cây (sao đen 31, móng bò 18, lộc vừng 12, giáng hương 4, long não 4, lim xẹt 1, thị 1, khế 0–1; không kể cau, trúc, kè, tường vi), TKCS có 70 đèn hắt cây; HM 06 chỉ có 10 đèn cắm cỏ "1 đèn/cây bóng mát" – đối chiếu.
+- (TH, giá) Dự toán HM 05 có giá vật liệu bị sửa tay so với dữ liệu gốc của chính file (sheet ẩn "Công trình", cột "Giá sau VAT"): đất trồng, láng đá mài, bồn di chuyển, bảng hiệu, bộ chữ (DT-CX-02, mức A). Kiểm tra các hạng mục khác cùng đơn vị lập. Ghi chú chung trồng cây, hệ thống chống cây, bảng thiết bị nằm ngoài khung nhìn, không có trên tờ in (TK-CX-05).
+- (HM 07 ↔ HM 01) Đã kiểm tra: HM 07 **có gồm** cấp thoát nước trong nhà hội quán, nhà rác, trạm XLNT (P-06, P-07; dự toán công tác 54–89, thiết bị vệ sinh) – trả lời phần nước của TK-HQ-02. Chưa có cấp nước chữa cháy, phương tiện PCCC cho nhà hội quán (TK-CTN-04): xác định thuộc HM 01 hay HM 07.
+- (HM 07 ↔ HM 03) Miệng hố ga +7,25 ÷ +7,50, miệng thu +7,25 ÷ +7,50, đáy miệng thu +6,85 ÷ +7,10; "+6,95" trên GT-02 có lẽ là đáy miệng thu (miệng thu +7,35/+6,95) – đối chiếu từng vị trí với cao độ hoàn thiện sân (TK-SN-09). Ống uPVC Ø168 chôn 0,24 ÷ 0,34 m nằm trong lớp móng sân BTXM 15 + CPĐD 15 cm; cống Ø300 đầu tuyến chỉ 0,30 ÷ 0,46 m đất trên đỉnh cống (TK-CTN-08). Phui đào HM 07 tính từ cao độ hoàn thiện, đào vào cát san nền HM 03, chở đổ 10 km, mua cát mới lấp lại (437 m³), phần trên phui trùng chiều dày kết cấu sân (DT-CTN-07): thống nhất trình tự thi công, tránh tính trùng.
+- (HM 07 ↔ HM 02) Cao độ ống vào bể XLNT +6,90, ra +6,60 (VN2000, P-04): bể tự hoại ra +7,00 → Ø114 2 % → XLNT → Ø114 2 % → T1 +6,50 → Ø200 0,5 % → DN +6,44 – dùng trả lời TK-NB-01, cần quy đổi về ±0,00 nhà bơm.
+- (HM 07 ↔ HM 04, 06) Bơm tăng áp HM 07: thuyết minh Q = 6 m³/h, H = 45 m, 2,5 kW, 220 V 1 pha; dự toán ghi H = 55 m (TK-CTN-09) – HM 06 chỉ dành 1,5 kW cho tủ DB.BSH: đối chiếu công suất. P-05 HM 07 có chi tiết bể nước ngầm, bể tự hoại – đối chiếu kích thước với kết cấu HM 04 (bể nước ngầm ≈ 25,1 m³ < 28 m³, TK-BT-02). Ống, phụ kiện cấp vào, tràn, xả cặn bể nước ngầm trong dự toán HM 07 chỉ ghi khối lượng tổng, không có diễn giải (DT-CTN-10).
+- (TH, chi phí) HM 07 tính VAT 10 % (các HM khác 8 %); dòng HM 07 trong `0.TMĐT.xlsx` (XD-TB dòng 15) tách 1.582.865.290 đ trước thuế + 126.629.223 đ VAT 8 %, không khớp Gxdtt thực 1.537.176.974 đ (DT-CTN-01). Bơm, tủ điều khiển bơm nằm trong Gxd HM 07, nên chuyển sang chi phí thiết bị (DT-CTN-08). Giá cát "giá sau VAT" 376.971 < giá tháng 388.950 đ giống HM 06 (DT-CTN-09).
+- (TH, bước trước) TKCS phần thoát nước mưa có Ø400 17 đốt, Ø300 136 đốt, 17 hố ga, uPVC Ø220 320 m (≈ 861 triệu đ); BVTC HM 07 thêm cấp nước, thoát nước thải, cấp thoát nước trong nhà (TKCS tính trong suất vốn "Khối nhà chính") – khi so TMĐT với TKCS cần tách phần này (TK-CTN-01).

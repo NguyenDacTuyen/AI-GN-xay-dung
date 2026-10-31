@@ -7,6 +7,15 @@
       "env": {
         "AUTOCAD_MCP_BACKEND": "auto"
       }
+    },
+    "blender": {
+      "type": "stdio",
+      "command": "C:\\Users\\Desktop\\mcp\\vn-mcp-blender\\.venv\\Scripts\\python.exe",
+      "args": ["-m", "vn_mcp_blender.cli"]
+    },
+    "chatgpt-image": {
+      "type": "stdio",
+      "command": "C:\\Users\\Desktop\\mcp\\chatgpt-image-mcp\\.venv\\Scripts\\cgimg-mcp.exe"
     }
   }
 }
