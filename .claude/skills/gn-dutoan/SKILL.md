@@ -23,6 +23,15 @@ Nếu cần đọc bản vẽ CAD bằng code thì dùng thêm skill `gn-banveca
 - Sắp xếp theo hạng mục công trình, giống bảng khối lượng mời thầu thông thường.
 - Nếu bản vẽ thiếu số liệu hoặc không rõ thì **liệt kê ra để hỏi**, không tự đoán.
 
+## Bóc khối lượng tự động từ trắc dọc thoát nước, xuất theo mẫu (đọc `boc-tu-trac-doc.md`)
+
+Khi bóc **đào đắp + bê tông hầm ga (giếng thu)** hạ tầng thoát nước: làm theo file tra cứu **`boc-tu-trac-doc.md`** (cùng thư mục skill). Nguyên tắc 2 bước:
+1. **Tính động** từ DXF trắc dọc theo tên layer (bao nhiêu giếng cũng được), khối lượng dùng công thức.
+2. **Lấy chính file Excel mẫu làm nền**, chỉ thêm/bớt số hàng cho khớp số giếng → giữ nguyên 100% định dạng mẫu (in ngang, lề, hàng, cột, số lẻ, ô gộp).
+Không dựng bảng từ đầu rồi tự định dạng; không mở mẫu điền tay vào số hàng cố định.
+
+Chương trình: `python/boc-ham-ga-thoat-nuoc.py` (chạy nhanh `chay-boc-ham-ga.bat`); hướng dẫn cho anh: `python/HUONG-DAN-boc-ham-ga.md`. Tên layer, cột, công thức, thông số ô vàng: xem `boc-tu-trac-doc.md`. Bản vẽ khác chuẩn layer thì sửa phần CẤU HÌNH đầu chương trình (chương trình tự in danh sách layer nếu sai tên).
+
 ## Trình tự bản vẽ → phần mềm Dự toán F1 (anh chốt 22/10/2026, đã chạy thử khớp 100% với bể tự hoại GN2026-HT-01)
 
 Anh lập dự toán trên **phần mềm F1** (cài ở `C:\Program Files (x86)\DuToanF1`; sau bản cập nhật 22/10/2026 cửa sổ F1 chạy bằng `dutoanf1.exe`, khi điều khiển màn hình phải xin quyền đúng tên này). Không cần anh làm bảng khối lượng Excel:

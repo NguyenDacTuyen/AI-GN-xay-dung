@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sơ đồ đội Agent — AI_Cad_K1</title>
+<style>
+  :root{
+    --bg:#f4f6f9; --panel:#ffffff; --ink:#1c2430; --muted:#5b6b7d;
+    --line:#d4dbe4; --shadow:0 1px 3px rgba(20,30,45,.08),0 6px 18px rgba(20,30,45,.06);
+    --coord:#2563eb; --coord-bg:#e8f0ff;
+    --spec:#0f9d74; --spec-bg:#e3f6ef;
+    --qc:#b4530a; --qc-bg:#fbeede;
+    --user:#6d28d9; --user-bg:#efe8fb;
+    --flow:#9aa7b6;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --bg:#0f141b; --panel:#171f29; --ink:#e7edf4; --muted:#9fb0c2;
+      --line:#2a3542; --shadow:0 1px 3px rgba(0,0,0,.4),0 8px 22px rgba(0,0,0,.35);
+      --coord:#7aa6ff; --coord-bg:#1a2744;
+      --spec:#4fd1a5; --spec-bg:#123026;
+      --qc:#e9a054; --qc-bg:#3a2810;
+      --user:#b794f6; --user-bg:#271a3f;
+      --flow:#55657a;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0f141b; --panel:#171f29; --ink:#e7edf4; --muted:#9fb0c2;
+    --line:#2a3542; --shadow:0 1px 3px rgba(0,0,0,.4),0 8px 22px rgba(0,0,0,.35);
+    --coord:#7aa6ff; --coord-bg:#1a2744; --spec:#4fd1a5; --spec-bg:#123026;
+    --qc:#e9a054; --qc-bg:#3a2810; --user:#b794f6; --user-bg:#271a3f; --flow:#55657a;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;line-height:1.5;
+    padding:24px 16px 48px}
+  .wrap{max-width:1040px;margin:0 auto}
+  header h1{font-size:22px;margin:0 0 4px}
+  header p{margin:0;color:var(--muted);font-size:14px}
+  .legend{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0 8px;font-size:12.5px}
+  .legend span{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:20px;border:1px solid var(--line);background:var(--panel)}
+  .dot{width:10px;height:10px;border-radius:50%}
+  .stage{margin-top:14px}
+  .stage-label{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin:0 0 8px;font-weight:600}
+  .row{display:grid;gap:14px}
+  .cols-1{grid-template-columns:1fr}
+  .cols-2{grid-template-columns:repeat(2,1fr)}
+  .cols-3{grid-template-columns:repeat(3,1fr)}
+  @media(max-width:720px){.cols-2,.cols-3{grid-template-columns:1fr}}
+  .card{background:var(--panel);border:1px solid var(--line);border-left-width:4px;border-radius:12px;
+    padding:12px 14px;box-shadow:var(--shadow)}
+  .card.coord{border-left-color:var(--coord)}
+  .card.spec{border-left-color:var(--spec)}
+  .card.qc{border-left-color:var(--qc)}
+  .card.user{border-left-color:var(--user);background:var(--user-bg)}
+  .card h3{margin:0 0 2px;font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .code{font-family:"Cascadia Code",Consolas,monospace;font-size:12.5px}
+  .role{color:var(--muted);font-size:13px;margin:2px 0 8px}
+  .tags{display:flex;flex-wrap:wrap;gap:6px}
+  .tag{font-size:11px;padding:2px 8px;border-radius:6px;border:1px solid var(--line);background:var(--bg);color:var(--ink);white-space:nowrap}
+  .tag.model{font-weight:600}
+  .tag.ro{color:var(--qc);border-color:var(--qc);background:var(--qc-bg)}
+  .tag.skill{color:var(--spec);border-color:var(--spec);background:var(--spec-bg)}
+  .tag.out{color:var(--coord);border-color:var(--coord);background:var(--coord-bg)}
+  .arrow{display:flex;justify-content:center;align-items:center;color:var(--flow);margin:10px 0;font-size:13px;gap:8px}
+  .arrow::before,.arrow::after{content:"";height:1px;background:var(--flow);flex:1;max-width:120px;opacity:.6}
+  .note{margin-top:28px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;font-size:13px;box-shadow:var(--shadow)}
+  .note h2{font-size:14px;margin:0 0 8px}
+  .note ul{margin:0;padding-left:18px} .note li{margin:4px 0}
+  .flowgrid{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:6px 10px;align-items:center;margin-top:8px;font-size:12.5px}
+  .pill{background:var(--spec-bg);border:1px solid var(--spec);color:var(--spec);border-radius:8px;padding:6px 8px;text-align:center;font-family:monospace}
+  .seq{color:var(--flow);text-align:center}
+  @media(max-width:720px){.flowgrid{grid-template-columns:1fr;text-align:center}.seq{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Đội Agent — Dự án AI_Cad_K1 (Gia Nguyễn)</h1>
+    <p>8 agent: 1 điều phối · 5 chuyên môn theo 5 lĩnh vực · 2 kiểm tra độc lập. Mỗi agent ghi kết quả vào <span class="code">handoff/NN_*.md</span> theo mẫu chung 6 mục.</p>
+  </header>
+
+  <div class="legend">
+    <span><i class="dot" style="background:var(--user)"></i>Anh Tuyên</span>
+    <span><i class="dot" style="background:var(--coord)"></i>Điều phối</span>
+    <span><i class="dot" style="background:var(--spec)"></i>Chuyên môn</span>
+    <span><i class="dot" style="background:var(--qc)"></i>Kiểm tra (chỉ đọc)</span>
+  </div>
+
+  <!-- Stage 0 -->
+  <div class="stage">
+    <p class="stage-label">1 · Đầu vào</p>
+    <div class="row cols-1">
+      <div class="card user">
+        <h3>Anh Tuyên</h3>
+        <div class="role">Giao yêu cầu + hồ sơ đầu vào: bản vẽ (<span class="code">ban-ve/</span>), hồ sơ nhận (<span class="code">tham-tra/&lt;dự án&gt;/dau-vao/</span>), tài liệu (<span class="code">tai-lieu/</span>). Duyệt và ký ở bước cuối.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow">giao việc</div>
+
+  <!-- Stage 1: coordinator -->
+  <div class="stage">
+    <p class="stage-label">2 · Điều phối</p>
+    <div class="row cols-1">
+      <div class="card coord">
+        <h3><span class="code">tiep-nhan-yeu-cau</span></h3>
+        <div class="role">Làm rõ yêu cầu, phân loại theo 5 lĩnh vực, lập kế hoạch và trình tự giao việc, tổng hợp kết quả cuối. Không tự làm chuyên môn.</div>
+        <div class="tags">
+          <span class="tag model">opus · high</span>
+          <span class="tag">Read/Glob/Grep/Write</span>
+          <span class="tag out">→ handoff/00_ke-hoach.md</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow">phân việc theo lĩnh vực + trình tự phụ thuộc</div>
+
+  <!-- Stage 2: specialists -->
+  <div class="stage">
+    <p class="stage-label">3 · Chuyên môn (5 lĩnh vực)</p>
+    <div class="row cols-2">
+      <div class="card spec">
+        <h3><span class="code">ky-su-ban-ve-cad</span></h3>
+        <div class="role">① Bản vẽ CAD: vẽ, sửa, chuẩn hóa, thống kê; viết LISP/Python; Layout, khung tên, in PDF. Không ghi đè bản vẽ gốc.</div>
+        <div class="tags"><span class="tag model">sonnet · high</span><span class="tag skill">gn-banvecad-isocty</span><span class="tag out">→ 01_ban-ve.md</span></div>
+      </div>
+      <div class="card spec">
+        <h3><span class="code">ky-su-boc-khoi-luong</span></h3>
+        <div class="role">② Bóc khối lượng từ kích thước bản vẽ, mỗi dòng có diễn giải + nguồn; soát bẫy. Không điền đơn giá.</div>
+        <div class="tags"><span class="tag model">sonnet · high</span><span class="tag skill">gn-dutoan</span><span class="tag out">→ 02_khoi-luong.md</span></div>
+      </div>
+      <div class="card spec">
+        <h3><span class="code">chuyen-vien-du-toan</span></h3>
+        <div class="role">③ Dự toán, tổng mức, so sánh giá; áp mã định mức và tra đơn giá có nguồn (ưu tiên phía Nam). Không bịa mã/đơn giá.</div>
+        <div class="tags"><span class="tag model">sonnet · high</span><span class="tag skill">gn-dutoan</span><span class="tag out">→ 03_du-toan.md</span></div>
+      </div>
+      <div class="card spec">
+        <h3><span class="code">ky-su-bien-phap-thi-cong</span></h3>
+        <div class="role">④ Biện pháp thi công (.docx): căn cứ, trình tự, an toàn, nghiệm thu; bám điều kiện miền Nam (đất yếu, mùa mưa, nước ngầm).</div>
+        <div class="tags"><span class="tag model">sonnet · high</span><span class="tag out">→ 04_bien-phap-thi-cong.md</span></div>
+      </div>
+      <div class="card spec" style="grid-column:1/-1">
+        <h3><span class="code">chuyen-vien-tham-tra</span></h3>
+        <div class="role">⑤ Thẩm tra thiết kế &amp; dự toán: dự thảo ý kiến TK/DT mức A/B/C, bảng so sánh dự toán, báo cáo theo mẫu công ty. Chỉ soạn dự thảo; kết luận do anh quyết và ký.</div>
+        <div class="tags"><span class="tag model">opus · high</span><span class="tag skill">tham-tra</span><span class="tag out">→ 05_tham-tra.md</span></div>
+      </div>
+    </div>
+    <div class="flowgrid">
+      <div class="pill">① bản vẽ</div><div class="seq">→</div>
+      <div class="pill">② khối lượng</div><div class="seq">→</div>
+      <div class="pill">③ dự toán</div>
+    </div>
+    <p class="stage-label" style="margin-top:8px;text-transform:none;font-weight:400">
+      Phụ thuộc: ② cần ① · ③ cần ② · ④ cần ①②  · ⑤ đối chiếu ①③ (hoặc hồ sơ đơn vị khác).
+    </p>
+  </div>
+
+  <div class="arrow">nộp sản phẩm + handoff để soát</div>
+
+  <!-- Stage 3: QC -->
+  <div class="stage">
+    <p class="stage-label">4 · Kiểm tra độc lập (chỉ đọc)</p>
+    <div class="row cols-2">
+      <div class="card qc">
+        <h3><span class="code">kiem-tra-khoi-luong</span> <span class="tag ro">chỉ đọc</span></h3>
+        <div class="role">Soát số học khối lượng/dự toán Excel: diễn giải, dòng tổng, đơn vị, làm tròn cộng dồn, đối chiếu bản vẽ, thống kê thép, giữa các sheet và file F1/G8.</div>
+        <div class="tags"><span class="tag model">sonnet · high</span><span class="tag">Read/Glob/Grep/Bash</span></div>
+      </div>
+      <div class="card qc">
+        <h3><span class="code">ky-su-kiem-tra</span> <span class="tag ro">chỉ đọc</span></h3>
+        <div class="role">Soát tính đầy đủ, nhất quán và nguồn của cả bộ hồ sơ; đối chiếu chéo các handoff với hồ sơ gốc; bắt chỗ tự điền giá, tự kết luận, bịa số.</div>
+        <div class="tags"><span class="tag model">sonnet · high</span><span class="tag">Read/Glob/Grep</span><span class="tag out">→ 07_kiem-tra-ho-so.md</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow">báo lỗi (nếu CẦN SỬA, quay lại chuyên môn tương ứng)</div>
+
+  <!-- Stage 4: wrap -->
+  <div class="stage">
+    <p class="stage-label">5 · Tổng hợp &amp; duyệt</p>
+    <div class="row cols-1">
+      <div class="card coord">
+        <h3><span class="code">tiep-nhan-yeu-cau</span> → <span style="color:var(--user)">Anh Tuyên</span></h3>
+        <div class="role">Điều phối gom kết quả, nêu rõ phần còn <span class="code">[Chờ bổ sung]</span> / <span class="code">Cần xác nhận lại</span> / <span class="code">cần kiểm tra hiệu lực</span>. Anh Tuyên duyệt, quyết kết luận và ký.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="note">
+    <h2>Cách đội làm việc cùng nhau</h2>
+    <ul>
+      <li><b>Một cửa vào:</b> mọi việc qua <span class="code">tiep-nhan-yeu-cau</span> để phân loại và định trình tự, tránh làm chồng chéo.</li>
+      <li><b>Dòng dữ liệu chính:</b> bản vẽ → khối lượng → dự toán. Biện pháp thi công và thẩm tra dùng lại sản phẩm các bước trước.</li>
+      <li><b>Kiểm tra tách khỏi lập:</b> 2 agent kiểm tra chỉ đọc, không sửa, nên ý kiến khách quan; lỗi được giao lại đúng agent đã lập.</li>
+      <li><b>Chống bịa số liệu:</b> mọi agent dùng 3 nhãn <span class="code">[Chờ bổ sung]</span> · <span class="code">Tài liệu không đề cập</span> · <span class="code">Cần xác nhận lại</span>; không ghi đè file gốc, bản cũ vào <span class="code">_backup/</span>.</li>
+      <li><b>Bàn giao thống nhất:</b> mỗi agent ghi <span class="code">handoff/NN_*.md</span> theo mẫu 6 mục (việc được giao · đầu vào · kết quả · giả định · chỗ chưa chắc · việc người sau).</li>
+      <li><b>Mô hình chạy:</b> opus cho điều phối và thẩm tra (suy luận, pháp lý nặng); sonnet · high cho phần còn lại.</li>
+    </ul>
+  </div>
+</div>
+</body>
+</html>
