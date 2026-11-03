@@ -30,7 +30,11 @@ Khi bóc **đào đắp + bê tông hầm ga (giếng thu)** hạ tầng thoát 
 2. **Lấy chính file Excel mẫu làm nền**, chỉ thêm/bớt số hàng cho khớp số giếng → giữ nguyên 100% định dạng mẫu (in ngang, lề, hàng, cột, số lẻ, ô gộp).
 Không dựng bảng từ đầu rồi tự định dạng; không mở mẫu điền tay vào số hàng cố định.
 
-Chương trình: `python/boc-ham-ga-thoat-nuoc.py` (chạy nhanh `chay-boc-ham-ga.bat`); hướng dẫn cho anh: `python/HUONG-DAN-boc-ham-ga.md`. Tên layer, cột, công thức, thông số ô vàng: xem `boc-tu-trac-doc.md`. Bản vẽ khác chuẩn layer thì sửa phần CẤU HÌNH đầu chương trình (chương trình tự in danh sách layer nếu sai tên).
+Hai bộ công cụ (cùng file mẫu `mau hamga.xlsx`, cùng sheet "DINH HINH CONG" để tra):
+- **Hầm ga (giếng thu):** `python/boc-ham-ga-thoat-nuoc.py` (`chay-boc-ham-ga.bat`) → tab "Dao dap ho ga".
+- **Cống + mối nối/gối cống:** `python/boc-cong-moinoi-thoat-nuoc.py` (`chay-boc-cong-moinoi.bat`) → tab "Dao dap cong" + "Moi noi-goi cong", mỗi đoạn ghép 2 giếng đầu/sau, tra VLOOKUP vào "DINH HINH CONG".
+
+Tên layer, cột, công thức, thông số, bảng định hình: xem **`boc-tu-trac-doc.md`**. Bản vẽ khác chuẩn layer thì sửa CẤU HÌNH đầu chương trình (tự in danh sách layer nếu sai tên). Số cột trong chương trình phải khớp header tab của file mẫu, nếu không sẽ lệch cột.
 
 ## Trình tự bản vẽ → phần mềm Dự toán F1 (anh chốt 22/10/2026, đã chạy thử khớp 100% với bể tự hoại GN2026-HT-01)
 
