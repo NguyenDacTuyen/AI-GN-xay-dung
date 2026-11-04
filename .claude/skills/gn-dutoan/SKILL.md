@@ -36,6 +36,24 @@ Hai bộ công cụ (cùng file mẫu `mau hamga.xlsx`, cùng sheet "DINH HINH C
 
 Tên layer, cột, công thức, thông số, bảng định hình: xem **`boc-tu-trac-doc.md`**. Bản vẽ khác chuẩn layer thì sửa CẤU HÌNH đầu chương trình (tự in danh sách layer nếu sai tên). Số cột trong chương trình phải khớp header tab của file mẫu, nếu không sẽ lệch cột.
 
+### Bóc TỔNG HỢP 1 file: thoát nước + giao thông (chốt 04/11/2026)
+
+Khi cần ra **1 file Excel đủ cả thoát nước và giao thông** theo một mẫu tổng hợp: dùng
+**`python/boc-tong-hop-thoat-nuoc-giao-thong.py`** (`chay-boc-tong-hop.bat`). Chương trình gọi lại 2 bộ trên, rồi ghép thành 1 file:
+- Mẫu tổng hợp: `template/du-toan/thoat-nuoc-giao-thong/mau-boc-khoi-luong-tong-hop.xlsx` (7 sheet: Thong so, DINH HINH CONG, Dao dap cong, Dao dap ho ga, Moi noi-goi cong, Dao dap nen duong, Tong hop).
+- **Thoát nước** (cống, hầm ga, mối nối/gối): bóc tự động từ DXF như trên.
+- **Giao thông** (`Dao dap nen duong`): KHÔNG đọc tự động từ bản vẽ được (dải bảng san nền trong DXF không tin cậy). Anh **xuất CSV từ ADSdesign**; chương trình đổ vào, **số cột công tác động** theo CSV. Công trình không có giao thông thì để `CSV_GIAOTHONG = ""`.
+- **Tong hop**: công thức **tự tìm dòng TỔNG** (INDEX/MATCH), giao thông dò theo **tên công tác** → dùng lại cho mọi công trình dù khác số lượng/số cột.
+- Viền ngoài cùng mọi bảng kẻ **nét đậm** (medium), viền trong mảnh.
+
+**Bản đồ cột (phải khớp tiêu đề mẫu, nếu sửa mẫu phải sửa chương trình):**
+- `Dao dap cong`: R=V đào, S=V cống chiếm chỗ, T=V lòng cát lưng cống (đắp trả).
+- `Moi noi-goi cong`: H=số mối nối, I=số gối, J=vữa, K=VK chèn mối nối, L=BT chèn gối, M=tổng dài, **N=cát đệm đáy cống, O=VK bê tông lót đáy cống, P=BT lót đáy cống**, Q=cừ tràm gối cống.
+- `Dao dap ho ga`: L=V đào, M=thép thân, N=thép thang, O=VK thành, P=BT thành, **Q=VK lót hầm ga, R=BT lót hầm ga M150, S=cừ tràm**. (Cột VK lót=4·I·B14, BT lót=I²·B14 với I=B_bê tông lót HG, B14=dày BT lót HG.)
+- `Tong hop` giao thông: mỗi công tác = `INDEX` cột KL tại dòng TỔNG, dò theo tên ở hàng 5 của `Dao dap nen duong`.
+
+CẤU HÌNH (sửa đầu chương trình): `MAU` (mặc định trỏ mẫu trong template), `DXF`, `CSV_GIAOTHONG`, `OUT`. 4 ô thông số thi công hầm ga trong `Thong so` (B9 hố lắng, B14 dày BT lót HG, B18 bản đáy HG, B19 mở rộng BT lót, B20 bước nấc thang) lấy từ **bản vẽ chi tiết hầm ga**, không có trong DINH HINH CONG.
+
 ## Trình tự bản vẽ → phần mềm Dự toán F1 (anh chốt 22/10/2026, đã chạy thử khớp 100% với bể tự hoại GN2026-HT-01)
 
 Anh lập dự toán trên **phần mềm F1** (cài ở `C:\Program Files (x86)\DuToanF1`; sau bản cập nhật 22/10/2026 cửa sổ F1 chạy bằng `dutoanf1.exe`, khi điều khiển màn hình phải xin quyền đúng tên này). Không cần anh làm bảng khối lượng Excel:

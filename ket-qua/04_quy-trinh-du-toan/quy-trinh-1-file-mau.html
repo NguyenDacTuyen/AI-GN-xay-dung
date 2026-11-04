@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gộp 1 file mẫu &amp; quy trình bóc khối lượng</title>
+<style>
+  :root{
+    --bg:#f4f6f9; --panel:#ffffff; --ink:#1c2430; --muted:#5b6b7d; --line:#d4dbe4;
+    --shadow:0 1px 3px rgba(20,30,45,.08),0 6px 18px rgba(20,30,45,.06);
+    --anh:#b4530a; --anh-bg:#fbeede;
+    --cl:#2563eb; --cl-bg:#e8f0ff;
+    --both:#0f9d74; --both-bg:#e3f6ef;
+    --flow:#9aa7b6;
+    --tabwater:#2563eb; --tabroad:#b4530a; --tabsum:#0f9d74;
+  }
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+    --bg:#0f141b;--panel:#171f29;--ink:#e7edf4;--muted:#9fb0c2;--line:#2a3542;
+    --shadow:0 1px 3px rgba(0,0,0,.4),0 8px 22px rgba(0,0,0,.35);
+    --anh:#e9a054;--anh-bg:#3a2810;--cl:#7aa6ff;--cl-bg:#1a2744;--both:#4fd1a5;--both-bg:#123026;--flow:#55657a;
+    --tabwater:#7aa6ff;--tabroad:#e9a054;--tabsum:#4fd1a5;}}
+  :root[data-theme="dark"]{--bg:#0f141b;--panel:#171f29;--ink:#e7edf4;--muted:#9fb0c2;--line:#2a3542;
+    --anh:#e9a054;--anh-bg:#3a2810;--cl:#7aa6ff;--cl-bg:#1a2744;--both:#4fd1a5;--both-bg:#123026;--flow:#55657a;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;line-height:1.5;padding:24px 16px 48px}
+  .wrap{max-width:920px;margin:0 auto}
+  h1{font-size:22px;margin:0 0 4px}
+  .sub{color:var(--muted);font-size:14px;margin:0 0 20px}
+  h2.sec{font-size:17px;margin:26px 0 12px;padding-bottom:6px;border-bottom:2px solid var(--line)}
+  .legend{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 18px;font-size:13px}
+  .legend span{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:20px;border:1px solid var(--line);background:var(--panel)}
+  .dot{width:11px;height:11px;border-radius:3px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow);margin:0 0 14px}
+  .card p{margin:6px 0} .card ul{margin:6px 0 0;padding-left:20px} .card li{margin:4px 0}
+  .yes{display:inline-block;font-weight:700;color:var(--both);background:var(--both-bg);border:1px solid var(--both);padding:2px 12px;border-radius:20px;font-size:13px}
+  .code{font-family:"Cascadia Code",Consolas,monospace;font-size:12.5px;background:var(--bg);padding:1px 6px;border-radius:5px;border:1px solid var(--line)}
+  /* so do 1 file nhieu sheet */
+  .book{display:flex;flex-direction:column;gap:0;border:2px solid var(--line);border-radius:10px;overflow:hidden;max-width:560px}
+  .bktitle{background:var(--bg);padding:8px 12px;font-weight:700;font-size:14px;border-bottom:1px solid var(--line)}
+  .tabs{display:flex;flex-wrap:wrap;gap:0}
+  .tab{flex:1 1 auto;min-width:120px;padding:9px 10px;font-size:12.5px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);text-align:center;background:var(--panel)}
+  .tab b{display:block;font-size:12px}
+  .tab .t{font-size:10.5px;color:var(--muted);margin-top:2px}
+  .tab.w{border-top:3px solid var(--tabwater)} .tab.r{border-top:3px solid var(--tabroad)} .tab.s{border-top:3px solid var(--tabsum)} .tab.n{border-top:3px solid var(--muted)}
+  .newtab{position:relative}
+  .newtab::after{content:"MỚI THÊM";position:absolute;top:2px;right:2px;font-size:8px;font-weight:700;color:#fff;background:var(--tabroad);padding:1px 4px;border-radius:4px}
+  /* steps */
+  ol.steps{counter-reset:s;list-style:none;padding:0;margin:0}
+  ol.steps>li{position:relative;padding:12px 15px 12px 52px;background:var(--panel);border:1px solid var(--line);border-left-width:5px;border-radius:12px;box-shadow:var(--shadow);margin:0 0 10px}
+  ol.steps>li::before{counter-increment:s;content:counter(s);position:absolute;left:14px;top:12px;width:26px;height:26px;border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px}
+  li.anh{border-left-color:var(--anh)} li.anh::before{background:var(--anh)}
+  li.cl{border-left-color:var(--cl)} li.cl::before{background:var(--cl)}
+  li.both{border-left-color:var(--both)} li.both::before{background:var(--both)}
+  .stitle{font-weight:600;font-size:14.5px}
+  .tag{font-size:11px;font-weight:600;padding:2px 9px;border-radius:20px;white-space:nowrap;margin-left:8px}
+  .tag.anh{color:var(--anh);background:var(--anh-bg);border:1px solid var(--anh)}
+  .tag.cl{color:var(--cl);background:var(--cl-bg);border:1px solid var(--cl)}
+  .tag.both{color:var(--both);background:var(--both-bg);border:1px solid var(--both)}
+  ol.steps .sbody{margin:6px 0 0;font-size:13.5px}
+  ol.steps .sbody ul{margin:4px 0 0;padding-left:18px}
+  .note{margin-top:8px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;font-size:13.5px;box-shadow:var(--shadow)}
+  .note h3{font-size:14px;margin:0 0 8px}
+  .note ul{margin:0;padding-left:18px} .note li{margin:5px 0}
+  .warn{color:var(--anh);font-weight:600}
+  .ok{color:var(--both);font-weight:600}
+  .kbd{font-family:"Cascadia Code",Consolas,monospace;font-size:12px;background:var(--bg);border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:1px 6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Gộp 2 mẫu thành 1 file &amp; quy trình bóc khối lượng</h1>
+  <p class="sub">Dự án AI_Cad_K1 · Gia Nguyễn · Cống – hầm ga – mối nối/gối cống – đào đắp nền đường trong MỘT file Excel.</p>
+
+  <!-- ============ PHAN 1 ============ -->
+  <h2 class="sec">1 · Gộp được không?</h2>
+  <div class="card">
+    <p><span class="yes">✔ ĐƯỢC</span> &nbsp;Một file Excel chứa được nhiều sheet (tab). Chỉ cần đưa sheet <span class="code">Dao dap nen duong</span> của mẫu giao thông vào chung file mẫu hầm ga là có <b>1 file mẫu tổng hợp</b> dùng cho cả 4 loại khối lượng.</p>
+    <p><span class="warn">Quan trọng:</span> không sửa trên 2 file gốc. Tạo <b>file mới</b> (ví dụ <span class="code">mau-boc-khoi-luong-tong-hop.xlsx</span>) rồi gộp vào đó — gốc vẫn còn để đối chiếu.</p>
+  </div>
+
+  <p style="font-size:13.5px;color:var(--muted);margin:0 0 8px">File mẫu tổng hợp sẽ gồm các sheet:</p>
+  <div class="book">
+    <div class="bktitle">📘 mau-boc-khoi-luong-tong-hop.xlsx</div>
+    <div class="tabs">
+      <div class="tab n"><b>Thong so</b><div class="t">thông số chung (ô vàng = xác nhận)</div></div>
+      <div class="tab n"><b>DINH HINH CONG</b><div class="t">bảng tra định hình</div></div>
+      <div class="tab w"><b>Dao dap cong</b><div class="t">đào đắp cống</div></div>
+      <div class="tab w"><b>Dao dap ho ga</b><div class="t">đào đắp hầm ga</div></div>
+      <div class="tab w"><b>Moi noi-goi cong</b><div class="t">mối nối / gối cống</div></div>
+      <div class="tab r newtab"><b>Dao dap nen duong</b><div class="t">đào đắp giao thông</div></div>
+      <div class="tab s"><b>Tong hop</b><div class="t">cộng tổng khối lượng</div></div>
+    </div>
+  </div>
+  <p style="font-size:12.5px;color:var(--muted);margin:8px 0 0">
+    <span style="color:var(--tabwater)">■</span> Thoát nước &nbsp;
+    <span style="color:var(--tabroad)">■</span> Giao thông &nbsp;
+    <span style="color:var(--tabsum)">■</span> Tổng hợp &nbsp;
+    <span style="color:var(--muted)">■</span> Dữ liệu dùng chung
+  </p>
+
+  <!-- ============ PHAN 2 ============ -->
+  <h2 class="sec">2 · Cách gộp — làm thẳng trong Excel (khuyến nghị)</h2>
+  <div class="card">
+    <p>Cách này giữ <b>nguyên 100%</b> định dạng, công thức, màu ô của mẫu. Anh làm 1 lần:</p>
+    <ul>
+      <li><b>B1.</b> Chép <span class="code">mau hamga.xlsx</span> ra 1 bản, đổi tên thành <span class="code">mau-boc-khoi-luong-tong-hop.xlsx</span>. <i>(Chỉ làm trên bản chép, không đụng file gốc.)</i></li>
+      <li><b>B2.</b> Mở <b>cả hai</b>: file tổng hợp vừa tạo và <span class="code">mau dao dap giao thong.xlsx</span>.</li>
+      <li><b>B3.</b> Trong file giao thông, <b>chuột phải</b> vào tab <span class="code">Dao dap nen duong</span> → chọn <span class="kbd">Move or Copy…</span> (Di chuyển hoặc Sao chép).</li>
+      <li><b>B4.</b> Hộp thoại hiện ra:
+        <ul>
+          <li>Ô <b>To book</b> (Tới sổ): chọn <span class="code">mau-boc-khoi-luong-tong-hop.xlsx</span>.</li>
+          <li>Ô <b>Before sheet</b> (Trước sheet): chọn <span class="code">Tong hop</span>.</li>
+          <li>Tích <span class="kbd">☑ Create a copy</span> (Tạo bản sao) — để mẫu giao thông gốc vẫn còn sheet đó.</li>
+          <li>Bấm <b>OK</b>.</li>
+        </ul>
+      </li>
+      <li><b>B5.</b> <span class="kbd">Ctrl + S</span> lưu lại. Xong — giờ 1 file có đủ các tab.</li>
+    </ul>
+    <p style="margin-top:10px"><span class="ok">Hoặc:</span> anh bảo một tiếng, tôi gộp tự động và trả về file mới (giữ định dạng), anh khỏi thao tác tay.</p>
+  </div>
+
+  <!-- ============ PHAN 3 ============ -->
+  <h2 class="sec">3 · Đưa bản vẽ vào → tính khối lượng theo file mẫu</h2>
+
+  <div class="legend">
+    <span><i class="dot" style="background:var(--anh)"></i>Anh làm</span>
+    <span><i class="dot" style="background:var(--cl)"></i>Claude tự chạy</span>
+    <span><i class="dot" style="background:var(--both)"></i>Cả hai</span>
+  </div>
+
+  <ol class="steps">
+    <li class="anh">
+      <span class="stitle">Chuẩn bị đầu vào</span><span class="tag anh">Anh làm</span>
+      <div class="sbody"><ul>
+        <li>Bản vẽ xuất ra <span class="code">.dxf</span> (trong AutoCAD gõ <span class="code">DXFOUT</span>), đúng bộ layer trắc dọc thoát nước (TP33, TP45, TP46, TP113, TP115, TP118).</li>
+        <li>Điền sheet <span class="code">Thong so</span> và bảng <span class="code">DINH HINH CONG</span> cho đúng công trình (đường kính cống, kích thước hầm ga, gối…).</li>
+      </ul></div>
+    </li>
+    <li class="cl">
+      <span class="stitle">Bóc thoát nước từ bản vẽ → 3 sheet</span><span class="tag cl">Claude tự chạy</span>
+      <div class="sbody"><ul>
+        <li>Chạy script đọc DXF, điền tự động: <span class="code">Dao dap cong</span>, <span class="code">Dao dap ho ga</span>, <span class="code">Moi noi-goi cong</span>.</li>
+        <li>Khối lượng để dưới dạng công thức; chỗ thiếu ghi <span class="code">[Chờ bổ sung]</span>, không bịa số.</li>
+      </ul></div>
+    </li>
+    <li class="anh">
+      <span class="stitle">Xuất CSV đào đắp nền đường từ ADSdesign</span><span class="tag anh">Anh làm</span>
+      <div class="sbody"><ul>
+        <li>Phần giao thông (san nền, đào đắp nền đường) <b>chưa đọc tự động từ bản vẽ</b> được — dải bảng khối lượng trong DXF không tin cậy.</li>
+        <li>Anh xuất bảng khối lượng ra <span class="code">.csv</span> từ phần mềm ADSdesign (như lần này).</li>
+      </ul></div>
+    </li>
+    <li class="cl">
+      <span class="stitle">Đổ CSV vào sheet Dao dap nen duong</span><span class="tag cl">Claude tự chạy</span>
+      <div class="sbody">Chạy công cụ đổ CSV → điền sheet giao thông, <b>số cột tự co giãn</b> theo số công tác trong CSV, định dạng &amp; màu theo mẫu, vừa 1 trang in ngang.</div>
+    </li>
+    <li class="both">
+      <span class="stitle">Kiểm tra &amp; tổng hợp</span><span class="tag both">Cả hai</span>
+      <div class="sbody"><ul>
+        <li>Sheet <span class="code">Tong hop</span> tự cộng khối lượng các sheet (giếng thu, cống D400/D600, đào hào, thép, mối nối…).</li>
+        <li>Claude: agent kiểm tra độc lập rà số học, đối chiếu bản vẽ.</li>
+        <li>Anh: duyệt các ô vàng (thông số thi công), quyết mã tương tự.</li>
+      </ul></div>
+    </li>
+    <li class="cl">
+      <span class="stitle">Xuất file kết quả</span><span class="tag cl">Claude tự chạy</span>
+      <div class="sbody">Ghi ra <b>file kết quả riêng</b> trong <span class="code">ket-qua/</span> (không ghi đè file mẫu). Đây là bảng khối lượng để anh nhập vào F1 áp đơn giá, lập dự toán.</div>
+    </li>
+  </ol>
+
+  <div class="note">
+    <h3>Lưu ý quan trọng</h3>
+    <ul>
+      <li><span class="ok">1 file mẫu – nhiều sheet là đúng cách làm.</span> Mỗi loại khối lượng 1 tab, sheet <span class="code">Tong hop</span> cộng lại. Dễ quản lý, dễ đối chiếu.</li>
+      <li><span class="warn">"Đưa bản vẽ là ra hết" đúng cho thoát nước</span> (cống, hầm ga, mối nối/gối) — nếu DXF đúng chuẩn layer. <b>Giao thông cần thêm 1 bước</b>: xuất CSV từ ADSdesign (bước 3).</li>
+      <li>Ra khối lượng, chưa phải ra dự toán. Dự toán đầy đủ vẫn cần áp đơn giá trên <b>F1</b> (ĐM TT 38/2026, đơn giá HCM QĐ 4570/2026) rồi mới tổng hợp.</li>
+      <li>Nguyên tắc xuyên suốt: <b>không ghi đè</b> file mẫu/gốc, không bịa số, mọi khối lượng có công thức để kiểm.</li>
+    </ul>
+  </div>
+</div>
+</body>
+</html>

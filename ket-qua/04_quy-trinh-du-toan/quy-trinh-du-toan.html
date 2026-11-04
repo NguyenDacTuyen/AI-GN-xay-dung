@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quy trình dự toán</title>
+<style>
+  :root{
+    --bg:#f4f6f9; --panel:#ffffff; --ink:#1c2430; --muted:#5b6b7d; --line:#d4dbe4;
+    --shadow:0 1px 3px rgba(20,30,45,.08),0 6px 18px rgba(20,30,45,.06);
+    --anh:#b4530a; --anh-bg:#fbeede;      /* Anh lam tay */
+    --cl:#2563eb; --cl-bg:#e8f0ff;        /* Claude tu chay */
+    --both:#0f9d74; --both-bg:#e3f6ef;    /* Ca hai */
+    --flow:#9aa7b6;
+  }
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+    --bg:#0f141b;--panel:#171f29;--ink:#e7edf4;--muted:#9fb0c2;--line:#2a3542;
+    --shadow:0 1px 3px rgba(0,0,0,.4),0 8px 22px rgba(0,0,0,.35);
+    --anh:#e9a054;--anh-bg:#3a2810;--cl:#7aa6ff;--cl-bg:#1a2744;--both:#4fd1a5;--both-bg:#123026;--flow:#55657a;}}
+  :root[data-theme="dark"]{--bg:#0f141b;--panel:#171f29;--ink:#e7edf4;--muted:#9fb0c2;--line:#2a3542;
+    --anh:#e9a054;--anh-bg:#3a2810;--cl:#7aa6ff;--cl-bg:#1a2744;--both:#4fd1a5;--both-bg:#123026;--flow:#55657a;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;line-height:1.5;padding:24px 16px 48px}
+  .wrap{max-width:900px;margin:0 auto}
+  h1{font-size:22px;margin:0 0 4px}
+  .sub{color:var(--muted);font-size:14px;margin:0 0 16px}
+  .legend{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 18px;font-size:13px}
+  .legend span{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:20px;border:1px solid var(--line);background:var(--panel)}
+  .dot{width:11px;height:11px;border-radius:3px}
+  .step{background:var(--panel);border:1px solid var(--line);border-left-width:5px;border-radius:12px;padding:12px 15px;box-shadow:var(--shadow);margin:0}
+  .step.anh{border-left-color:var(--anh)} .step.cl{border-left-color:var(--cl)} .step.both{border-left-color:var(--both)}
+  .step.io{border-left-color:var(--muted);background:var(--bg)}
+  .shead{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .num{min-width:26px;height:26px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:#fff}
+  .anh .num{background:var(--anh)} .cl .num{background:var(--cl)} .both .num{background:var(--both)} .io .num{background:var(--muted)}
+  .stitle{font-size:15px;font-weight:600;flex:1}
+  .tag{font-size:11px;font-weight:600;padding:2px 9px;border-radius:20px;white-space:nowrap}
+  .tag.anh{color:var(--anh);background:var(--anh-bg);border:1px solid var(--anh)}
+  .tag.cl{color:var(--cl);background:var(--cl-bg);border:1px solid var(--cl)}
+  .tag.both{color:var(--both);background:var(--both-bg);border:1px solid var(--both)}
+  .sbody{margin:8px 0 0;color:var(--ink);font-size:13.5px}
+  .sbody ul{margin:4px 0 0;padding-left:18px} .sbody li{margin:3px 0}
+  .code{font-family:"Cascadia Code",Consolas,monospace;font-size:12.5px;background:var(--bg);padding:1px 5px;border-radius:5px;border:1px solid var(--line)}
+  .arrow{display:flex;justify-content:center;color:var(--flow);font-size:18px;line-height:1;margin:6px 0}
+  .note{margin-top:24px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;font-size:13px;box-shadow:var(--shadow)}
+  .note h2{font-size:14px;margin:0 0 8px}
+  .note ul{margin:0;padding-left:18px} .note li{margin:4px 0}
+  .warn{color:var(--anh);font-weight:600}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Quy trình lập dự toán — từ bản vẽ đến hồ sơ</h1>
+  <p class="sub">Dự án AI_Cad_K1 · Gia Nguyễn. Ghi rõ bước nào anh Tuyên làm tay, bước nào Claude tự chạy.</p>
+
+  <div class="legend">
+    <span><i class="dot" style="background:var(--anh)"></i>Anh làm tay</span>
+    <span><i class="dot" style="background:var(--cl)"></i>Claude tự chạy</span>
+    <span><i class="dot" style="background:var(--both)"></i>Cả hai (anh cấp dữ liệu, Claude làm)</span>
+  </div>
+
+  <div class="step io"><div class="shead"><span class="num">●</span><span class="stitle">ĐẦU VÀO: Bản vẽ thi công của công trình</span></div></div>
+  <div class="arrow">▼</div>
+
+  <div class="step anh">
+    <div class="shead"><span class="num">1</span><span class="stitle">Chuẩn bị bản vẽ</span><span class="tag anh">Anh làm tay</span></div>
+    <div class="sbody"><ul>
+      <li>Có file bản vẽ. Nếu là <span class="code">.dwg</span> → mở AutoCAD, gõ <span class="code">DXFOUT</span> xuất ra <span class="code">.dxf</span>.</li>
+      <li>Bản vẽ dùng đúng bộ layer chuẩn (trắc dọc thoát nước: TP33, TP45, TP46, TP113, TP115, TP118).</li>
+    </ul></div>
+  </div>
+  <div class="arrow">▼</div>
+
+  <div class="step both">
+    <div class="shead"><span class="num">2</span><span class="stitle">Khai báo dự án + thông số + bảng định hình</span><span class="tag both">Cả hai</span></div>
+    <div class="sbody"><ul>
+      <li>Anh cung cấp: tên dự án, địa điểm, chủ đầu tư, các hạng mục &amp; lĩnh vực, bản vẽ chi tiết (cống, hầm ga, móng-gối).</li>
+      <li>Claude điền: file khai báo <span class="code">.ini</span>, các ô thông số, bảng <span class="code">DINH HINH CONG</span> trong file mẫu.</li>
+    </ul></div>
+  </div>
+  <div class="arrow">▼</div>
+
+  <div class="step cl">
+    <div class="shead"><span class="num">3</span><span class="stitle">Bóc khối lượng từ bản vẽ → Excel theo mẫu</span><span class="tag cl">Claude tự chạy</span></div>
+    <div class="sbody"><ul>
+      <li><b>Tự động (thoát nước):</b> đào đắp hầm ga, đào đắp cống, mối nối/gối cống — chạy script, ra Excel theo mẫu, công thức tra định hình.</li>
+      <li><b>Bán tự động / thủ công:</b> các hạng mục khác (san nền, giao thông, kết cấu, dân dụng...) — đang mở rộng dần.</li>
+      <li>Khối lượng dùng công thức; chỗ thiếu số liệu ghi nhãn <span class="code">[Chờ bổ sung]</span>, không bịa.</li>
+    </ul></div>
+  </div>
+  <div class="arrow">▼</div>
+
+  <div class="step both">
+    <div class="shead"><span class="num">4</span><span class="stitle">Kiểm tra &amp; duyệt khối lượng</span><span class="tag both">Cả hai</span></div>
+    <div class="sbody"><ul>
+      <li>Claude: agent kiểm tra độc lập soát số học, đối chiếu bản vẽ, bắt lỗi.</li>
+      <li>Anh: duyệt bảng khối lượng, xác nhận các ô vàng (thông số thi công), quyết mã tương tự.</li>
+    </ul></div>
+  </div>
+  <div class="arrow">▼</div>
+
+  <div class="step anh">
+    <div class="shead"><span class="num">5</span><span class="stitle">Áp định mức &amp; đơn giá trên phần mềm F1</span><span class="tag anh">Anh làm tay</span></div>
+    <div class="sbody"><ul>
+      <li>Nhập bảng khối lượng vào F1; áp mã hiệu định mức (TT 38/2026).</li>
+      <li>Tính đơn giá: nhân công (QĐ 4570 HCM), máy (TT 37), vật liệu (công bố giá Sở Xây dựng), cước vận chuyển.</li>
+      <li>Xuất Excel từ F1.</li>
+    </ul></div>
+  </div>
+  <div class="arrow">▼</div>
+
+  <div class="step cl">
+    <div class="shead"><span class="num">6</span><span class="stitle">Chuyển F1 → dự toán hạng mục theo mẫu công ty</span><span class="tag cl">Claude tự chạy</span></div>
+    <div class="sbody">Chạy <span class="code">chuyen_f1_ve_mau.py</span> (theo file khai báo) → file dự toán hạng mục đúng mẫu lĩnh vực.</div>
+  </div>
+  <div class="arrow">▼</div>
+
+  <div class="step cl">
+    <div class="shead"><span class="num">7</span><span class="stitle">Tổng hợp dự toán / tổng mức + thuyết minh</span><span class="tag cl">Claude tự chạy</span></div>
+    <div class="sbody"><ul>
+      <li><span class="code">tong_hop_du_toan.py</span>: cộng chi phí xây dựng các hạng mục, tính QLDA, tư vấn, chi phí khác, dự phòng (tra sheet TT38).</li>
+      <li><span class="code">thuyet_minh_du_toan.py</span>: xuất thuyết minh Word.</li>
+    </ul></div>
+  </div>
+  <div class="arrow">▼</div>
+
+  <div class="step both">
+    <div class="shead"><span class="num">8</span><span class="stitle">Soát nội bộ / thẩm tra → Anh quyết &amp; ký</span><span class="tag both">Cả hai</span></div>
+    <div class="sbody"><ul>
+      <li>Claude: agent thẩm tra/soát xét đối chiếu, lập dự thảo ý kiến.</li>
+      <li>Anh: kiểm tra hiệu lực văn bản, quyết kết luận và ký.</li>
+    </ul></div>
+  </div>
+  <div class="arrow">▼</div>
+
+  <div class="step io"><div class="shead"><span class="num">●</span><span class="stitle">ĐẦU RA: Bộ hồ sơ dự toán (Excel + thuyết minh Word)</span></div></div>
+
+  <div class="note">
+    <h2>Lưu ý quan trọng</h2>
+    <ul>
+      <li><span class="warn">Chưa phải "đưa bản vẽ là xong".</span> Đưa bản vẽ → tự ra <b>khối lượng</b> (hiện cho thoát nước, nếu bản vẽ đúng chuẩn layer). Ra <b>dự toán đầy đủ</b> vẫn cần anh áp đơn giá trên F1 (bước 5) rồi Claude tổng hợp (bước 6–7).</li>
+      <li>Điều kiện để bước 3 chạy tự động: bản vẽ <b>DXF đúng layer</b> + có <b>file mẫu</b> + <b>bảng định hình</b> điền đủ.</li>
+      <li>Hạng mục ngoài thoát nước: hiện bóc thủ công/bán tự động, đang mở rộng dần.</li>
+      <li>Nguyên tắc xuyên suốt: không bịa số liệu, không ghi đè file mẫu/gốc, mọi khối lượng có công thức để kiểm.</li>
+    </ul>
+  </div>
+</div>
+</body>
+</html>
