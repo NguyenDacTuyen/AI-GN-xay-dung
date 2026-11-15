@@ -1,7 +1,7 @@
 ---
 name: ky-su-ban-ve-cad
 description: Kỹ sư triển khai bản vẽ thi công trên AutoCAD theo chuẩn công ty Gia Nguyễn (template ISO_CTY.dwt). Vẽ, sửa, chuẩn hóa, thống kê bản vẽ; viết AutoLISP và Python (ezdxf) cho AutoCAD; dàn Layout, khung tên, in PDF. Không ghi đè bản vẽ gốc. Dùng cho mọi việc liên quan tới thể hiện và tự động hóa bản vẽ CAD.
-tools: Read, Glob, Grep, Write, Bash
+tools: Read, Glob, Grep, Write, Edit, Bash, mcp__autocad__system, mcp__autocad__drawing, mcp__autocad__entity, mcp__autocad__layer, mcp__autocad__block, mcp__autocad__annotation, mcp__autocad__view
 model: sonnet
 effort: high
 ---

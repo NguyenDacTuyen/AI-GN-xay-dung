@@ -24,24 +24,45 @@ Quy tắc chi tiết của từng lĩnh vực nằm trong các skill ở thư m�
 
 Khi thêm lĩnh vực mới: tạo skill mới trong `.claude/skills/`, rồi thêm một dòng vào bảng này. Không viết thêm quy tắc chi tiết vào CLAUDE.md.
 
-## Tổ chức thư mục (đề xuất)
+Thư mục `.claude/skills/` còn 8 skill `vn-*` (nhà phố, thư viện vncad, từ repo bên ngoài, không theo dõi bằng Git). Chúng **không thuộc** quy trình công trình nhà xưởng, hạ tầng, giao thông của công ty; chỉ dùng khi anh yêu cầu làm hồ sơ nhà phố.
+
+## Đội agent
+
+Các agent ở `.claude/agents/`, mỗi agent theo một skill ở trên. Agent điều phối `tiep-nhan-yeu-cau` chia việc; kết quả bàn giao ghi trong `handoff/` (quy ước số thứ tự và vị trí nằm trong file agent đó).
+
+| Agent | Việc | Skill |
+|---|---|---|
+| `tiep-nhan-yeu-cau` | Làm rõ yêu cầu, chia việc, tổng hợp | |
+| `ky-su-ban-ve-cad` | Vẽ, sửa, thống kê bản vẽ; LISP, Python | `gn-banvecad-isocty` |
+| `ky-su-boc-khoi-luong` | Bóc khối lượng từ bản vẽ | `gn-dutoan` |
+| `chuyen-vien-du-toan` | Dự toán, tổng mức, so sánh giá | `gn-dutoan` |
+| `ky-su-bien-phap-thi-cong` | Thuyết minh biện pháp thi công | |
+| `chuyen-vien-tham-tra` | Thẩm tra thiết kế, dự toán | `tham-tra` |
+| `kiem-tra-khoi-luong` | Soát số học, khối lượng Excel (chỉ đọc) | `gn-dutoan` |
+| `ky-su-kiem-tra` | Soát cả bộ hồ sơ trước khi giao (chỉ đọc) | |
+
+## Tổ chức thư mục
 
 ```
 AI_Cad_K1/
 ├── CLAUDE.md          ← file này (chỉ phần riêng của dự án)
+├── .claude/agents/    ← đội agent (mỗi file một agent)
 ├── .claude/skills/    ← quy tắc chi tiết theo lĩnh vực
 │   ├── gn-banvecad-isocty/      SKILL.md + template-ISO_CTY.md (bảng layer, style, khung tên, Layout) + mcp-autocad.md (vẽ qua MCP)
-│   ├── gn-dutoan/               SKILL.md + mau-hang-muc-chung.md + 3 file mẫu theo lĩnh vực + mau-tong-hop.md
+│   ├── gn-dutoan/               SKILL.md + mau-hang-muc-chung.md + 3 file mẫu theo lĩnh vực + mau-tong-hop.md + mau-thuyet-minh.md + boc-tu-trac-doc.md (bóc thoát nước) + quy-trinh-f1.md + khai-bao-du-an.md
 │   └── tham-tra/                SKILL.md + mau-bao-cao.md (bố cục mẫu báo cáo, căn cứ pháp lý)
 ├── template/          ← mẫu công ty, chỉ đọc, không sửa
 │   ├── ban-ve/        ← ISO_CTY.dwt (template bản vẽ)
-│   ├── du-toan/       ← mẫu dự toán Excel: dan-dung-cong-nghiep/, ha-tang-ky-thuat/, giao-thong/, tong-hop/
+│   ├── du-toan/       ← mẫu dự toán Excel: dan-dung-cong-nghiep/, ha-tang-ky-thuat/, giao-thong/, thoat-nuoc-giao-thong/, tong-hop/
+│   ├── Chu-dau-tu/    ← văn bản, hợp đồng mẫu của chủ đầu tư (tham khảo, chỉ đọc)
 │   └── tham-tra/      ← Bia tham tra.docx + Bao cao tham tra.docx (mẫu báo cáo thẩm tra)
 ├── lisp/              ← các file AutoLISP (.lsp)
-├── python/            ← các file Python (.py)
+├── python/            ← các file Python (.py), HUONG-DAN-boc-ham-ga.md, chay-du-toan.bat
+├── chay-boc-*.bat     ← 3 file chạy nhanh bộ bóc khối lượng thoát nước (hầm ga, cống + mối nối, tổng hợp)
 ├── ban-ve/            ← bản vẽ đầu vào (DWG/DXF), chỉ đọc, không sửa
 ├── ket-qua/           ← file Excel, Word xuất ra
 ├── tham-tra/          ← mỗi dự án thẩm tra 1 thư mục con: dau-vao/ (hồ sơ nhận, chỉ đọc) và ket-qua/
 ├── tai-lieu/          ← định mức, đơn giá, tiêu chuẩn tham khảo
-└── _luu-tru/          ← bản sao lưu cũ (CLAUDE.md trước khi tách skill, trước khi tách global)
+├── _backup/           ← bản cũ trước khi sửa (cũng có _backup/ cạnh từng file đã sửa)
+└── _luu-tru/          ← bản sao lưu cũ thời kỳ đầu (đã được thay bằng _backup/ và Git; giữ nguyên, không xóa)
 ```

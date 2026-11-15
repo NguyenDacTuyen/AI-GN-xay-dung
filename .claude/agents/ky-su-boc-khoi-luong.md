@@ -1,7 +1,7 @@
 ---
 name: ky-su-boc-khoi-luong
 description: Kỹ sư QS bóc tách khối lượng từ bản vẽ (DWG/DXF/PDF) của Gia Nguyễn cho nhà xưởng, hạ tầng kỹ thuật, giao thông, dân dụng. Khối lượng sinh từ kích thước trên bản vẽ, mỗi dòng có diễn giải và nguồn; soát các bẫy bóc khối lượng hay gặp. Không tự điền đơn giá, không bịa kích thước. Dùng khi cần bóc khối lượng, thống kê vật tư.
-tools: Read, Glob, Grep, Write, Bash
+tools: Read, Glob, Grep, Write, Edit, Bash
 model: sonnet
 effort: high
 ---

@@ -4,7 +4,7 @@ BÓC KHỐI LƯỢNG TỔNG HỢP TRÊN 1 FILE MẪU: THOÁT NƯỚC + GIAO THÔ
 ------------------------------------------------------------------
 Một lần chạy ra 1 file Excel đủ các sheet (theo mẫu mau-boc-khoi-luong-tong-hop.xlsx):
   - Dao dap cong, Dao dap ho ga, Moi noi-goi cong : bóc TỰ ĐỘNG từ bản vẽ DXF trắc dọc thoát nước.
-  - Dao dap nen duong                              : đổ từ file CSV xuất ra từ phần mềm ADSdesign (giao thông).
+  - Dao dap nen duong                              : đổ từ file CSV xuất ra từ phần mềm anddesign (giao thông).
   - Tong hop                                       : tự cộng, công thức tự tìm dòng TỔNG.
 
 Công cụ này GỌI LẠI 2 chương trình có sẵn trong cùng thư mục:
@@ -31,11 +31,11 @@ PROJ = os.path.dirname(HERE)
 # ================== CẤU HÌNH (anh sửa ở đây) ==================
 MAU = os.path.join(PROJ, "template", "du-toan", "thoat-nuoc-giao-thong",
                    "mau-boc-khoi-luong-tong-hop.xlsx")       # file mẫu tổng hợp (không sửa file này)
-DXF = r"F:/demo/Acad_BD_TD_TN Nhi Binh 5.dxf"                # bản vẽ trắc dọc thoát nước
-CSV_GIAOTHONG = r"F:/demo/Bang khoi luong xuat tu phan mem addesign.csv"  # CSV giao thông; để "" nếu công trình KHÔNG có phần giao thông
-OUT = os.path.join(PROJ, "ket-qua", "06_tong-hop-1-file", "KL-tong-hop_CONGTRINH.xlsx")
+DXF = r"F:/Du an duong nhi binh/Acad_BD_TD_TN Nhi Binh 5.dxf"                # bản vẽ trắc dọc thoát nước
+CSV_GIAOTHONG = r"F:/Du an duong nhi binh/Bang khoi luong xuat tu phan mem addesign.csv"  # CSV giao thông; để "" nếu công trình KHÔNG có phần giao thông
+OUT = r"F:/Du an duong nhi binh/KL-tong-hop_NhiBinh.xlsx"
 
-# Tên công tác giao thông chuẩn, theo đúng THỨ TỰ cột trong CSV ADSdesign:
+# Tên công tác giao thông chuẩn, theo đúng THỨ TỰ cột trong CSV anddesign:
 CONGTAC_GIAOTHONG = ["Đắp vỉa hè", "Đắp nền đường", "Đào nền", "Đào khuôn", "Vét bùn",
                      "Đánh cấp", "Bù vênh đường cũ", "Đắp Taluy", "Đắp đất trồng cây"]
 # =============================================================
@@ -161,7 +161,7 @@ def _boc_giao_thong(wb, csvf, med, thin, TN, DAM):
     c = 4
     for _ in names: ws.merge_cells(start_row=H1, start_column=c, end_row=H1, end_column=c+1); c += 2
     ws.merge_cells(start_row=tong, start_column=1, end_row=tong, end_column=3)
-    ws.cell(4, 1, "Phương pháp mặt cắt: KL = (DT mặt cắt này + DT mặt cắt trước)/2 × khoảng cách lẻ. Số liệu từ bảng khối lượng ADSdesign.").font = IT
+    ws.cell(4, 1, "Phương pháp mặt cắt: KL = (DT mặt cắt này + DT mặt cắt trước)/2 × khoảng cách lẻ. Số liệu từ bảng khối lượng anddesign.").font = IT
     ws.column_dimensions["A"].width = 5.140625; ws.column_dimensions["B"].width = 6.7109375; ws.column_dimensions["C"].width = 7.5
     cc = 4
     for di in range(nct):

@@ -1,7 +1,7 @@
 # Bóc khối lượng từ trắc dọc thoát nước, xuất theo mẫu (tài liệu tra cứu skill gn-dutoan)
 
 Áp dụng cho hạ tầng thoát nước. Anh chốt 02-03/11/2026, đã chạy khớp mẫu với dự án Nhị Bình.
-Có **2 bộ công cụ** (cùng nguyên tắc, cùng file mẫu `mau hamga.xlsx`):
+Có **2 bộ công cụ** (cùng nguyên tắc, cùng file mẫu `template/du-toan/thoat-nuoc-giao-thong/mau-boc-khoi-luong-tong-hop.xlsx`):
 - **Hầm ga (giếng thu):** `python/boc-ham-ga-thoat-nuoc.py` + `chay-boc-ham-ga.bat` → xuất tab "Dao dap ho ga".
 - **Cống + mối nối/gối cống:** `python/boc-cong-moinoi-thoat-nuoc.py` + `chay-boc-cong-moinoi.bat` → xuất tab "Dao dap cong" và "Moi noi-goi cong". Các cột kỹ thuật **tra VLOOKUP vào sheet "DINH HINH CONG"** trong file mẫu. Xem mục "Bộ cống + mối nối" cuối file.
 
@@ -51,7 +51,7 @@ Công thức chính (tham chiếu sheet "Thong so"):
 ## Sau khi ra bảng
 - Mở file một lần trong Excel để công thức tính ra giá trị.
 - Kiểm số giếng, cao độ khớp bản vẽ; sửa ô vàng cho đúng công trình.
-- Mã hiệu định mức, đơn giá: để `[Chờ bổ sung]`, áp trên **F1** (xem mục "Trình tự bản vẽ → F1" trong SKILL.md).
+- Mã hiệu định mức, đơn giá: để `[Chờ bổ sung]`, áp trên **F1** (xem `quy-trinh-f1.md`).
 
 ---
 
@@ -84,3 +84,40 @@ Dòng TỔNG dùng SUM; chữ "TỔNG" ghi vào ô neo A của vùng gộp A..C.
 - Mọi số kỹ thuật cống lấy từ sheet "DINH HINH CONG" — một nguồn duy nhất; đổi định hình là bảng tự cập nhật.
 - Bản vẽ khác chuẩn layer, hoặc file mẫu đổi số cột/bố cục → dò lại layer và đối chiếu header tab trước khi chạy (số cột script phải khớp header mẫu, nếu không sẽ lệch cột).
 - **Không ghi đè file mẫu**; luôn xuất ra file kết quả riêng đặt tên theo công trình.
+
+---
+
+## Quy trình chung và bộ bóc TỔNG HỢP 1 file (chuyển từ SKILL.md)
+
+Khi bóc **đào đắp + bê tông hầm ga (giếng thu)** hạ tầng thoát nước: làm theo file tra cứu **`boc-tu-trac-doc.md`** (cùng thư mục skill). Nguyên tắc 2 bước:
+1. **Tính động** từ DXF trắc dọc theo tên layer (bao nhiêu giếng cũng được), khối lượng dùng công thức.
+2. **Lấy chính file Excel mẫu làm nền**, chỉ thêm/bớt số hàng cho khớp số giếng → giữ nguyên 100% định dạng mẫu (in ngang, lề, hàng, cột, số lẻ, ô gộp).
+Không dựng bảng từ đầu rồi tự định dạng; không mở mẫu điền tay vào số hàng cố định.
+
+Hai bộ công cụ (cùng file mẫu `template/du-toan/thoat-nuoc-giao-thong/mau-boc-khoi-luong-tong-hop.xlsx`, cùng sheet "DINH HINH CONG" để tra):
+- **Hầm ga (giếng thu):** `python/boc-ham-ga-thoat-nuoc.py` (`chay-boc-ham-ga.bat`) → tab "Dao dap ho ga".
+- **Cống + mối nối/gối cống:** `python/boc-cong-moinoi-thoat-nuoc.py` (`chay-boc-cong-moinoi.bat`) → tab "Dao dap cong" + "Moi noi-goi cong", mỗi đoạn ghép 2 giếng đầu/sau, tra VLOOKUP vào "DINH HINH CONG".
+
+Tên layer, cột, công thức, thông số, bảng định hình: xem **`boc-tu-trac-doc.md`**. Bản vẽ khác chuẩn layer thì sửa CẤU HÌNH đầu chương trình (tự in danh sách layer nếu sai tên). Số cột trong chương trình phải khớp header tab của file mẫu, nếu không sẽ lệch cột.
+
+### Bóc TỔNG HỢP 1 file: thoát nước + giao thông (chốt 04/11/2026)
+
+Khi cần ra **1 file Excel đủ cả thoát nước và giao thông** theo một mẫu tổng hợp: dùng
+**`python/boc-tong-hop-thoat-nuoc-giao-thong.py`** (`chay-boc-tong-hop.bat`). Chương trình gọi lại 2 bộ trên, rồi ghép thành 1 file:
+- Mẫu tổng hợp: `template/du-toan/thoat-nuoc-giao-thong/mau-boc-khoi-luong-tong-hop.xlsx` (7 sheet: Thong so, DINH HINH CONG, Dao dap cong, Dao dap ho ga, Moi noi-goi cong, Dao dap nen duong, Tong hop).
+- **Thoát nước** (cống, hầm ga, mối nối/gối): bóc tự động từ DXF như trên.
+- **Giao thông** (`Dao dap nen duong`): KHÔNG đọc tự động từ bản vẽ được (dải bảng san nền trong DXF không tin cậy). Anh **xuất CSV từ anddesign**; chương trình đổ vào, **số cột công tác động** theo CSV. Công trình không có giao thông thì để `CSV_GIAOTHONG = ""`.
+- **Tong hop**: công thức **tự tìm dòng TỔNG** (INDEX/MATCH), giao thông dò theo **tên công tác** → dùng lại cho mọi công trình dù khác số lượng/số cột.
+- Viền ngoài cùng mọi bảng kẻ **nét đậm** (medium), viền trong mảnh.
+
+**Bản đồ cột (phải khớp tiêu đề mẫu, nếu sửa mẫu phải sửa chương trình):**
+- `Dao dap cong`: R=V đào, S=V cống chiếm chỗ, T=V lòng cát lưng cống (đắp trả).
+- `Moi noi-goi cong`: H=số mối nối, I=số gối, J=vữa, K=VK chèn mối nối, L=BT chèn gối, M=tổng dài, **N=cát đệm đáy cống, O=VK bê tông lót đáy cống, P=BT lót đáy cống**, Q=cừ tràm gối cống.
+- `Dao dap ho ga`: L=V đào, M=thép thân, N=thép thang, O=VK thành, P=BT thành, **Q=VK lót hầm ga, R=BT lót hầm ga M150, S=cừ tràm**. (Cột VK lót=4·I·B14, BT lót=I²·B14 với I=B_bê tông lót HG, B14=dày BT lót HG.)
+- `Tong hop` giao thông: mỗi công tác = `INDEX` cột KL tại dòng TỔNG, dò theo tên ở hàng 5 của `Dao dap nen duong`.
+
+CẤU HÌNH (sửa đầu chương trình): `MAU` (mặc định trỏ mẫu trong template), `DXF`, `CSV_GIAOTHONG`, `OUT`. 4 ô thông số thi công hầm ga trong `Thong so` (B9 hố lắng, B14 dày BT lót HG, B18 bản đáy HG, B19 mở rộng BT lót, B20 bước nấc thang) lấy từ **bản vẽ chi tiết hầm ga**, không có trong DINH HINH CONG.
+
+## Đã chốt (15/11/2026)
+- **File mẫu chuẩn** cho hầm ga, cống, mối nối, giao thông: `template/du-toan/thoat-nuoc-giao-thong/mau-boc-khoi-luong-tong-hop.xlsx` (7 sheet). Cả 3 chương trình bóc đều trỏ mẫu này; không còn dùng `mau hamga.xlsx` ở `F:\demo\`. `DXF` và `OUT` vẫn là đường dẫn công trình cũ (Nhị Bình), phải sửa trong CẤU HÌNH khi làm công trình mới.
+- **Phần mềm xuất CSV giao thông:** anddesign (file CSV mẫu tên `...addesign.csv`).

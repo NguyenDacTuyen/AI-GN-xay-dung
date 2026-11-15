@@ -25,7 +25,7 @@ File mẫu gồm **2 file** trong `template/tham-tra/` (đọc lại ngày 31/10
 
 **Phần mở đầu thân báo cáo** (`Bao cao tham tra.docx`)
 1. Bảng 2 cột không viền:
-   - Cột trái: tên công ty, bên dưới là số báo cáo dạng **`Số: NN/BCTT.YYYY_GN`** (mẫu: `02/BCTT.2026_GN`).
+   - Cột trái: tên công ty, bên dưới là số báo cáo dạng **`Số: NN/BCTT.YYYY_GN`** (mẫu: `02/BCTT.2026_GN`). `Cần xác nhận lại`: báo cáo I.22 đang đặt số theo dạng `2611-BCTTr-2026_GN`; hỏi anh dạng nào dùng từ nay.
    - Cột phải: Quốc hiệu, tiêu ngữ, bên dưới là "TP. Hồ Chí Minh, ngày ... tháng ... năm ...".
 2. Tên báo cáo: **"BÁO CÁO KẾT QUẢ THẨM TRA THIẾT KẾ XÂY DỰNG TRIỂN KHAI SAU KHI DỰ ÁN ĐƯỢC PHÊ DUYỆT"**, dòng dưới là "Dự án: ...".
 3. "Kính gửi: <chủ đầu tư>."
@@ -39,7 +39,7 @@ File mẫu gồm **2 file** trong `template/tham-tra/` (đọc lại ngày 31/10
    7. Giấy đăng ký kinh doanh và chứng chỉ năng lực của Gia Nguyễn
    8. Hợp đồng thẩm tra, kết thúc bằng câu "Sau khi xem xét, Công ty ... báo cáo kết quả thẩm tra như sau:"
 
-**Bố cục nội dung** (thân báo cáo mẫu hiện có **6 mục La Mã** I–VI)
+**Bố cục nội dung** (bố cục đang dùng: **8 mục La Mã** I–VIII; file mẫu gốc chỉ có I–VI, xem ghi chú dưới bảng)
 
 | Phần | Nội dung |
 |---|---|
@@ -47,11 +47,13 @@ File mẫu gồm **2 file** trong `template/tham-tra/` (đọc lại ngày 31/10
 | **II. Danh mục hồ sơ đề nghị thẩm tra** | 1. Văn bản pháp lý. 2. Danh mục hồ sơ (khảo sát + thiết kế BVTC, dự toán, hồ sơ khác). 3. Tài liệu sử dụng trong thẩm tra (nếu có) |
 | **III. Nội dung chủ yếu thiết kế xây dựng** | 1. Bảng quy chuẩn, tiêu chuẩn áp dụng (STT, tên, số hiệu), chia nhóm: A chung, B khảo sát, C thiết kế (C.1 chung, C.2 đường, C.3 thoát nước), D thi công nghiệm thu (D.1 đường, D.2 bê tông, D.3 thoát nước, D.4 thí nghiệm vật liệu), E quản lý và an toàn thi công, G bảo trì. 2. Giải pháp thiết kế chủ yếu theo từng hạng mục (mẫu: 2.1 đường, 2.2 thoát nước, 2.3 cây xanh, 2.4 chiếu sáng). 3. Cơ sở xác định dự toán |
 | **IV. Nhận xét về chất lượng hồ sơ đề nghị thẩm tra** | 1. Quy cách và danh mục hồ sơ. 2. Tính đầy đủ: 2.1 thiết kế BVTC, 2.2 dự toán (2.2.1 phương pháp lập, 2.2.2 cơ sở các khoản mục chi phí, 2.2.3 đơn giá áp dụng), 2.3 pháp lý (năng lực tổ chức, chứng chỉ hành nghề cá nhân chủ trì). 3. Kết luận hồ sơ đủ hay chưa đủ điều kiện thẩm tra |
-| **V. Kết quả thẩm tra thiết kế xây dựng** | 1. Sự phù hợp với bước thiết kế trước (1.1). 2. Tuân thủ quy chuẩn, tiêu chuẩn và quy định về vật liệu. 3. An toàn công trình và công trình lân cận. 4. Dây chuyền, thiết bị công nghệ (nếu có). 5. Giải pháp phòng cháy chữa cháy. 6. Yêu cầu hoàn thiện hồ sơ |
-| **VI. Kết luận và kiến nghị** | Hồ sơ đủ hay chưa đủ điều kiện trình thẩm định, phê duyệt; các kiến nghị |
+| **V. Kết quả thẩm tra tính pháp lý** | 1. Năng lực của tổ chức thiết kế. 2. Năng lực của cá nhân chủ nhiệm, chủ trì thiết kế. 3. Kết luận. (Thêm từ báo cáo I.22; file mẫu cũ chưa có mục này, nên các mục sau lệch 1 số so với file mẫu) |
+| **VI. Kết quả thẩm tra thiết kế xây dựng** | 1. Sự phù hợp với bước thiết kế trước. 2. Tuân thủ quy chuẩn, tiêu chuẩn và quy định về vật liệu. 3. An toàn công trình và công trình lân cận. 4. Dây chuyền, thiết bị công nghệ (nếu có). 5. Giải pháp phòng cháy chữa cháy. 6. Yêu cầu hoàn thiện hồ sơ. **Ý kiến TK-xx đặt tại đây** |
+| **VII. Kết quả thẩm tra dự toán** | 1. Sự tuân thủ quy định khi xác định các thành phần chi phí: 1.1 đến 1.3 căn cứ pháp lý, sự phù hợp với tổng mức đầu tư, phương pháp xác định dự toán; 1.4 cơ sở xác định các thành phần chi phí (khối lượng, định mức, đơn giá, các khoản chi phí). 2. Giá trị dự toán xây dựng. **Ý kiến DT-xx và bảng công tác chênh lệch đặt tại đây** |
+| **VIII. Kết luận và kiến nghị** | Hồ sơ đủ hay chưa đủ điều kiện trình thẩm định, phê duyệt; các kiến nghị |
 | **Phần ký** | "CHỦ NHIỆM, CHỦ TRÌ THẨM TRA CỦA TỪNG BỘ MÔN": từng người ghi họ tên, ký tên, số chứng chỉ, ngày cấp, lĩnh vực. Cuối cùng là đại diện công ty (Giám đốc) |
 
-Ghi chú: kết quả thẩm tra dự toán trong mẫu này trình bày dạng thuyết minh ở mục IV.2.2; **bảng so sánh giá trị dự toán trước/sau thẩm tra (tăng/giảm) để ở file Excel riêng** ("So sanh du toan ...xlsx"), không nằm trong file Word.
+Ghi chú: **bố cục đang dùng là 8 mục I–VIII** (như bảng trên, khớp báo cáo I.22 và `SKILL.md`). File mẫu gốc `Bao cao tham tra.docx` chỉ có 6 mục I–VI (thiếu mục pháp lý và mục dự toán riêng; dự toán trình bày dạng thuyết minh ở IV.2.2) nên khi soạn báo cáo mới phải thêm mục V, VII và đánh lại số. Bảng so sánh giá trị dự toán trước/sau thẩm tra (tăng/giảm) toàn bộ để ở file Excel riêng ("So sanh du toan ...xlsx"); trong Word chỉ đưa bảng công tác có chênh lệch ở VII.1.4 theo `SKILL.md`.
 
 **Danh mục căn cứ pháp lý trong mẫu** (theo bản thân báo cáo, lập tháng 8/2026)
 

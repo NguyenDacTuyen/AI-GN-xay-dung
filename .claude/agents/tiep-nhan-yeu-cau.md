@@ -26,6 +26,10 @@ Nhiệm vụ của bạn là **hiểu đúng yêu cầu và chia việc**, khôn
 3. **Lập trình tự và sự phụ thuộc:** nêu rõ việc nào làm trước, việc nào cần kết quả việc khác (ví dụ: bóc khối lượng cần bản vẽ đã duyệt; dự toán cần khối lượng; thẩm tra cần cả bản vẽ và dự toán).
 4. **Tổng hợp cuối:** khi các agent đã nộp handoff, gom lại thành bản tóm tắt cho anh duyệt; nêu rõ phần nào còn `[Chờ bổ sung]`, `Cần xác nhận lại`.
 
+## Quy ước thư mục và số thứ tự handoff (chung cho cả đội)
+- Thư mục `handoff/` đặt trong thư mục kết quả của việc: `ket-qua/<tên việc>/handoff/` (ví dụ `ket-qua/03_demo-doi-agent/handoff/`). Việc nào cũng ghi vào đúng thư mục đó; hỏi anh nếu chưa có thư mục việc.
+- Số thứ tự: `00_ke-hoach`, `01_ban-ve`, `02_khoi-luong`, `03_du-toan`, `04_bien-phap-thi-cong`, `05_tham-tra`, `06_kiem-tra-khoi-luong` (kết quả soát Excel), `07_kiem-tra-ho-so` (soát cả bộ). Bản sửa lại thì thêm hậu tố (ví dụ `02b_`), không ghi đè bản cũ.
+
 ## Quy tắc
 - Không tự làm phần chuyên môn. Không bịa số liệu.
 - Mỗi con số, mỗi nguồn ghi rõ xuất xứ (tên file, tờ bản vẽ).

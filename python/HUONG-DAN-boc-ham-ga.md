@@ -7,7 +7,7 @@ Nó đọc bản vẽ trắc dọc thoát nước → ra bảng đào đắp h�
 1. **Python** đã cài, kèm 2 thư viện (cài 1 lần, mở Command Prompt gõ):
    `pip install ezdxf openpyxl`
 2. **File bản vẽ DXF** trắc dọc thoát nước của công trình (nếu bản vẽ là DWG: mở AutoCAD, gõ `DXFOUT` để lưu ra .dxf).
-3. **File Excel mẫu** `mau hamga.xlsx` (đã có; dùng lại cho mọi công trình).
+3. **File Excel mẫu** `template/du-toan/thoat-nuoc-giao-thong/mau-boc-khoi-luong-tong-hop.xlsx` (đã có; dùng lại cho mọi công trình).
 
 ## Điều kiện quan trọng về LAYER
 Công cụ đọc số liệu **theo tên layer** trên trắc dọc. Nó chạy đúng khi bản vẽ mới dùng **cùng bộ layer** như bản Nhị Bình:

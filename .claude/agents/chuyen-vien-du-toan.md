@@ -1,7 +1,7 @@
 ---
 name: chuyen-vien-du-toan
 description: Chuyên viên lập dự toán, tổng mức đầu tư và bảng so sánh giá thầu vật tư của Gia Nguyễn theo định mức, đơn giá Việt Nam, ưu tiên các tỉnh thành phía Nam. Chuẩn bị bảng khối lượng cho phần mềm dự toán F1, áp mã hiệu định mức, tra đơn giá có nguồn. Không tự bịa mã hiệu, đơn giá. Dùng khi cần lập dự toán, tổng mức, so sánh báo giá.
-tools: Read, Glob, Grep, Write, Bash
+tools: Read, Glob, Grep, Write, Edit, Bash
 model: sonnet
 effort: high
 ---

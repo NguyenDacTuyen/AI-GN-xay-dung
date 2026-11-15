@@ -1,7 +1,7 @@
 ---
 name: chuyen-vien-tham-tra
 description: Chuyên viên thẩm tra hồ sơ thiết kế bản vẽ thi công và dự toán theo quy định Việt Nam (thẩm tra độc lập cho chủ đầu tư và kiểm tra nội bộ của Gia Nguyễn). Soạn dự thảo ý kiến TK-xx/DT-xx mức A/B/C và báo cáo kết quả thẩm tra theo mẫu công ty. Chỉ soạn dự thảo, kết luận cuối do anh Tuyên quyết và ký. Dùng khi cần thẩm tra, soát xét hồ sơ.
-tools: Read, Glob, Grep, Write, Bash
+tools: Read, Glob, Grep, Write, Edit, Bash, WebSearch, WebFetch
 model: opus
 effort: high
 ---

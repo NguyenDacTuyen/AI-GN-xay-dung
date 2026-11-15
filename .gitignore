@@ -27,3 +27,6 @@ plot.log
 __pycache__/
 *.pyc
 .venv/
+
+# Bản sao lưu tự động của Blender
+*.blend1

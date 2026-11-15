@@ -15,7 +15,7 @@ from openpyxl.utils import get_column_letter
 
 # ================== CẤU HÌNH (anh sửa ở đây) ==================
 DXF = r"F:/demo/Acad_BD_TD_TN Nhi Binh 5.dxf"   # bản vẽ trắc dọc thoát nước của công trình
-MAU = r"F:/demo/mau hamga.xlsx"                 # file Excel mẫu (định dạng)
+MAU = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "template", "du-toan", "thoat-nuoc-giao-thong", "mau-boc-khoi-luong-tong-hop.xlsx")  # file mẫu chuẩn trong template (không sửa file này)
 OUT = r"D:/SOFTWARE/15. AI/15.4 Claude/15.4.1 Lop hoc Cesslobal/02. AI_Xay Dung/AI_Cad_K1/ket-qua/KL-dao-dap-ham-ga_CONGTRINHMOI.xlsx"
 
 # Tên LAYER trong bản vẽ (nếu công trình mới đặt tên layer khác thì sửa đúng tên ở đây):

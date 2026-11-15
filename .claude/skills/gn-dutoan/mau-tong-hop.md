@@ -12,11 +12,9 @@ File mẫu: `template/du-toan/tong-hop/bang-du-toan-tong-hop.xlsx` (đọc ngày
 
 Sheet **`TT38`** (anh để hiện và cập nhật ngày 24/10/2026): bảng định mức chi phí QLDA và tư vấn theo TT 38/2026/TT-BXD, có công thức nội suy theo ô C4 (chi phí xây dựng, tỷ đồng). Mỗi bảng nằm giữa 2 dòng mốc ở cột A (`QLDA79^` ... `QLDA79$`), cột "Giá trị" là tỷ lệ đã nội suy. Anh xác nhận bảng lập BCKTKT (5,8% hạ tầng dưới 1 tỷ) là đúng; 4,37% trên F1 là tỷ lệ cho dự án bảo trì nhóm C, không dùng.
 
-Anh cập nhật lần 2 (trưa 24/10/2026): bảng `TDDA` theo TT 28/2023/TT-BTC, bảng `TTQT` và `CPKT` theo NĐ 193/2026/NĐ-CP (khớp F1: 0,019%, 0,57%, 0,96% dưới 5 tỷ); TH TMDT D37 bảo hiểm cố định 0,25% (NĐ 67/2023, NĐ 220/2026); D38, D39 trỏ đúng cột "Giá trị". Chương trình dùng `TDDA`, `TTQT`, `CPKT` (không dùng bản cũ `TTQT09`, `CPKT09`, `TDDA209`).
+Các bảng khác trong mẫu (đã cập nhật 24/10/2026): `TDDA` theo TT 28/2023/TT-BTC; `TTQT`, `CPKT` theo NĐ 193/2026/NĐ-CP (khớp F1: 0,019%, 0,57%, 0,96% dưới 5 tỷ); bảo hiểm D37 cố định 0,25% (NĐ 67/2023, NĐ 220/2026); bảng lập BCKTKT `LBC79` đủ 6 mốc 1, 3, 7, 15, 20, 40 tỷ cho 5 loại công trình, cột "Giá trị" ở **cột I** (trên 40 tỷ ra 0: không lập BCKTKT). TH TMDT: D18 trỏ I59, D38, D39 trỏ cột "Giá trị", D41 trỏ `CPKT` (J270), D43 trỏ `TTQT` (J263). Chương trình chỉ dùng `TDDA`, `TTQT`, `CPKT` (không dùng bản cũ `TTQT09`, `CPKT09`, `TDDA209`). Ô C4, C9 của mẫu là số nhập tay để thử; chương trình ghi lại công thức trong file kết quả.
 
-Anh sửa lần 3 (tối 24/10/2026): bảng lập BCKTKT (`LBC79`) đủ 6 mốc 1, 3, 7, 15, 20, 40 tỷ cho cả 5 loại công trình, cột "Giá trị" chuyển sang **cột I** (trên 40 tỷ ra 0: không lập BCKTKT); TH TMDT D18 trỏ I59, D41 trỏ `CPKT` (J270), D43 trỏ `TTQT` (J263). Ô C4, C9 của mẫu là số nhập tay để thử; chương trình ghi lại công thức trong file kết quả.
-
-**Còn lưu ý (26/10/2026):**
+**Còn lưu ý (chốt đến 26/10/2026):**
 - Bảng phí thẩm định TK (`TTTK210`) và dự toán (`TTDT210`), bảng NĐ 67/2023 (dòng 406–415): công thức nội suy vẫn đọc số ở bảng TT 75/2014 (hàng 281, 306). Số hai bên hiện giống nhau (chỉ khác ô 8.000 tỷ của thẩm định dự toán: 0,015 và 0,014), nên kết quả chưa sai; sửa số ở bảng mới sẽ không có tác dụng cho tới khi sửa công thức.
 - Bảng lập BCKTKT: J56, K56 dùng `>=40` nên chi phí xây dựng đúng 40 tỷ ra 0% (không phải 2,2%).
 - Anh chốt 26/10/2026: quyết toán **không nhân 50%** (mẫu G43 đã bỏ); đưa **bảo hiểm công trình** (0,25% GXD trước thuế, có thuế GTGT) và **phí thẩm định dự toán** (bảng `TTDT210` Phụ lục số 1, GXD trước thuế, không thuế, không nhân 50%) vào bảng tổng hợp. **Phí thẩm định thiết kế chưa đưa vào.**
@@ -30,6 +28,8 @@ Anh sửa lần 3 (tối 24/10/2026): bảng lập BCKTKT (`LBC79`) đủ 6 mố
 - Cột "Cách tính" ghi bằng công thức nối chữ, ví dụ `="GXD trước thuế x "&D18&" x 1,08"`.
 
 ## Bố cục khoản mục
+**Bảng dưới là bố cục và cách tính của FILE MẪU GỐC.** File do chương trình lập khác mẫu ở các điểm sau (chốt 24 đến 26/10/2026): quyết toán **không nhân 50%**; thẩm định dự toán không thuế, không nhân 50%; **chưa có** phí thẩm định thiết kế; bỏ dòng chưa dùng và đánh lại số (K1 thẩm định dự án, K2 bảo hiểm, K3 thẩm định dự toán, K4 kiểm toán, K5 quyết toán, K6 nghiệm thu, K7 đảm bảo giao thông nếu khai báo); thuế GTGT dùng **một ô tham số duy nhất (M4)** thay cho "× 1,08" gõ cứng.
+
 | TT | Nội dung | Ký hiệu | Cách tính trong mẫu | Căn cứ trong mẫu |
 |---|---|---|---|---|
 | **I** | **Chi phí xây dựng** | GXD | Tổng các dòng bên dưới | |
@@ -52,10 +52,10 @@ Anh sửa lần 3 (tối 24/10/2026): bảng lập BCKTKT (`LBC79`) đủ 6 mố
 | 4 | Phí thẩm định dự toán | K4 | GXD trước thuế × % × 50% | như trên |
 | 5 | Kiểm toán độc lập | K5 | TMĐT × % × 1,08 | NĐ 254/2025/NĐ-CP |
 | 6 | Thẩm tra, phê duyệt quyết toán | K6 | TMĐT × % × 50% | |
-| 7 | Kiểm tra nghiệm thu công trình trước khi đưa vào sử dụng | K7 | 20% × chi phí giám sát trước thuế × 1,08 | TT 10/2021/TT-BXD |
+| 7 | Kiểm tra nghiệm thu công trình trước khi đưa vào sử dụng | K7 | 20% × chi phí giám sát trước thuế × 1,08 | TT 10/2021/TT-BXD (`Cần xác nhận lại`: hệ văn bản 2026 đã đổi sang NĐ 207/2026, TT 36/2026; kiểm tra căn cứ còn hiệu lực) |
 | 8 | Đảm bảo giao thông trong quá trình thi công | K8 | Tạm tính | |
 | **V** | **Chi phí dự phòng** | GDP | GDP1 + GDP2 | |
-| 5.1 | Dự phòng cho yếu tố khối lượng | GDP1 | 5% × (GXD + GQLDA + GTV + GK) | TT 38/2026/TT-BXD |
+| 5.1 | Dự phòng cho yếu tố khối lượng | GDP1 | 5% × (GXD + GQLDA + GTV + GK) | TT 38/2026/TT-BXD (`Cần xác nhận lại`: theo danh mục văn bản, TT 38 là định mức xây dựng, phương pháp xác định chi phí là TT 36/2026; kiểm tra điều khoản dự phòng) |
 | 5.2 | Dự phòng cho yếu tố trượt giá | GDP2 | Lấy từ sheet `Du_phong_truot_gia` | |
 | **VI** | **Chi phí di dời hạ tầng kỹ thuật** | GDD | Tạm tính (ví dụ di dời trụ điện) | |
 | | **Tổng cộng** | TMĐT | GXD + GQLDA + GTV + GK + GDP + GDD, **làm tròn triệu đồng** (`ROUND(...,-6)`) | |
@@ -91,7 +91,7 @@ Anh sửa lần 3 (tối 24/10/2026): bảng lập BCKTKT (`LBC79`) đủ 6 mố
 Trình tự: dự toán hạng mục trên F1 (tới chi phí xây dựng) → **file tổng hợp** → **thuyết minh** lấy số từ file tổng hợp.
 
 1. **Không cần file F1 TMĐT** (từ 24/10/2026). Mọi tỷ lệ tra sheet `TT38`.
-2. Chạy `python/tong_hop_du_toan.py <file khai báo>` (xem mục File khai báo dự án trong SKILL.md). Chương trình:
+2. Chạy `python/tong_hop_du_toan.py <file khai báo>` (xem `khai-bao-du-an.md`). Chương trình:
    - Lấy chi phí xây dựng (G, GTGT, LT) từ sheet "Tổng hợp dự toán" của file hạng mục.
    - **Tỷ lệ QLDA, lập BCKTKT, thẩm tra TK, thẩm tra DT, giám sát, lập HSMT** (anh chốt 24/10/2026): công thức trỏ sang sheet `TT38` giữ lại trong file kết quả. Loại công trình theo **hạng mục có chi phí xây dựng trước thuế lớn nhất** (`linh_vuc` của hạng mục đó); tỷ lệ nội suy theo **tổng** chi phí xây dựng trước thuế cả dự án (TT38!C4 = GXD trước thuế). Chi phí khác theo thứ tự mẫu: K1 phí thẩm định dự án, K2 bảo hiểm, K3 phí thẩm định dự toán, K4 kiểm toán, K5 quyết toán, K6 nghiệm thu, K7 đảm bảo giao thông (nếu khai báo). Phí thẩm định dự án, kiểm toán, quyết toán tra bảng `TDDA`, `CPKT`, `TTQT` theo ô C9 = GXD + GQLDA + GTV sau thuế (tạm thay tổng mức đầu tư, tránh công thức vòng). Thẩm định HSMT, KQLCNT 0,1%; nghiệm thu 20% giám sát; dự phòng khối lượng 5%: theo mẫu.
    - Ghi ra `du-toan_tong-hop.xlsx`, mọi số tiền đều là công thức, có một ô thuế suất VAT duy nhất (M4).

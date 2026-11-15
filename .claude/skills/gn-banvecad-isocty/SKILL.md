@@ -97,7 +97,7 @@ Kích thước dưới đây tính **trên giấy in**. Trong Model nhân với 
    | `TP_1-xx SoHieuThep` | Kiểu Multileader | Phần cuối là block `GN_SoHieuThep`, đã phóng theo tỷ lệ |
 
    - Kiểu Multileader có cho 8 tỷ lệ: 1/10, 1/25, 1/50, 1/100, 1/150, 1/200, 1/250, 1/500. Tỷ lệ khác thì thêm 1 dòng vào danh sách trong `c:GNMAU`.
-   - Bản sao template đã có sẵn các mẫu này: `ket-qua/_mau-iso/ISO_CTY_bo-sung.dwt`, trang thử `ket-qua/_mau-iso/thu-mau.dwg`. **Khi anh chưa chép đè lên `template/ban-ve/ISO_CTY.dwt`**, bản vẽ mới chép từ template cũ phải chạy `GNMAU` trước khi ghi chú.
+   - Template `template/ban-ve/ISO_CTY.dwt` (và bản chép `ket-qua/_mau-iso/ISO_CTY.dwt`, giống hệt nhau) **chưa có sẵn các mẫu này**; chưa có file `.dwt` bổ sung. Trang thử có mẫu: `ket-qua/_mau-iso/thu-mau-ghichu.dwg`. Vì vậy bản vẽ mới chép từ template phải chạy `GNMAU` trước khi ghi chú, cho tới khi anh chép bản template đã bổ sung đè lên `template/ban-ve/ISO_CTY.dwt`.
    - Multileader phải đặt trên layer `42.Tp_M learder`. Kiểu Multileader không tự chọn layer được.
    - Cách dùng tay: chọn kiểu Multileader đúng tỷ lệ, gõ `MLEADER`, bấm điểm mũi tên rồi điểm gãy. Số hiệu thép thì nhấp đúp để sửa số và chữ thép. Vòng tròn cần nằm bên trái thì đổi **Source block** trong bảng Properties thành `GN_SoHieuThep_T`.
    - Khi vẽ bằng code: **dùng Multileader và block này**, không vẽ nét rời. Cách gọi bằng code xem `mcp-autocad.md`, mục "Multileader bằng code".
@@ -111,6 +111,7 @@ Kích thước dưới đây tính **trên giấy in**. Trong Model nhân với 
 - Tọa độ theo **hệ VN-2000** (múi chiếu theo tỉnh), cao độ theo **hệ cao độ quốc gia (Hòn Dấu)**.
 - Bản vẽ mặt bằng đặt **đúng tọa độ thực**. Không dời gốc tọa độ, không xoay bản vẽ.
 - Lưu ý: tọa độ VN-2000 tính bằng mét, còn bản vẽ vẽ bằng mm. Khi đọc hoặc xuất tọa độ phải quy đổi rõ ràng và ghi chú đơn vị.
+- `Cần xác nhận lại`: đặt đúng tọa độ thực VN-2000 với đơn vị mm làm số tọa độ rất lớn (hàng tỷ), AutoCAD dễ lệch khi hiển thị, bắt điểm, in; thông lệ bản vẽ mặt bằng hạ tầng thường vẽ theo mét. Với bản vẽ hạ tầng, giao thông: hỏi anh dùng mm hay m trước khi vẽ, và ghi rõ trên bản vẽ.
 
 ### Bảng thống kê cốt thép
 - Thể hiện **bảng đầy đủ ngay trên bản vẽ**, gồm các cột:
@@ -123,7 +124,7 @@ Khi đối chiếu, ghi rõ số hiệu tiêu chuẩn và **nhắc anh kiểm tr
 - Bản vẽ: TCVN 5571:2012 (khung tên), TCVN 5570:2012 (đường nét, đường trục), TCVN 5572:2012 (bản vẽ kết cấu BT, BTCT)
 - Kết cấu: TCVN 5574:2018 (BT, BTCT), TCVN 5575:2024 (kết cấu thép), TCVN 2737:2023 (tải trọng và tác động)
 - Hạ tầng và giao thông: TCVN 4054:2005 (đường ô tô), TCVN 7957:2023 (thoát nước), QCVN 07:2023/BXD (hạ tầng kỹ thuật)
-- Nhà xưởng: QCVN 06:2022/BXD (an toàn cháy)
+- Nhà xưởng: QCVN 06:2022/BXD (an toàn cháy), `Cần xác nhận lại` bản sửa đổi, bổ sung (có Sửa đổi 1:2023) và còn hiệu lực
 
 ### Việc Claude hỗ trợ thêm với bản vẽ
 1. **Kiểm tra lỗi bản vẽ:** layer sai so với template, text sai font, kích thước bị ghi đè số (override), đối tượng không ByLayer, đối tượng rác, block lỗi. Xuất **danh sách lỗi** để anh xem trước khi sửa.

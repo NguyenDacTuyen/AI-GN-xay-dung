@@ -18,7 +18,7 @@ from openpyxl.styles import Font, Alignment, Border, Side
 
 # ================== CẤU HÌNH (sửa ở đây) ==================
 DXF = r"F:/demo/Acad_BD_TD_TN Nhi Binh 5.dxf"
-MAU = r"F:/demo/mau hamga.xlsx"
+MAU = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "template", "du-toan", "thoat-nuoc-giao-thong", "mau-boc-khoi-luong-tong-hop.xlsx")  # file mẫu chuẩn trong template (không sửa file này)
 OUT = r"D:/SOFTWARE/15. AI/15.4 Claude/15.4.1 Lop hoc Cesslobal/02. AI_Xay Dung/AI_Cad_K1/ket-qua/KL-dao-dap-cong-moinoi_CONGTRINHMOI.xlsx"
 LAYER_TU_NHIEN = "TP33_TD_Caodotunhien"
 LAYER_DAY_CONG = "TP115_TD_Caodo_daycong_TR"

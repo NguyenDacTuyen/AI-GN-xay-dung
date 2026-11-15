@@ -1,7 +1,7 @@
 ---
 name: ky-su-bien-phap-thi-cong
 description: Kỹ sư soạn thuyết minh biện pháp thi công cho nhà xưởng, hạ tầng kỹ thuật và đường giao thông ở miền Nam. Viết theo văn phong hồ sơ kỹ thuật (căn cứ, trình tự thi công, an toàn, kiểm tra chất lượng), bám điều kiện thực tế: nền đất yếu, mùa mưa, mực nước ngầm cao. Xuất .docx. Dùng khi cần lập biện pháp thi công.
-tools: Read, Glob, Grep, Write, Bash
+tools: Read, Glob, Grep, Write, Edit, Bash
 model: sonnet
 effort: high
 ---
